@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
-import { Search, User, Calendar, ChevronDown, ChevronUp, Save, LogOut, ArrowRight, Clock, FileText, Heart, Play, Info, ExternalLink, X } from 'lucide-react';
+import { Search, User, Calendar, ChevronDown, ChevronUp, LogOut, ArrowRight, Clock, Heart, Play, Info, ExternalLink, X, Activity } from 'lucide-react';
 import { MOCK_CLINICAL_PATIENT, mockTrends } from '../../mockData';
 
 const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any }> = ({ isOpen, onClose, report }) => {
@@ -91,7 +91,7 @@ const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any 
   );
 };
 
-const TrendChart: React.FC<{
+const InsightPanel: React.FC<{
   title: string;
   data: number[];
   color: string;
@@ -99,76 +99,166 @@ const TrendChart: React.FC<{
   max: number;
   inverted?: boolean;
   description: string;
-}> = ({ title, data, color, unit, max, inverted, description }) => {
-  const chartHeight = 80;
-  const chartWidth = 280;
-  const paddingLeft = 25;
-  const points = data.map((val, i) => {
-    const x = paddingLeft + (i / (data.length - 1)) * (chartWidth - paddingLeft);
-    const y = chartHeight - (val / max) * chartHeight;
-    return `${x},${y}`;
-  }).join(' ');
+  isLoading?: boolean;
+}> = ({ title, data, color, unit, max, inverted, description, isLoading }) => {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const chartHeight = 60;
+  const chartWidth = 300;
+  const paddingX = 10;
+
+  const getX = (i: number) => paddingX + (i / (data.length - 1)) * (chartWidth - paddingX * 2);
+  const getY = (val: number) => chartHeight - (val / max) * chartHeight;
+
+  const points = data.map((val, i) => `${getX(i)},${getY(val)}`).join(' ');
+  const areaPoints = `${getX(0)},${chartHeight} ${points} ${getX(data.length - 1)},${chartHeight}`;
 
   const lastValue = data[data.length - 1];
-  const avgValue = (data.reduce((a, b) => a + b, 0) / data.length).toFixed(1);
-  const gridLines = [0, 0.5, 1]; // 0, 5, 10
+  const prevValue = data[data.length - 8] || data[0]; // Simple 7-day delta approximation
+  const delta = lastValue - prevValue;
+  const isPositive = delta > 0;
+  const trendColor = inverted ? (isPositive ? 'text-rose-500' : 'text-emerald-500') : (isPositive ? 'text-emerald-500' : 'text-rose-500');
+
+  // Map color strings to tailwind colors for gradient IDs and strokes
+  const colorMap: Record<string, { stroke: string; stop: string; shadow: string }> = {
+    '#3b82f6': { stroke: '#3b82f6', stop: '#3b82f6', shadow: 'shadow-blue-500/10' }, // Sleep
+    '#8b5cf6': { stroke: '#8b5cf6', stop: '#8b5cf6', shadow: 'shadow-indigo-500/10' }, // Well-being
+    '#ef4444': { stroke: '#ef4444', stop: '#ef4444', shadow: 'shadow-rose-500/10' }, // Pain
+  };
+  const theme = colorMap[color] || colorMap['#3b82f6'];
+  const gradientId = `grad-${title.replace(/\s+/g, '-').toLowerCase()}`;
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between px-1">
-        <div className="flex items-center gap-1.5 group/info relative">
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{title}</span>
-          <Info className="w-3 h-3 text-slate-300 hover:text-blue-500 cursor-help transition-colors" />
-
-          {/* Light Tooltip */}
-          <div className="absolute bottom-full left-0 mb-2 w-56 p-4 bg-white/95 backdrop-blur-md border border-blue-100 rounded-2xl text-[10px] opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all z-50 shadow-[0_10px_30px_rgba(0,0,0,0.08)] pointer-events-none">
-            <p className="font-black mb-1.5 uppercase tracking-wider text-blue-600">Clinical Guide</p>
-            <p className="text-slate-600 leading-relaxed mb-3 font-semibold">{description}</p>
-            <div className="pt-2.5 border-t border-slate-100 flex justify-between items-center">
-              <span className="text-slate-400 font-black uppercase tracking-[0.15em] text-[8px]">Period Average</span>
-              <span className="text-xs font-black text-slate-900 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">{avgValue}{unit}</span>
+    <div className={`group relative bg-white rounded-[2rem] border border-slate-100 p-6 transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:border-slate-200 ${isLoading ? 'opacity-50 grayscale' : ''}`}>
+      {/* Header Info */}
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{title}</h4>
+            <div className="invisible group-hover:visible transition-all">
+              <div className="relative group/tooltip">
+                <Info className="w-3 h-3 text-slate-300 hover:text-slate-900 transition-colors cursor-help" />
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-3 bg-slate-900 text-white text-[9px] font-bold rounded-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all shadow-xl z-50 pointer-events-none">
+                  {description}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                </div>
+              </div>
             </div>
-            {/* Tooltip Arrow */}
-            <div className="absolute top-full left-4 -mt-1 border-[6px] border-transparent border-t-white drop-shadow-[0_1px_0_rgba(191,219,254,1)]" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-slate-900 tracking-tighter">{lastValue}<span className="text-sm text-slate-400 ml-0.5 font-bold tracking-normal">{unit}</span></span>
+            <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-lg bg-slate-50 border border-slate-100 ${trendColor}`}>
+              {delta === 0 ? '±0' : (delta > 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1))}
+            </span>
           </div>
         </div>
-        <span className={`text-xs font-black ${inverted && lastValue > 7 ? 'text-red-500' : 'text-slate-900'}`}>{lastValue}{unit}</span>
+        <div className={`w-10 h-10 rounded-2xl flex items-center justify-center bg-slate-50 transition-colors group-hover:bg-white`}>
+          {title === "Sleep Quality" && <Clock className="w-5 h-5 text-blue-500" />}
+          {title === "Well-being" && <Heart className="w-5 h-5 text-indigo-500" />}
+          {title === "Pain Level" && <Activity className="w-5 h-5 text-rose-500" />}
+        </div>
       </div>
-      <div className="h-28 bg-white rounded-2xl border border-slate-100 flex items-end p-2 overflow-hidden relative shadow-sm">
-        <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-full overflow-visible">
-          {/* Grid Lines & Y-Axis Labels */}
-          {gridLines.map((line, i) => (
-            <g key={i}>
-              <line
-                x1={paddingLeft}
-                y1={chartHeight - (line * chartHeight)}
-                x2={chartWidth}
-                y2={chartHeight - (line * chartHeight)}
-                stroke="#f1f5f9"
-                strokeWidth="1"
-              />
-              <text
-                x="0"
-                y={chartHeight - (line * chartHeight) + 3}
-                className="text-[8px] fill-slate-300 font-bold"
-              >
-                {Math.round(line * max)}
-              </text>
-            </g>
-          ))}
 
+      {/* Main Sparkline */}
+      <div className="relative h-[80px] mt-4 flex items-end">
+        <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-full overflow-visible">
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={theme.stop} stopOpacity="0.15" />
+              <stop offset="100%" stopColor={theme.stop} stopOpacity="0.01" />
+            </linearGradient>
+          </defs>
+
+          {/* Area Fill */}
+          <polyline
+            fill={`url(#${gradientId})`}
+            points={areaPoints}
+            className="transition-all duration-700 ease-in-out"
+          />
+
+          {/* Line */}
           <polyline
             fill="none"
-            stroke={color}
-            strokeWidth="2.5"
+            stroke={theme.stroke}
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
             points={points}
-            className="transition-all duration-700"
+            className="transition-all duration-700 ease-in-out drop-shadow-sm"
           />
-          <circle cx={chartWidth} cy={chartHeight - (lastValue / max) * chartHeight} r="3" fill={color} className="animate-pulse" />
+
+          {/* Last Point Halo */}
+          <circle
+            cx={getX(data.length - 1)}
+            cy={getY(lastValue)}
+            r="6"
+            fill={theme.stroke}
+            className="opacity-10 animate-pulse"
+          />
+          <circle
+            cx={getX(data.length - 1)}
+            cy={getY(lastValue)}
+            r="2.5"
+            fill={theme.stroke}
+            stroke="white"
+            strokeWidth="1.5"
+          />
+
+          {/* Invisible hover zones for simple tooltip simulation */}
+          {data.map((val, i) => (
+            <rect
+              key={i}
+              x={getX(i) - 5}
+              y="0"
+              width="10"
+              height={chartHeight}
+              fill="transparent"
+              onMouseEnter={() => setHoveredIndex(i)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              className="cursor-pointer"
+            />
+          ))}
+
+          {/* Simple Hover Indicator */}
+          {hoveredIndex !== null && (
+            <g>
+              <line
+                x1={getX(hoveredIndex)}
+                y1="0"
+                x2={getX(hoveredIndex)}
+                y2={chartHeight}
+                stroke="#e2e8f0"
+                strokeWidth="1"
+                strokeDasharray="4,2"
+              />
+              <circle cx={getX(hoveredIndex)} cy={getY(data[hoveredIndex])} r="3" fill={theme.stroke} stroke="white" strokeWidth="1.5" />
+            </g>
+          )}
         </svg>
+
+        {/* Hover Text Labels */}
+        {hoveredIndex !== null && (
+          <div
+            className="absolute -top-4 bg-slate-900 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md pointer-events-none transition-all shadow-lg"
+            style={{ left: `${(getX(hoveredIndex) / chartWidth) * 100}%`, transform: 'translateX(-50%)' }}
+          >
+            {data[hoveredIndex]}{unit}
+          </div>
+        )}
       </div>
+
+      {/* Bottom Subtitle */}
+      <div className="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center text-[9px] font-bold text-slate-400">
+        <span className="uppercase tracking-widest">7D Avg</span>
+        <span className="text-slate-700">{(data.reduce((a, b) => a + b, 0) / data.length).toFixed(1)}{unit}</span>
+      </div>
+
+      {/* Loading Shimmer */}
+      {isLoading && (
+        <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] rounded-[2rem] flex items-center justify-center z-10">
+          <div className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-blue-500 animate-spin" />
+        </div>
+      )}
     </div>
   );
 };
@@ -182,7 +272,15 @@ export const Patient: React.FC = () => {
   const [expandedSummary, setExpandedSummary] = useState(false);
   const [expandedTimeline, setExpandedTimeline] = useState<string | null>(null);
   const [selectedRange, setSelectedRange] = useState(7);
+  const [isChartLoading, setIsChartLoading] = useState(false);
   const [selectedReport, setSelectedReport] = useState<any>(null);
+
+  const handleRangeChange = (days: number) => {
+    if (days === selectedRange) return;
+    setIsChartLoading(true);
+    setSelectedRange(days);
+    setTimeout(() => setIsChartLoading(false), 300);
+  };
 
   const filteredTrends = mockTrends.slice(-selectedRange);
   const visibleTimeline = currentClinicalPatient?.timeline.slice(0, 3) || [];
@@ -323,53 +421,65 @@ export const Patient: React.FC = () => {
                 </div>
               </div>
 
-              {/* Unified Health Trends Section */}
-              <div className="glass-card flex-col border-blue-100 shadow-blue-50 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5" /> Longitudinal Health Insights
-                  </h3>
-                  <div className="flex bg-slate-100 p-1 rounded-xl">
-                    {[7, 30, 90].map((days) => (
-                      <button
-                        key={days}
-                        onClick={() => setSelectedRange(days)}
-                        className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-all ${selectedRange === days ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-                      >
-                        {days}D
-                      </button>
-                    ))}
+              {/* Premium Longitudinal Health Insights */}
+              <div className="flex flex-col gap-6">
+                <div className="flex items-end justify-between px-2">
+                  <div className="space-y-1">
+                    <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">Longitudinal Insights</h3>
+                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">Clinical Trends</h2>
+                  </div>
+                  <div className="flex flex-col items-end gap-3">
+                    <div className="flex items-center gap-6">
+                      <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest hidden md:block">Last updated: Today 12:03</span>
+                      <div className="flex bg-slate-100 p-1.5 rounded-[1.25rem] border border-slate-200 relative group">
+                        {[7, 30, 90].map((days) => (
+                          <button
+                            key={days}
+                            onClick={() => handleRangeChange(days)}
+                            className={`relative z-10 px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all duration-300 ${selectedRange === days ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
+                          >
+                            {days}D
+                            {selectedRange === days && (
+                              <div className="absolute inset-0 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)] rounded-xl -z-10 animate-scale-up" />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Sleep Chart */}
-                  <TrendChart
+                  <InsightPanel
                     title="Sleep Quality"
                     data={filteredTrends.map(t => t.sleepHours)}
                     color="#3b82f6"
                     unit="h"
                     max={12}
-                    description="Measures total restorative sleep duration and quality metrics over time."
+                    description="Total restorative sleep duration and quality assessment metrics."
+                    isLoading={isChartLoading}
                   />
                   {/* Wellbeing Chart */}
-                  <TrendChart
+                  <InsightPanel
                     title="Well-being"
                     data={filteredTrends.map(t => t.wellbeing)}
                     color="#8b5cf6"
                     unit="/10"
                     max={10}
-                    description="Self-reported psychological and physical state based on daily check-ins."
+                    description="Patient-reported psychological state and daily comfort scores."
+                    isLoading={isChartLoading}
                   />
                   {/* Pain Level Chart */}
-                  <TrendChart
+                  <InsightPanel
                     title="Pain Level"
                     data={filteredTrends.map(t => t.painLevel)}
                     color="#ef4444"
                     unit="/10"
                     max={10}
                     inverted
-                    description="Subjective pain scale rating. Decreasing trends indicate positive treatment response."
+                    description="Subjective pain severity reports. Downward trends indicate clinical progress."
+                    isLoading={isChartLoading}
                   />
                 </div>
               </div>
