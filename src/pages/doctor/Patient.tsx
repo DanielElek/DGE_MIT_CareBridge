@@ -388,8 +388,8 @@ export const Patient: React.FC = () => {
                     <User className="w-10 h-10" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">
-                      {currentClinicalPatient.name} <span className="text-xl font-medium text-slate-400 ml-2 tracking-normal">{currentClinicalPatient.code}</span>
+                    <h2 className="headline-type text-slate-900 mb-1">
+                      {currentClinicalPatient.name} <span className="text-xl font-medium text-slate-300 ml-2 tracking-normal uppercase text-[14px] font-black tracking-[0.2em]">{currentClinicalPatient.code}</span>
                     </h2>
                     <div className="flex items-center gap-4 text-sm font-bold text-slate-500 uppercase tracking-wider">
                       <span>{currentClinicalPatient.age} Years • {currentClinicalPatient.sex}</span>
@@ -425,8 +425,8 @@ export const Patient: React.FC = () => {
               <div className="flex flex-col gap-6">
                 <div className="flex items-end justify-between px-2">
                   <div className="space-y-1">
-                    <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">Longitudinal Insights</h3>
-                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">Clinical Trends</h2>
+                    <h3 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.3em]">Longitudinal Insights</h3>
+                    <h2 className="headline-type text-slate-900">Clinical Trends</h2>
                   </div>
                   <div className="flex flex-col items-end gap-3">
                     <div className="flex items-center gap-6">

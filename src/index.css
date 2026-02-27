@@ -12,10 +12,26 @@
 }
 
 @layer base {
+    html {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        text-rendering: geometricPrecision;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
     body {
-        @apply bg-slate-50 text-slate-900 antialiased;
+        @apply bg-slate-50 text-slate-900 text-[18px] leading-[1.6];
         background: radial-gradient(circle at top left, #f1f5f9 0%, #f8fafc 100%);
         min-height: 100vh;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply tracking-tighter;
     }
 }
 
@@ -26,6 +42,21 @@
 
     .glass-header {
         @apply sticky top-0 z-50 backdrop-blur-lg bg-white/60 border-b border-white/20;
+    }
+
+    /* PREMIUM TYPOGRAPHY UTILITIES */
+    .display-type {
+        font-size: clamp(48px, 6vw, 96px);
+        @apply font-light leading-display tracking-tightest;
+    }
+
+    .headline-type {
+        font-size: clamp(32px, 4vw, 48px);
+        @apply font-medium leading-tight tracking-tighter;
+    }
+
+    .body-type {
+        @apply text-[18px] leading-[1.6] font-normal;
     }
 
     .btn-primary {

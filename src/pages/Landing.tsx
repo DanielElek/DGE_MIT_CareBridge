@@ -21,11 +21,11 @@ export const Landing: React.FC = () => {
                     </div>
 
                     <div className="space-y-4">
-                        <h2 className="text-2xl font-black text-slate-800 tracking-tight leading-tight">
-                            Precision Healthcare <br />
+                        <h2 className="display-type text-slate-900 border-l-2 border-blue-600 pl-8 -ml-8">
+                            Precision <span className="font-medium">Healthcare</span> <br />
                             <span className="text-blue-600">at your fingertips.</span>
                         </h2>
-                        <p className="text-slate-500 font-medium leading-relaxed">
+                        <p className="body-type text-slate-500 max-w-lg">
                             A unified platform connecting patients and medical professionals with real-time health data, AI-driven summaries, and clinical insights.
                         </p>
                     </div>
