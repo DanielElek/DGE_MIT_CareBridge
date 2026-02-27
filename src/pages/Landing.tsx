@@ -6,81 +6,108 @@ export const Landing: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-50/50 via-slate-50 to-slate-50">
-            <div className="w-full max-w-4xl grid md:grid-cols-2 gap-8 animate-slide-up">
-                {/* Left Side: Branding */}
-                <div className="flex flex-col justify-center space-y-8 pr-8">
-                    <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 bg-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-200 rotate-3">
-                            <Heart className="w-9 h-9 text-white" />
+        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 overflow-hidden relative">
+            {/* Background Decorative Elements */}
+            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-50/40 rounded-full blur-[120px] -mr-96 -mt-96 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-50/30 rounded-full blur-[100px] -ml-48 -mb-48 pointer-events-none" />
+
+            <div className="w-full max-w-[1400px] grid lg:grid-cols-12 gap-16 items-center z-10 animate-slide-up">
+
+                {/* Left Side: Impactful Branding & Intro */}
+                <div className="lg:col-span-7 flex flex-col space-y-12">
+                    {/* Brand Identity */}
+                    <div className="flex items-center gap-5">
+                        <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-200 -rotate-2">
+                            <Heart className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-4xl font-black text-slate-900 tracking-tighter leading-none">CareBridge</h1>
-                            <p className="text-blue-600 font-black text-xs uppercase tracking-[0.3em] mt-1 ml-0.5">Clinical Ecosystem</p>
+                            <h1 className="text-[28px] font-black text-slate-900 tracking-tighter leading-none">CareBridge</h1>
+                            <p className="text-blue-600 font-black text-[10px] uppercase tracking-[0.4em] mt-1">Clinical Ecosystem</p>
                         </div>
                     </div>
 
-                    <div className="space-y-4">
-                        <h2 className="display-type text-slate-900 border-l-2 border-blue-600 pl-8 -ml-8">
-                            Precision <span className="font-medium">Healthcare</span> <br />
+                    {/* Hero Headline */}
+                    <div className="space-y-8">
+                        <h2 className="display-type text-slate-900 leading-[0.9] max-w-3xl">
+                            Precision <span className="font-light text-slate-900">Healthcare</span> <br />
                             <span className="text-blue-600">at your fingertips.</span>
                         </h2>
-                        <p className="body-type text-slate-500 max-w-lg">
-                            A unified platform connecting patients and medical professionals with real-time health data, AI-driven summaries, and clinical insights.
+                        <p className="text-[22px] text-slate-500 font-medium leading-[1.5] max-w-lg">
+                            An intelligent ecosystem bridging the gap between clinical excellence and patient care through real-time data.
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3 pt-4">
-                        <div className="flex -space-x-3">
-                            {[1, 2, 3, 4].map(i => (
-                                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200" />
-                            ))}
-                        </div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Trusted by 500+ Clinics</p>
-                    </div>
                 </div>
 
-                {/* Right Side: Portal Selection */}
-                <div className="space-y-6">
-                    <button
-                        onClick={() => navigate('/doctor/patient')}
-                        className="w-full group relative overflow-hidden bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-2xl hover:shadow-blue-100 hover:-translate-y-1 transition-all text-left flex items-start gap-6"
-                    >
-                        <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-inner">
-                            <Shield className="w-7 h-7" />
-                        </div>
-                        <div className="flex-1 mt-1">
-                            <div className="flex items-center justify-between mb-1">
-                                <h3 className="text-xl font-black text-slate-900 tracking-tight">Clinical Portal</h3>
-                                <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-blue-600 transition-colors" />
-                            </div>
-                            <p className="text-slate-500 text-sm font-medium leading-relaxed">Access patient records, clinical charts, and finalize SOAP notes.</p>
-                            <span className="inline-block mt-4 text-[10px] font-black text-blue-600 uppercase tracking-widest">Healthcare Provider Only</span>
-                        </div>
-                    </button>
+                {/* Right Side: High-End Portal Cards */}
+                <div className="lg:col-span-5 flex flex-col gap-10 relative">
+                    {/* Persistent Background Glow for the whole column */}
+                    <div className="absolute inset-0 bg-blue-400/10 blur-[140px] rounded-full -z-20 scale-125 translate-x-20" />
 
-                    <button
-                        onClick={() => navigate('/patient/complaint')}
-                        className="w-full group relative overflow-hidden bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-2xl hover:shadow-indigo-100 hover:-translate-y-1 transition-all text-left flex items-start gap-6"
-                    >
-                        <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-inner">
-                            <Activity className="w-7 h-7" />
-                        </div>
-                        <div className="flex-1 mt-1">
-                            <div className="flex items-center justify-between mb-1">
-                                <h3 className="text-xl font-black text-slate-900 tracking-tight">Patient Portal</h3>
-                                <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-indigo-600 transition-colors" />
+                    {/* Clinical Portal Card */}
+                    <div className="relative group">
+                        {/* Static Subtle Aura */}
+                        <div className="absolute inset-x-0 inset-y-0 bg-blue-500/5 blur-[80px] rounded-full scale-150 -z-10" />
+
+                        <button
+                            onClick={() => navigate('/doctor/patient')}
+                            className="relative w-full bg-white/90 backdrop-blur-sm p-10 rounded-[3rem] border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.02)] hover:-translate-y-3 hover:bg-white hover:shadow-[0_40px_80px_rgba(59,130,246,0.08)] transition-all duration-500 text-left overflow-hidden z-10"
+                        >
+                            <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/5 blur-[80px] -mr-20 -mt-20 group-hover:bg-blue-500/10 transition-all duration-700" />
+                            <div className="flex items-center justify-between mb-8 relative z-10">
+                                <div className="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-inner">
+                                    <Shield className="w-8 h-8" />
+                                </div>
+                                <div className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-100 transition-all">
+                                    <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                                </div>
                             </div>
-                            <p className="text-slate-500 text-sm font-medium leading-relaxed">Submit symptoms, track trends, and view your medical documents.</p>
-                            <span className="inline-block mt-4 text-[10px] font-black text-indigo-600 uppercase tracking-widest">Self-Management Tools</span>
-                        </div>
-                    </button>
+                            <div className="space-y-4 relative z-10">
+                                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Clinical Portal</h3>
+                                <p className="text-slate-500 font-medium leading-relaxed text-[16px]">
+                                    Professional workflow for healthcare providers. Access records, clinical charts, and finalise SOAP notes.
+                                </p>
+                                <div className="pt-2 flex items-center gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)]" />
+                                    <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em]">Medical Access Required</span>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
+
+                    {/* Patient Portal Card */}
+                    <div className="relative group">
+                        {/* Static Subtle Aura */}
+                        <div className="absolute inset-x-0 inset-y-0 bg-blue-500/5 blur-[80px] rounded-full scale-150 -z-10" />
+
+                        <button
+                            onClick={() => navigate('/patient/complaint')}
+                            className="relative w-full bg-white/90 backdrop-blur-sm p-10 rounded-[3rem] border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.02)] hover:-translate-y-3 hover:bg-white hover:shadow-[0_40px_80px_rgba(59,130,246,0.08)] transition-all duration-500 text-left overflow-hidden z-10"
+                        >
+                            <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/5 blur-[80px] -mr-20 -mt-20 group-hover:bg-blue-500/10 transition-all duration-700" />
+                            <div className="flex items-center justify-between mb-8 relative z-10">
+                                <div className="w-16 h-16 rounded-3xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-inner">
+                                    <Activity className="w-8 h-8" />
+                                </div>
+                                <div className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-100 transition-all">
+                                    <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                                </div>
+                            </div>
+                            <div className="space-y-4 relative z-10">
+                                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Patient Portal</h3>
+                                <p className="text-slate-500 font-medium leading-relaxed text-[16px]">
+                                    Intelligent self-management. Submit symptoms, track physiological trends, and access personalized medical data.
+                                </p>
+                                <div className="pt-2 flex items-center gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)]" />
+                                    <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em]">Patient Access Point</span>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <p className="fixed bottom-8 text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">
-                Secure Session • 256-Bit Encrypted Nexus
-            </p>
         </div>
     );
 };

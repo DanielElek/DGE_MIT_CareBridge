@@ -20,8 +20,8 @@
     }
 
     body {
-        @apply bg-slate-50 text-slate-900 text-[18px] leading-[1.6];
-        background: radial-gradient(circle at top left, #f1f5f9 0%, #f8fafc 100%);
+        @apply bg-white text-slate-900 text-[18px] leading-[1.6];
+        background: radial-gradient(circle at 100% 0%, #f1f5fe 0%, #ffffff 50%, #f8fafc 100%);
         min-height: 100vh;
     }
 
