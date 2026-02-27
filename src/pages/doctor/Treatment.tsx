@@ -66,13 +66,13 @@ const localAI = {
 };
 
 const WaveformAnimated: React.FC<{ isRecording: boolean }> = ({ isRecording }) => (
-    <div className="relative w-full h-32 flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50/50 to-indigo-50/50 border border-white shadow-inner group-hover:border-blue-200 transition-all duration-500">
+    <div className="relative w-full h-32 flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-accent-500/5 to-primary-900/5 border border-white shadow-inner group-hover:border-accent-500/20 transition-all duration-500">
         <svg viewBox="0 0 200 60" preserveAspectRatio="none" className={`w-full h-full scale-y-110 transition-opacity duration-700 ${isRecording ? 'opacity-90' : 'opacity-30'}`}>
             <defs>
                 <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
-                    <stop offset="50%" stopColor="#2563eb" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.2" />
+                    <stop offset="0%" stopColor="#22C58B" stopOpacity="0.2" />
+                    <stop offset="50%" stopColor="#137353" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#22C58B" stopOpacity="0.2" />
                 </linearGradient>
             </defs>
             <path
@@ -85,27 +85,27 @@ const WaveformAnimated: React.FC<{ isRecording: boolean }> = ({ isRecording }) =
             <path
                 d="M -200 30 Q -175 22 -150 30 Q -125 38 -100 30 Q -75 22 -50 30 Q -25 38 0 30 Q 25 22 50 30 Q 75 38 100 30 Q 125 22 150 30 Q 175 38 200 30"
                 fill="none"
-                stroke="#60a5fa"
+                stroke="#22C58B"
                 strokeWidth="1"
                 className={isRecording ? 'animate-wave-2' : ''}
             />
             <path
                 d="M -200 30 Q -175 5 -150 30 Q -125 55 -100 30 Q -75 5 -50 30 Q -25 55 0 30 Q 25 5 50 30 Q 75 55 100 30 Q 125 5 150 30 Q 175 55 200 30"
                 fill="none"
-                stroke="#2563eb"
+                stroke="#137353"
                 strokeWidth="2"
                 className={isRecording ? 'animate-wave-3' : ''}
             />
         </svg>
         {!isRecording && (
             <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-[80%] h-[1px] bg-blue-200/50 rounded-full" />
+                <div className="w-[80%] h-[1px] bg-accent-500/20 rounded-full" />
             </div>
         )}
         {isRecording && (
-            <div className="absolute top-4 right-4 flex items-center gap-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-full border border-blue-100 shadow-sm animate-pulse">
+            <div className="absolute top-4 right-4 flex items-center gap-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded-full border border-accent-500/10 shadow-sm animate-pulse">
                 <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                <span className="text-[9px] font-black uppercase tracking-widest text-slate-600">Live</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-text-muted">Live</span>
             </div>
         )}
     </div>
@@ -314,14 +314,14 @@ export const Treatment: React.FC = () => {
                     <div className="flex items-center gap-6">
                         <button
                             onClick={() => navigate('/doctor/patient')}
-                            className="p-1.5 hover:bg-slate-50 border border-transparent hover:border-slate-200 rounded-lg transition-all group"
+                            className="p-1.5 hover:bg-surface-muted border border-transparent hover:border-border rounded-lg transition-all group"
                         >
-                            <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-blue-600" />
+                            <ArrowLeft className="w-4 h-4 text-text-muted group-hover:text-accent-600" />
                         </button>
                         <div className="flex flex-col">
-                            <h1 className={`${isLarge ? 'text-lg' : 'text-sm'} font-bold text-slate-900 flex items-center gap-2`}>
-                                Treatment Session <ChevronRight className="w-3 h-3 text-slate-300" />
-                                <span className="text-slate-500 font-medium">{currentClinicalPatient.name}</span>
+                            <h1 className={`${isLarge ? 'text-lg' : 'text-sm'} font-bold text-text-strong flex items-center gap-2`}>
+                                Treatment Session <ChevronRight className="w-3 h-3 text-border" />
+                                <span className="text-text font-medium">{currentClinicalPatient.name}</span>
                             </h1>
                         </div>
                     </div>
@@ -338,14 +338,14 @@ export const Treatment: React.FC = () => {
                         {isFinalStep && (
                             <div className="flex items-center gap-2">
                                 <button
-                                    className="h-9 px-5 bg-white border border-slate-200 text-slate-500 rounded-xl text-[10px] font-black uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all flex items-center gap-2"
+                                    className="h-9 px-5 bg-white border border-border text-text-muted rounded-xl text-[10px] font-black uppercase tracking-widest hover:border-accent-600 hover:text-accent-600 transition-all flex items-center gap-2"
                                     onClick={handleSendEmail}
                                     disabled={isSaving}
                                 >
                                     <Mail className="w-3.5 h-3.5" /> Send to Patient
                                 </button>
                                 <button
-                                    className="h-9 px-5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
+                                    className="h-9 px-5 bg-primary hover:bg-primary-900 text-white shadow-lg shadow-primary/20 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2"
                                     onClick={handleCommitRecord}
                                     disabled={isSaving}
                                 >
@@ -369,12 +369,12 @@ export const Treatment: React.FC = () => {
                                     <WaveformAnimated isRecording={isRecording && !isPaused} />
 
                                     <div className="mt-10 text-center relative">
-                                        <div className={`${isLarge ? 'text-7xl' : 'text-6xl'} font-black tabular-nums tracking-tighter mb-1 text-slate-900 drop-shadow-sm`}>
+                                        <div className={`${isLarge ? 'text-7xl' : 'text-6xl'} font-black tabular-nums tracking-tighter mb-1 text-text-strong drop-shadow-sm`}>
                                             {formatTime(elapsedTime)}
                                         </div>
                                         <div className="flex items-center justify-center gap-2">
-                                            <Clock className="w-3.5 h-3.5 text-blue-500/50" />
-                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+                                            <Clock className="w-3.5 h-3.5 text-accent-500/50" />
+                                            <p className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em]">
                                                 {sessionStep.includes("followup") ? "Follow-up Session" : "Encounter duration"}
                                             </p>
                                         </div>
@@ -387,17 +387,17 @@ export const Treatment: React.FC = () => {
                                                 <button
                                                     onClick={isPaused ? resumeRecording : pauseRecording}
                                                     className={`w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all duration-300 hover:scale-110 ${isPaused
-                                                        ? 'bg-blue-600 border-blue-600 shadow-xl shadow-blue-200 text-white'
-                                                        : 'bg-white border-slate-100 hover:border-blue-200 text-slate-600 shadow-sm'
+                                                        ? 'bg-primary border-primary shadow-xl shadow-primary/20 text-white'
+                                                        : 'bg-white border-border hover:border-accent-500/20 text-text transition-colors shadow-sm'
                                                         }`}
                                                 >
                                                     {isPaused ? <Play className="w-6 h-6 fill-current" /> : <Pause className="w-6 h-6" />}
                                                 </button>
                                                 <button
                                                     onClick={stopRecording}
-                                                    className="w-20 h-20 rounded-full bg-slate-900 hover:bg-black flex items-center justify-center shadow-2xl shadow-slate-200 hover:scale-105 active:scale-95 transition-all outline-none"
+                                                    className="w-20 h-20 rounded-full bg-text-strong hover:bg-black flex items-center justify-center shadow-2xl shadow-primary/10 hover:scale-105 active:scale-95 transition-all outline-none"
                                                 >
-                                                    <Square className="w-8 h-8 fill-blue-500" />
+                                                    <Square className="w-8 h-8 fill-accent-500" />
                                                 </button>
                                             </div>
                                         ) : (
@@ -405,7 +405,7 @@ export const Treatment: React.FC = () => {
                                                 {sessionStep === "recording_initial" && (
                                                     <button
                                                         onClick={startRecording}
-                                                        className="w-full h-16 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl flex items-center justify-center gap-4 hover:shadow-2xl hover:shadow-blue-600/30 transition-all group overflow-hidden relative"
+                                                        className="w-full h-16 bg-gradient-to-br from-primary to-primary-900 text-white rounded-2xl flex items-center justify-center gap-4 hover:shadow-2xl hover:shadow-primary/30 transition-all group overflow-hidden relative"
                                                     >
                                                         <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                                                         <Mic className="w-5 h-5 relative z-10" />
@@ -417,11 +417,11 @@ export const Treatment: React.FC = () => {
                                                     <div className="space-y-3">
                                                         <button
                                                             onClick={handleAnalyzeInitial}
-                                                            className="w-full h-14 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-3"
+                                                            className="w-full h-14 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-900 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"
                                                         >
                                                             <Sparkles className="w-4 h-4" /> Analyze (Local AI)
                                                         </button>
-                                                        <button onClick={resetRecording} className="w-full text-[9px] font-bold text-slate-400 uppercase tracking-widest flex items-center justify-center gap-2 hover:text-blue-600 transition-colors">
+                                                        <button onClick={resetRecording} className="w-full text-[9px] font-bold text-text-muted uppercase tracking-widest flex items-center justify-center gap-2 hover:text-accent-600 transition-colors">
                                                             <RotateCcw className="w-3 h-3" /> Redo Recording
                                                         </button>
                                                     </div>
@@ -440,11 +440,11 @@ export const Treatment: React.FC = () => {
                                                     <div className="space-y-3">
                                                         <button
                                                             onClick={handleAnalyzeFollowup}
-                                                            className="w-full h-14 bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-3"
+                                                            className="w-full h-14 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-900 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"
                                                         >
                                                             <Sparkles className="w-4 h-4" /> Update Summary (Local AI)
                                                         </button>
-                                                        <button onClick={resetRecording} className="w-full text-[9px] font-bold text-slate-400 uppercase tracking-widest flex items-center justify-center gap-2 hover:text-blue-600 transition-colors">
+                                                        <button onClick={resetRecording} className="w-full text-[9px] font-bold text-text-muted uppercase tracking-widest flex items-center justify-center gap-2 hover:text-accent-600 transition-colors">
                                                             <RotateCcw className="w-3 h-3" /> Redo Follow-up
                                                         </button>
                                                     </div>
@@ -454,9 +454,9 @@ export const Treatment: React.FC = () => {
                                     </div>
 
                                     {audioUrl && !isRecording && !sessionStep.includes("analyzing") && (
-                                        <div className="mt-10 p-6 rounded-3xl bg-slate-50/80 border border-slate-100 animate-slide-up shadow-sm">
+                                        <div className="mt-10 p-6 rounded-3xl bg-surface-muted border border-border animate-slide-up shadow-sm">
                                             <div className="flex items-center justify-between mb-4">
-                                                <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest flex items-center gap-1.5">
+                                                <span className="text-[9px] font-black text-accent-600 uppercase tracking-widest flex items-center gap-1.5">
                                                     <Sparkles className="w-3 h-3" /> Preview Audio
                                                 </span>
                                                 <button onClick={resetRecording} className="p-1.5 hover:bg-red-50 text-red-400 rounded-lg transition-colors">
@@ -481,19 +481,19 @@ export const Treatment: React.FC = () => {
                                         {/* Embedded Loading State */}
                                         {sessionStep.includes("analyzing") && (
                                             <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
-                                                <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-4" />
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 animate-pulse">Neural AI Analyzing...</p>
+                                                <Loader2 className="w-8 h-8 text-accent-500 animate-spin mb-4" />
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-text-muted animate-pulse">Neural AI Analyzing...</p>
                                             </div>
                                         )}
 
-                                        <div className="px-10 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between shrink-0">
-                                            <h3 className="text-xl font-black text-blue-600 tracking-tight uppercase">Summary</h3>
-                                            <div className="bg-white px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
-                                                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Encounter Analysis</span>
+                                        <div className="px-10 py-5 border-b border-border bg-surface-muted flex items-center justify-between shrink-0">
+                                            <h3 className="text-xl font-black text-accent-600 tracking-tight uppercase">Summary</h3>
+                                            <div className="bg-white px-3 py-1 rounded-lg border border-border shadow-sm">
+                                                <span className="text-[9px] font-black text-text-muted uppercase tracking-widest">Encounter Analysis</span>
                                             </div>
                                         </div>
                                         <div className="flex-1 overflow-y-auto p-10 scrollbar-thin">
-                                            <div className={`leading-[1.8] transition-all duration-700 font-medium ${isLarge ? 'text-xl' : 'text-base'} ${aiSummary ? 'text-slate-800' : 'text-slate-600'}`}>
+                                            <div className={`leading-[1.8] transition-all duration-700 font-medium ${isLarge ? 'text-xl' : 'text-base'} ${aiSummary ? 'text-text-strong' : 'text-text'}`}>
                                                 {aiSummary || currentClinicalPatient.latestSummary.text}
                                             </div>
                                         </div>
@@ -509,8 +509,8 @@ export const Treatment: React.FC = () => {
                                                     <div className="absolute inset-0 bg-slate-50/20 backdrop-blur-[1px] z-10" />
                                                 )}
 
-                                                <div className="px-10 py-6 border-b border-slate-50/50 bg-white">
-                                                    <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em]">
+                                                <div className="px-10 py-6 border-b border-border bg-white">
+                                                    <p className="text-[10px] font-black text-accent-600 uppercase tracking-[0.2em]">
                                                         {aiQuestions.length > 0 ? "Neural Insights: Follow-up" : "Topics to Cover"}
                                                     </p>
                                                 </div>
@@ -522,9 +522,9 @@ export const Treatment: React.FC = () => {
                                                                 className="group flex items-start gap-4 animate-fade-in"
                                                                 style={{ animationDelay: `${idx * 0.1}s` }}
                                                             >
-                                                                <div className="mt-2 w-1.5 h-1.5 rounded-full bg-blue-500/40 shrink-0 group-hover:bg-blue-600 group-hover:scale-125 transition-all" />
+                                                                <div className="mt-2 w-1.5 h-1.5 rounded-full bg-accent-500/40 shrink-0 group-hover:bg-accent-600 group-hover:scale-125 transition-all" />
                                                                 <div className="flex flex-col gap-1 flex-1">
-                                                                    <p className={`font-bold leading-relaxed transition-all ${isLarge ? 'text-lg' : 'text-[11px]'} text-slate-700 group-hover:text-slate-900`}>
+                                                                    <p className={`font-bold leading-relaxed transition-all ${isLarge ? 'text-lg' : 'text-[11px]'} text-text group-hover:text-text-strong`}>
                                                                         {topic.question || topic.text}
                                                                     </p>
                                                                 </div>
@@ -533,10 +533,10 @@ export const Treatment: React.FC = () => {
                                                     </ul>
 
                                                     {aiQuestions.length > 0 && sessionStep === "followup_questions_ready" && (
-                                                        <div className="mt-8 p-6 bg-blue-100/30 border border-dashed border-blue-200 rounded-[2rem] text-center animate-bounce-short">
-                                                            <AlertCircle className="w-5 h-5 text-blue-500 mx-auto mb-2" />
-                                                            <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Phase 2: Target questions</p>
-                                                            <p className="text-[11px] font-bold text-slate-400 leading-tight mt-1">Please address these questions in the follow-up recording phase.</p>
+                                                        <div className="mt-8 p-6 bg-accent-500/10 border border-dashed border-accent-500/20 rounded-[2rem] text-center animate-bounce-short">
+                                                            <AlertCircle className="w-5 h-5 text-accent-500 mx-auto mb-2" />
+                                                            <p className="text-[10px] font-black text-accent-600 uppercase tracking-widest">Phase 2: Target questions</p>
+                                                            <p className="text-[11px] font-bold text-text-muted leading-tight mt-1">Please address these questions in the follow-up recording phase.</p>
                                                         </div>
                                                     )}
                                                 </div>
@@ -545,19 +545,19 @@ export const Treatment: React.FC = () => {
 
                                         {isFinalStep && soapDraft && (
                                             <div className="flex flex-col h-full animate-fade-in">
-                                                <div className="px-10 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between shrink-0">
-                                                    <h3 className="text-xl font-black text-blue-600 tracking-tight uppercase">Clinical SOAP Documentation</h3>
-                                                    <div className="bg-white px-3 py-1 rounded-lg border border-slate-100 shadow-sm">
-                                                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Final Report</span>
+                                                <div className="px-10 py-5 border-b border-border bg-surface-muted flex items-center justify-between shrink-0">
+                                                    <h3 className="text-xl font-black text-accent-600 tracking-tight uppercase">Clinical SOAP Documentation</h3>
+                                                    <div className="bg-white px-3 py-1 rounded-lg border border-border shadow-sm">
+                                                        <span className="text-[9px] font-black text-text-muted uppercase tracking-widest">Final Report</span>
                                                     </div>
                                                 </div>
                                                 <div className="flex-1 overflow-y-auto p-8 scrollbar-thin">
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                         {(['S', 'O', 'A', 'P'] as const).map(key => (
-                                                            <div key={key} className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm hover:border-blue-100 transition-all">
+                                                            <div key={key} className="p-6 bg-white border border-border rounded-3xl shadow-sm hover:border-accent-500/20 transition-all">
                                                                 <div className="flex items-center gap-3 mb-4">
-                                                                    <span className="w-6 h-6 bg-blue-600 text-white rounded-xl flex items-center justify-center text-[11px] font-black">{key}</span>
-                                                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                                                                    <span className="w-6 h-6 bg-primary text-white rounded-xl flex items-center justify-center text-[11px] font-black">{key}</span>
+                                                                    <span className="text-[9px] font-black text-text-muted uppercase tracking-widest">
                                                                         {key === 'S' ? 'Subjective' : key === 'O' ? 'Objective' : key === 'A' ? 'Assessment' : 'Plan'}
                                                                     </span>
                                                                 </div>
@@ -573,15 +573,15 @@ export const Treatment: React.FC = () => {
                                             </div>
                                         )}
 
-                                        <div className="p-8 border-t border-slate-100 text-center flex items-center justify-center bg-white/50">
+                                        <div className="p-8 border-t border-border text-center flex items-center justify-center bg-white/50">
                                             {isFinalStep ? (
-                                                <div className="flex items-center gap-3 text-emerald-600 bg-emerald-50 px-5 py-2.5 rounded-full border border-emerald-100">
+                                                <div className="flex items-center gap-3 text-accent-600 bg-accent-500/5 px-5 py-2.5 rounded-full border border-accent-500/20">
                                                     <Check className="w-4 h-4" />
                                                     <span className="text-[10px] font-black uppercase tracking-widest">Documentation Ready</span>
                                                 </div>
                                             ) : (
-                                                <div className="flex items-center gap-3 text-slate-400">
-                                                    <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                                                <div className="flex items-center gap-3 text-text-muted">
+                                                    <div className="w-2 h-2 rounded-full bg-accent-500 animate-pulse" />
                                                     <span className="text-[9px] font-black uppercase tracking-widest">Sequence Integrity: Valid</span>
                                                 </div>
                                             )}

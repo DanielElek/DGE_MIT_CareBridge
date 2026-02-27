@@ -27,10 +27,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
   const isDoctorRoute = location.pathname.startsWith('/doctor');
 
   const themes: { name: string; color: any; value: any }[] = [
-    { name: 'Medical Blue', color: '#3b82f6', value: 'blue' },
-    { name: 'Healing Teal', color: '#0d9488', value: 'teal' },
-    { name: 'Royal Indigo', color: '#6366f1', value: 'indigo' },
-    { name: 'Deep Slate', color: '#475569', value: 'slate' },
+    { name: 'ApexCare+', color: '#083A2A', value: 'green' }, // New Fixed Brand Theme
   ];
 
   return (
@@ -38,22 +35,22 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
       {!hideHeader && (
         <header className="glass-header shadow-sm px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-600 rounded-xl shadow-lg shadow-blue-200">
+            <div className="p-2 bg-primary rounded-xl shadow-lg shadow-primary/20">
               <Heart className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight text-slate-800">CareBridge</h1>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600 leading-none">AI Health Companion</p>
+              <h1 className="text-xl font-bold tracking-tight text-text-strong">CareBridge</h1>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-accent-500 leading-none">AI Health Companion</p>
             </div>
           </div>
 
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex bg-slate-100/80 p-1 rounded-xl border border-slate-200">
+            <div className="hidden md:flex bg-surface-muted p-1 rounded-xl border border-border">
               <button
                 onClick={() => handleRoleSwitch('patient')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'patient'
-                  ? 'bg-white text-blue-600 shadow-md'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-white text-primary shadow-md'
+                  : 'text-text-muted hover:text-text-strong'
                   }`}
               >
                 <User className="w-4 h-4" />
@@ -62,8 +59,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
               <button
                 onClick={() => handleRoleSwitch('doctor')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'doctor'
-                  ? 'bg-white text-blue-600 shadow-md'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-white text-primary shadow-md'
+                  : 'text-text-muted hover:text-text-strong'
                   }`}
               >
                 <Stethoscope className="w-4 h-4" />
@@ -86,7 +83,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={() => setTextSize('normal')}
-                        className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${textSize === 'normal' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-200 text-slate-600'
+                        className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${textSize === 'normal' ? 'border-primary bg-accent-500/10 text-primary' : 'border-border text-text-muted'
                           }`}
                       >
                         <span className="text-xs font-bold uppercase">Abc</span>
@@ -94,7 +91,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
                       </button>
                       <button
                         onClick={() => setTextSize('large')}
-                        className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${textSize === 'large' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-200 text-slate-600'
+                        className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${textSize === 'large' ? 'border-primary bg-accent-500/10 text-primary' : 'border-border text-text-muted'
                           }`}
                       >
                         <span className="text-lg font-bold uppercase leading-none">Abc</span>
@@ -168,10 +165,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
 
 const NavLink: React.FC<{ to: string; icon: React.ReactNode; label: string; active: boolean; themeColor: string }> = ({ to, icon, label, active, themeColor }) => {
   const colorMap = {
-    blue: 'bg-blue-600 shadow-blue-200',
-    teal: 'bg-teal-600 shadow-teal-200',
-    indigo: 'bg-indigo-600 shadow-indigo-200',
-    slate: 'bg-slate-700 shadow-slate-200'
+    blue: 'bg-primary shadow-primary/20',
+    teal: 'bg-accent-600 shadow-accent-600/20',
+    indigo: 'bg-primary-900 shadow-primary-900/20',
+    slate: 'bg-text-strong shadow-text-strong/20',
+    green: 'bg-primary shadow-primary/20'
   };
 
   return (

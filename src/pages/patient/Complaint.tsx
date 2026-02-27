@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
@@ -104,13 +104,13 @@ export const Complaint: React.FC = () => {
       <Layout>
         <div className="max-w-2xl mx-auto px-4 py-8 animate-slide-up">
           <div className="mb-8 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent-500/10 text-primary rounded-full text-xs font-bold uppercase tracking-wider mb-3">
               <Sparkles className="w-3 h-3" /> Smart Check-in
             </div>
-            <h2 className={`font-bold text-slate-900 mb-2 ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
+            <h2 className={`font-bold text-text-strong mb-2 ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
               Help us understand better
             </h2>
-            <p className="text-slate-500">Based on your complaint, we have a few follow-up questions.</p>
+            <p className="text-text-muted">Based on your complaint, we have a few follow-up questions.</p>
           </div>
 
           <div className="glass-card p-8 border-slate-200">
@@ -119,19 +119,19 @@ export const Complaint: React.FC = () => {
                 {[...Array(totalQuestions)].map((_, i) => (
                   <div
                     key={i}
-                    className={`h-1.5 rounded-full transition-all duration-500 ${i < currentQuestionIndex ? 'w-8 bg-green-500' :
-                        i === currentQuestionIndex ? 'w-12 bg-blue-600' : 'w-4 bg-slate-200'
+                    className={`h-1.5 rounded-full transition-all duration-500 ${i < currentQuestionIndex ? 'w-8 bg-accent-500' :
+                      i === currentQuestionIndex ? 'w-12 bg-primary' : 'w-4 bg-border'
                       }`}
                   />
                 ))}
               </div>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              <span className="text-xs font-bold text-text-muted uppercase tracking-widest">
                 Question {currentQuestionIndex + 1} / {totalQuestions}
               </span>
             </div>
 
             <div className="min-h-[200px] flex flex-col justify-center mb-10">
-              <h3 className={`font-bold text-slate-800 leading-tight mb-8 ${textSize === 'large' ? 'text-3xl' : 'text-2xl'}`}>
+              <h3 className={`font-bold text-text-strong leading-tight mb-8 ${textSize === 'large' ? 'text-3xl' : 'text-2xl'}`}>
                 {question.question}
               </h3>
 
@@ -140,8 +140,8 @@ export const Complaint: React.FC = () => {
                   <button
                     onClick={() => setCurrentAnswer(true)}
                     className={`flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 ${currentAnswer === true
-                        ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-md scale-[1.02]'
-                        : 'border-slate-100 bg-slate-50 text-slate-600 hover:border-slate-200'
+                      ? 'border-primary bg-accent-500/10 text-primary shadow-md scale-[1.02]'
+                      : 'border-border bg-surface-muted text-text-muted hover:border-accent-500/20'
                       }`}
                   >
                     <CheckCircle2 className={`w-8 h-8 ${currentAnswer === true ? 'text-blue-600' : 'text-slate-300'}`} />
@@ -150,11 +150,11 @@ export const Complaint: React.FC = () => {
                   <button
                     onClick={() => setCurrentAnswer(false)}
                     className={`flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 ${currentAnswer === false
-                        ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-md scale-[1.02]'
-                        : 'border-slate-100 bg-slate-50 text-slate-600 hover:border-slate-200'
+                      ? 'border-primary bg-accent-500/10 text-primary shadow-md scale-[1.02]'
+                      : 'border-border bg-surface-muted text-text-muted hover:border-accent-500/20'
                       }`}
                   >
-                    <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${currentAnswer === false ? 'border-blue-600 text-blue-600' : 'border-slate-300 text-slate-300'}`}>
+                    <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${currentAnswer === false ? 'border-primary text-primary' : 'border-border text-text-muted'}`}>
                       <span className="text-xl font-bold leading-none">×</span>
                     </div>
                     <span className="font-bold text-lg">No</span>
@@ -170,8 +170,8 @@ export const Complaint: React.FC = () => {
                         key={val}
                         onClick={() => setCurrentAnswer(val)}
                         className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${currentAnswer === val
-                            ? 'bg-blue-600 text-white scale-125 shadow-lg shadow-blue-200'
-                            : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                          ? 'bg-primary text-white scale-125 shadow-lg shadow-primary/20'
+                          : 'bg-surface-muted text-text-muted hover:bg-border'
                           }`}
                       >
                         {val}
@@ -192,7 +192,7 @@ export const Complaint: React.FC = () => {
                     value={String(currentAnswer)}
                     onChange={(e) => setCurrentAnswer(e.target.value)}
                     placeholder="Describe briefly..."
-                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 text-lg focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all"
+                    className="w-full bg-surface-muted border-2 border-border rounded-2xl px-6 py-4 text-lg focus:ring-4 focus:ring-accent-500/10 focus:border-accent-500 outline-none transition-all"
                   />
                 </div>
               )}
@@ -227,11 +227,11 @@ export const Complaint: React.FC = () => {
     <Layout>
       <div className="max-w-3xl mx-auto px-4 py-8 animate-slide-up">
         <div className="mb-10">
-          <h2 className={`font-bold text-slate-900 mb-3 ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
+          <h2 className={`font-bold text-text-strong mb-3 ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
             Welcome, Patient
           </h2>
-          <p className="text-slate-500 flex items-center gap-2 text-lg">
-            How are you feeling today? <Sparkles className="w-5 h-5 text-blue-500" />
+          <p className="text-text-muted flex items-center gap-2 text-lg">
+            How are you feeling today? <Sparkles className="w-5 h-5 text-accent-500" />
           </p>
         </div>
 
@@ -240,8 +240,8 @@ export const Complaint: React.FC = () => {
             <button
               onClick={() => setActiveTab('type')}
               className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl font-bold transition-all duration-300 ${activeTab === 'type'
-                  ? 'bg-white text-blue-600 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700'
+                ? 'bg-white text-primary shadow-sm'
+                : 'text-text-muted hover:text-text'
                 }`}
             >
               <Keyboard className="w-5 h-5" />
@@ -250,8 +250,8 @@ export const Complaint: React.FC = () => {
             <button
               onClick={() => setActiveTab('voice')}
               className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl font-bold transition-all duration-300 ${activeTab === 'voice'
-                  ? 'bg-white text-blue-600 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700'
+                ? 'bg-white text-primary shadow-sm'
+                : 'text-text-muted hover:text-text'
                 }`}
             >
               <Mic className="w-5 h-5" />
@@ -277,10 +277,10 @@ export const Complaint: React.FC = () => {
                 {isAnalyzing ? (
                   <div className="flex flex-col items-center">
                     <div className="relative w-24 h-24 mb-6">
-                      <div className="absolute inset-0 rounded-full border-4 border-blue-100"></div>
-                      <div className="absolute inset-0 rounded-full border-4 border-t-blue-600 animate-spin"></div>
+                      <div className="absolute inset-0 rounded-full border-4 border-accent-500/10"></div>
+                      <div className="absolute inset-0 rounded-full border-4 border-t-accent-600 animate-spin"></div>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <Sparkles className="w-8 h-8 text-blue-600" />
+                        <Sparkles className="w-8 h-8 text-accent-600" />
                       </div>
                     </div>
                     <p className="text-xl font-bold text-slate-800 mb-1">Local AI is thinking...</p>
@@ -292,7 +292,7 @@ export const Complaint: React.FC = () => {
                       {[...Array(20)].map((_, i) => (
                         <div
                           key={i}
-                          className="w-1.5 bg-blue-600 rounded-full transition-all duration-150"
+                          className="w-1.5 bg-primary rounded-full transition-all duration-150"
                           style={{ height: `${Math.random() * 100 + 20}%`, animation: `pulse 1s ease-in-out infinite ${i * 0.05}s` }}
                         />
                       ))}
@@ -311,7 +311,7 @@ export const Complaint: React.FC = () => {
                     <div className="bg-slate-50 rounded-2xl p-6 text-left text-slate-600 border border-slate-100 mb-6 leading-relaxed">
                       {complaintText}
                     </div>
-                    <button onClick={() => setComplaintText('')} className="text-blue-600 font-bold hover:underline">
+                    <button onClick={() => setComplaintText('')} className="text-primary font-bold hover:underline">
                       Re-record
                     </button>
                   </div>
@@ -319,9 +319,9 @@ export const Complaint: React.FC = () => {
                   <div className="flex flex-col items-center">
                     <button
                       onClick={simulateRecording}
-                      className="group relative w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center shadow-xl shadow-blue-200 hover:scale-110 transition-all duration-300"
+                      className="group relative w-24 h-24 bg-primary rounded-full flex items-center justify-center shadow-xl shadow-primary/20 hover:scale-110 transition-all duration-300"
                     >
-                      <div className="absolute inset-0 rounded-full bg-blue-600 animate-ping opacity-20"></div>
+                      <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-20"></div>
                       <Mic className="w-10 h-10 text-white" />
                     </button>
                     <p className="mt-8 text-xl font-bold text-slate-800">Tap to start recording</p>

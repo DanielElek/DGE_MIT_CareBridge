@@ -72,27 +72,27 @@ export const Session: React.FC = () => {
       <div className="max-w-[1600px] mx-auto px-4 py-8 animate-slide-up">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div>
-            <h2 className={`font-black text-slate-900 tracking-tight ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
+            <h2 className={`font-black text-text-strong tracking-tight ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
               Interactive Session
             </h2>
-            <p className="text-slate-500 mt-2 text-lg">AI-Augmented consultation with real-time analysis.</p>
+            <p className="text-text-muted mt-2 text-lg">AI-Augmented consultation with real-time analysis.</p>
           </div>
 
-          <div className="flex items-center gap-6 bg-slate-100 p-2 rounded-2xl border border-slate-200">
+          <div className="flex items-center gap-6 bg-surface-muted p-2 rounded-2xl border border-border">
             <div className="flex items-center gap-3 px-4">
-              <div className={`w-3 h-3 rounded-full ${isRecording ? 'bg-red-500 animate-pulse' : 'bg-slate-300'}`} />
-              <span className="font-mono font-black text-xl text-slate-700">{formatTime(recordingTime)}</span>
+              <div className={`w-3 h-3 rounded-full ${isRecording ? 'bg-danger animate-pulse' : 'bg-border'}`} />
+              <span className="font-mono font-black text-xl text-text-strong">{formatTime(recordingTime)}</span>
             </div>
             {isRecording ? (
-              <button onClick={handleStopRecording} className="flex items-center gap-2 px-6 py-2.5 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg active:scale-95">
+              <button onClick={handleStopRecording} className="flex items-center gap-2 px-6 py-2.5 bg-danger text-white rounded-xl font-bold hover:bg-danger-700 transition-all shadow-lg shadow-danger/20 active:scale-95">
                 <Square className="w-4 h-4 fill-white" /> Stop
               </button>
             ) : hasRecording ? (
-              <button onClick={() => navigate('/doctor/soap')} className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg active:scale-95">
+              <button onClick={() => navigate('/doctor/soap')} className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl font-bold hover:bg-primary-900 transition-all shadow-lg shadow-primary/20 active:scale-95">
                 Analyze & Generate SOAP <ArrowRight className="w-4 h-4" />
               </button>
             ) : (
-              <button onClick={handleStartRecording} className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg active:scale-95">
+              <button onClick={handleStartRecording} className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl font-bold hover:bg-primary-900 transition-all shadow-lg shadow-primary/20 active:scale-95">
                 <Mic className="w-4 h-4" /> Record Session
               </button>
             )}
@@ -102,16 +102,16 @@ export const Session: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Main Transcript Panel */}
           <div className="lg:col-span-8 flex flex-col h-[700px]">
-            <div className="glass-card flex-1 border-slate-200 overflow-hidden flex flex-col">
-              <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-                <div className="flex items-center gap-2 text-slate-500 font-bold text-xs uppercase tracking-widest">
+            <div className="glass-card flex-1 border-border overflow-hidden flex flex-col">
+              <div className="px-6 py-4 border-b border-border bg-surface-muted/50 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-text-muted font-bold text-xs uppercase tracking-widest">
                   <MessageSquare className="w-4 h-4" /> Live Transcription
                 </div>
                 <div className="flex items-center gap-4 text-[10px] font-bold">
-                  <span className="flex items-center gap-1.5 text-green-600">
-                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" /> Mic Active
+                  <span className="flex items-center gap-1.5 text-primary">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" /> Mic Active
                   </span>
-                  <span className="text-slate-400">EN-US</span>
+                  <span className="text-text-muted">EN-US</span>
                 </div>
               </div>
 
@@ -126,26 +126,26 @@ export const Session: React.FC = () => {
 
                 {transcript.map((line, i) => (
                   <div key={i} className={`flex gap-4 animate-slide-up ${line.speaker === 'Doctor' ? 'opacity-60' : ''}`}>
-                    <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold ${line.speaker === 'Doctor' ? 'bg-slate-100 text-slate-500' : 'bg-blue-100 text-blue-600'
+                    <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold ${line.speaker === 'Doctor' ? 'bg-surface-muted text-text-muted' : 'bg-accent-500/10 text-primary'
                       }`}>
                       {line.speaker[0]}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-bold text-slate-400">{line.speaker}</span>
-                        <span className="text-[10px] text-slate-300">{line.time}</span>
+                        <span className="text-xs font-bold text-text-muted">{line.speaker}</span>
+                        <span className="text-[10px] text-text-muted/50">{line.time}</span>
                       </div>
-                      <p className="text-slate-700 font-medium leading-relaxed">{line.text}</p>
+                      <p className="text-text font-medium leading-relaxed">{line.text}</p>
                     </div>
                   </div>
                 ))}
                 <div ref={transcriptEndRef} />
               </div>
 
-              <div className="p-4 border-t border-slate-100 bg-white">
+              <div className="p-4 border-t border-border bg-white">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-indigo-50 rounded-lg text-indigo-500 animate-pulse"><Zap className="w-4 h-4" /></div>
-                  <p className="text-xs font-medium text-slate-500">AI is listening and flags potential clinical themes in real-time...</p>
+                  <div className="p-2 bg-accent-500/10 rounded-lg text-primary animate-pulse"><Zap className="w-4 h-4" /></div>
+                  <p className="text-xs font-medium text-text-muted">AI is listening and flags potential clinical themes in real-time...</p>
                 </div>
               </div>
             </div>
@@ -154,8 +154,8 @@ export const Session: React.FC = () => {
           {/* AI Suggestions / Sidebars */}
           <div className="lg:col-span-4 space-y-6">
             {/* Dynamic AI Insights */}
-            <div className="glass-card p-6 border-indigo-100 bg-indigo-50/10">
-              <div className="flex items-center gap-2 mb-6 text-indigo-600">
+            <div className="glass-card p-6 border-accent-500/10 bg-accent-500/5">
+              <div className="flex items-center gap-2 mb-6 text-primary">
                 <ShieldCheck className="w-5 h-5" />
                 <h4 className="font-bold uppercase tracking-wider text-xs">Real-time Insights</h4>
               </div>
@@ -174,7 +174,7 @@ export const Session: React.FC = () => {
                   desc="Onset clarified as '3 days ago'. Ask about previous episodes."
                 />
                 <InsightItem
-                  icon={<AlertTriangle className="w-4 h-4 text-orange-500" />}
+                  icon={<AlertTriangle className="w-4 h-4 text-warning" />}
                   active={false}
                   title="Red Flag Monitor"
                   desc="No mentions of saddle anesthesia or bowel/bladder issues yet."
@@ -183,20 +183,20 @@ export const Session: React.FC = () => {
             </div>
 
             {/* Patient Snapshot */}
-            <div className="glass-card p-6 border-slate-200">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Patient Snapshot</h4>
-              <div className="flex items-center gap-4 mb-6 p-3 bg-slate-50 rounded-xl">
-                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-slate-200 shadow-sm font-black text-indigo-600">JD</div>
+            <div className="glass-card p-6 border-border">
+              <h4 className="text-xs font-bold text-text-muted uppercase tracking-widest mb-4">Patient Snapshot</h4>
+              <div className="flex items-center gap-4 mb-6 p-3 bg-surface-muted rounded-xl">
+                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-border shadow-sm font-black text-primary">JD</div>
                 <div>
-                  <p className="font-bold text-slate-800 text-sm">John Doe</p>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">68y • Male • Lumbar Sx</p>
+                  <p className="font-bold text-text-strong text-sm">John Doe</p>
+                  <p className="text-[10px] text-text-muted font-bold uppercase tracking-tighter">68y • Male • Lumbar Sx</p>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <p className="text-xs font-bold text-slate-600 px-1">Recent Intake Notes:</p>
+                <p className="text-xs font-bold text-text-strong px-1">Recent Intake Notes:</p>
                 {patientData?.summary.bullets.slice(0, 2).map((b, i) => (
-                  <div key={i} className="text-[11px] leading-relaxed text-slate-500 font-medium p-2 border-l-2 border-slate-100">
+                  <div key={i} className="text-[11px] leading-relaxed text-text-muted font-medium p-2 border-l-2 border-border">
                     {b}
                   </div>
                 ))}
@@ -205,15 +205,15 @@ export const Session: React.FC = () => {
 
             {/* Processing Overlay if needed */}
             {isProcessing && (
-              <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[100] flex items-center justify-center p-6">
-                <div className="glass-card p-12 text-center max-w-sm border-white/20 bg-white/80 shadow-2xl animate-scale-up">
-                  <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-indigo-50 shadow-inner">
-                    <Zap className="w-10 h-10 text-indigo-600 animate-pulse" />
+              <div className="fixed inset-0 bg-primary/40 backdrop-blur-md z-[100] flex items-center justify-center p-6">
+                <div className="glass-card p-12 text-center max-w-sm border-white/20 bg-white shadow-2xl animate-scale-up">
+                  <div className="w-20 h-20 bg-accent-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-accent-500/20 shadow-inner">
+                    <Zap className="w-10 h-10 text-primary animate-pulse" />
                   </div>
-                  <h3 className="text-2xl font-black text-slate-900 mb-2">Analyzing Session</h3>
-                  <p className="text-slate-600 font-medium mb-8">Generating structured clinical hints based on the audio history...</p>
-                  <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-indigo-600 animate-progress" style={{ width: '100%' }} />
+                  <h3 className="text-2xl font-black text-text-strong mb-2">Analyzing Session</h3>
+                  <p className="text-text-muted font-medium mb-8">Generating structured clinical hints based on the audio history...</p>
+                  <div className="w-full h-2 bg-surface-muted rounded-full overflow-hidden">
+                    <div className="h-full bg-primary animate-progress" style={{ width: '100%' }} />
                   </div>
                 </div>
               </div>
@@ -226,13 +226,13 @@ export const Session: React.FC = () => {
 };
 
 const InsightItem: React.FC<{ icon: React.ReactNode; title: string; desc: string; active: boolean }> = ({ icon, title, desc, active }) => (
-  <div className={`p-4 rounded-xl border transition-all duration-500 ${active ? 'bg-white border-indigo-200 shadow-sm opacity-100 scale-100' : 'bg-slate-50 border-slate-100 opacity-40 grayscale translate-y-2'
+  <div className={`p-4 rounded-xl border transition-all duration-500 ${active ? 'bg-white border-accent-500/20 shadow-sm opacity-100 scale-100' : 'bg-surface-muted border-border opacity-40 grayscale translate-y-2'
     }`}>
-    <div className="flex items-center gap-2 mb-2 text-indigo-600">
+    <div className="flex items-center gap-2 mb-2 text-primary">
       {icon}
       <span className="text-xs font-bold">{title}</span>
     </div>
-    <p className="text-[11px] font-medium text-slate-600 leading-normal">{desc}</p>
+    <p className="text-[11px] font-medium text-text-muted leading-normal">{desc}</p>
   </div>
 );
 

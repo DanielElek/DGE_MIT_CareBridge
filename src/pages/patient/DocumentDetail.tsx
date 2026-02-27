@@ -21,7 +21,7 @@ export const DocumentDetail: React.FC = () => {
     return (
       <Layout>
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <p className={`text-gray-600 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
+          <p className={`text-text-muted ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
             Document not found
           </p>
         </div>
@@ -52,18 +52,18 @@ export const DocumentDetail: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 py-8">
         <button
           onClick={() => navigate('/patient/documents')}
-          className={`flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-6 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}
+          className={`flex items-center gap-2 text-primary hover:text-accent-600 transition-colors mb-6 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}
         >
           <ArrowLeft className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
           Back to documents
         </button>
 
         <div className="space-y-6">
-          <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-            <h2 className={`font-bold text-gray-900 mb-2 ${textSize === 'large' ? 'text-3xl' : 'text-2xl'}`}>
+          <div className={`bg-white rounded-lg shadow-sm border border-border ${cardPaddingClass}`}>
+            <h2 className={`font-bold text-text-strong mb-2 ${textSize === 'large' ? 'text-3xl' : 'text-2xl'}`}>
               {document.title}
             </h2>
-            <p className={`text-gray-600 mb-6 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
+            <p className={`text-text-muted mb-6 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
               {new Date(document.date).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -71,11 +71,11 @@ export const DocumentDetail: React.FC = () => {
               })}
             </p>
 
-            <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
+            <h3 className={`font-bold text-text-strong mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
               Clinical wording
             </h3>
-            <div className={`bg-gray-50 rounded-lg p-6 border border-gray-200 ${textSize === 'large' ? 'text-lg leading-relaxed' : 'text-base leading-relaxed'}`}>
-              <p className="text-gray-700 whitespace-pre-line">
+            <div className={`bg-surface-muted rounded-lg p-6 border border-border ${textSize === 'large' ? 'text-lg leading-relaxed' : 'text-base leading-relaxed'}`}>
+              <p className="text-text whitespace-pre-line">
                 {document.clinicalText}
               </p>
             </div>
@@ -85,7 +85,7 @@ export const DocumentDetail: React.FC = () => {
             <button
               onClick={handleExplain}
               disabled={isExplaining}
-              className={`w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 ${buttonSizeClass}`}
+              className={`w-full flex items-center justify-center gap-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-900 transition-colors disabled:opacity-50 shadow-lg shadow-primary/20 ${buttonSizeClass}`}
             >
               {isExplaining ? (
                 <>
@@ -103,53 +103,53 @@ export const DocumentDetail: React.FC = () => {
 
           {showExplanation && (
             <>
-              <div className={`bg-blue-50 rounded-lg border border-blue-200 ${cardPaddingClass}`}>
-                <h3 className={`font-bold text-blue-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
+              <div className={`bg-accent-500/5 rounded-lg border border-accent-500/10 ${cardPaddingClass}`}>
+                <h3 className={`font-bold text-primary mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
                   Plain-language explanation
                 </h3>
                 <ul className={`space-y-3 mb-6 ${textSize === 'large' ? 'text-lg leading-relaxed' : 'text-base leading-relaxed'}`}>
                   {document.plainLanguageExplanation.map((item, index) => (
                     <li key={index} className="flex items-start">
-                      <span className="text-blue-600 mr-3 mt-1">•</span>
-                      <span className="text-blue-900">{item}</span>
+                      <span className="text-accent-500 mr-3 mt-1">•</span>
+                      <span className="text-text">{item}</span>
                     </li>
                   ))}
                 </ul>
 
-                <h4 className={`font-bold text-blue-900 mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
+                <h4 className={`font-bold text-primary mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
                   Key takeaways
                 </h4>
                 <ul className={`space-y-2 mb-6 ${textSize === 'large' ? 'text-lg leading-relaxed' : 'text-base leading-relaxed'}`}>
                   {document.keyTakeaways.map((item, index) => (
                     <li key={index} className="flex items-start">
-                      <CheckCircle2 className={`text-blue-600 mr-3 flex-shrink-0 ${textSize === 'large' ? 'w-6 h-6 mt-0.5' : 'w-5 h-5 mt-0.5'}`} />
-                      <span className="text-blue-900">{item}</span>
+                      <CheckCircle2 className={`text-accent-500 mr-3 flex-shrink-0 ${textSize === 'large' ? 'w-6 h-6 mt-0.5' : 'w-5 h-5 mt-0.5'}`} />
+                      <span className="text-text">{item}</span>
                     </li>
                   ))}
                 </ul>
 
-                <h4 className={`font-bold text-blue-900 mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
+                <h4 className={`font-bold text-primary mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
                   Questions to ask your clinician
                 </h4>
                 <ul className={`space-y-2 ${textSize === 'large' ? 'text-lg leading-relaxed' : 'text-base leading-relaxed'}`}>
                   {document.questionsToAsk.map((item, index) => (
                     <li key={index} className="flex items-start">
-                      <span className="text-blue-600 mr-3 mt-1">?</span>
-                      <span className="text-blue-900">{item}</span>
+                      <span className="text-accent-500 mr-3 mt-1">?</span>
+                      <span className="text-text">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className={`bg-gray-50 rounded-lg border border-gray-200 ${cardPaddingClass}`}>
-                <h4 className={`font-bold text-gray-900 mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
+              <div className={`bg-surface-muted rounded-lg border border-border ${cardPaddingClass}`}>
+                <h4 className={`font-bold text-text-strong mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
                   Key medical terms
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {document.keyTerms.map((term, index) => (
                     <span
                       key={index}
-                      className={`inline-block bg-white border-2 border-gray-300 text-gray-700 rounded-full px-4 py-2 font-medium ${textSize === 'large' ? 'text-base' : 'text-sm'}`}
+                      className={`inline-block bg-white border-2 border-border text-text rounded-full px-4 py-2 font-medium ${textSize === 'large' ? 'text-base' : 'text-sm'}`}
                     >
                       {term}
                     </span>
@@ -157,8 +157,8 @@ export const DocumentDetail: React.FC = () => {
                 </div>
               </div>
 
-              <div className={`bg-yellow-50 rounded-lg border border-yellow-200 ${cardPaddingClass}`}>
-                <p className={`text-yellow-900 font-medium ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
+              <div className={`bg-warning/10 rounded-lg border border-warning/20 ${cardPaddingClass}`}>
+                <p className={`text-warning-800 font-medium ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
                   Not medical advice. Discuss with your clinician.
                 </p>
               </div>
@@ -166,14 +166,14 @@ export const DocumentDetail: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={handleCopy}
-                  className={`flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors ${buttonSizeClass}`}
+                  className={`flex items-center justify-center gap-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-900 transition-colors shadow-lg shadow-primary/20 ${buttonSizeClass}`}
                 >
                   <Copy className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
                   {copied ? 'Copied!' : 'Copy explanation'}
                 </button>
                 <button
                   onClick={handlePrint}
-                  className={`flex items-center justify-center gap-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors ${buttonSizeClass}`}
+                  className={`flex items-center justify-center gap-2 bg-white border-2 border-border text-text-muted rounded-lg font-medium hover:bg-surface-muted hover:text-text-strong transition-colors ${buttonSizeClass}`}
                 >
                   <Printer className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
                   Print

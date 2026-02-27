@@ -3,12 +3,47 @@
 @tailwind utilities;
 
 :root {
-    --primary-bg: #f8fafc;
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --accent-blue: #3b82f6;
-    --accent-teal: #0d9488;
-    --medical-surface: #ffffff;
+    /* Brand Palette - RAW HEX */
+    --primary-900: #083A2A;
+    --primary-800: #0C4A34;
+    --primary-700: #0F5A3F;
+    --primary-600: #137353;
+
+    --accent-600: #19A974;
+    --accent-500: #22C58B;
+    --accent-400: #3ED6A1;
+
+    --bg: #F6F8F7;
+    --surface: #FFFFFF;
+    --surface-muted: #EEF2F0;
+
+    --text-strong: #0B1511;
+    --text: #1B2B24;
+    --text-muted: #5B6B63;
+
+    /* Functional Mappings */
+    --background: var(--bg);
+    --foreground: var(--text);
+
+    --card: var(--surface);
+    --card-foreground: var(--text);
+
+    --muted: var(--surface-muted);
+    --muted-foreground: var(--text-muted);
+
+    --border: rgba(10, 30, 22, 0.10);
+    --input: rgba(10, 30, 22, 0.05);
+    --ring: var(--accent-500);
+
+    --primary: var(--primary-800);
+    --primary-foreground: var(--surface);
+
+    --accent: var(--accent-500);
+    --accent-foreground: var(--surface);
+
+    --success: var(--accent-500);
+    --warning: #F2B94B;
+    --danger: #D64545;
 }
 
 @layer base {
@@ -17,12 +52,14 @@
         text-rendering: geometricPrecision;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        background-color: var(--bg);
     }
 
     body {
-        @apply bg-white text-slate-900 text-[18px] leading-[1.6];
-        background: radial-gradient(circle at 100% 0%, #f1f5fe 0%, #ffffff 50%, #f8fafc 100%);
+        @apply text-slate-900 text-[18px] leading-[1.6];
+        background: radial-gradient(circle at 100% 0%, #edf3f0 0%, #f6f8f7 50%, #f1f4f2 100%);
         min-height: 100vh;
+        color: var(--text);
     }
 
     h1,
@@ -32,6 +69,7 @@
     h5,
     h6 {
         @apply tracking-tighter;
+        color: var(--text-strong);
     }
 }
 
@@ -48,27 +86,34 @@
     .display-type {
         font-size: clamp(48px, 6vw, 96px);
         @apply font-light leading-display tracking-tightest;
+        color: var(--text-strong);
     }
 
     .headline-type {
         font-size: clamp(32px, 4vw, 48px);
         @apply font-medium leading-tight tracking-tighter;
+        color: var(--text-strong);
     }
 
     .body-type {
         @apply text-[18px] leading-[1.6] font-normal;
+        color: var(--text);
     }
 
     .btn-primary {
-        @apply px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl transition-all duration-300 hover:bg-blue-700 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100;
+        @apply px-6 py-3 bg-primary-800 text-white font-semibold rounded-xl transition-all duration-300 hover:bg-primary-700 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100;
+    }
+
+    .btn-accent {
+        @apply px-6 py-3 bg-accent-500 text-white font-semibold rounded-xl transition-all duration-300 hover:bg-accent-600 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98];
     }
 
     .btn-secondary {
-        @apply px-6 py-3 bg-white text-slate-700 font-semibold border border-slate-200 rounded-xl transition-all duration-300 hover:bg-slate-50 hover:shadow-md active:scale-[0.98];
+        @apply px-6 py-3 bg-white text-text font-semibold border border-border rounded-xl transition-all duration-300 hover:bg-muted hover:shadow-md active:scale-[0.98];
     }
 
     .input-field {
-        @apply w-full bg-white/50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all;
+        @apply w-full bg-white/50 border border-border rounded-xl px-4 py-3 focus:ring-2 focus:ring-opacity-20 focus:border-accent-500 outline-none transition-all;
     }
 }
 
