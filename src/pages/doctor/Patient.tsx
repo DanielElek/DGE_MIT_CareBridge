@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
 import { Search, User, Calendar, ChevronDown, ChevronUp, Save, LogOut, ArrowRight, Clock, Plus, FileText, Heart, Play } from 'lucide-react';
-import { MOCK_CLINICAL_PATIENT } from '../../mockData';
+import { MOCK_CLINICAL_PATIENT, mockTrends } from '../../mockData';
+
 
 export const Patient: React.FC = () => {
   const { currentClinicalPatient, setCurrentClinicalPatient, clinicalNotes, setClinicalNotes } = useApp();

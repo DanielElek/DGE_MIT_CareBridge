@@ -97,15 +97,17 @@ export interface ClinicalPatientData {
     conditions: string[];
     alerts: string[];
   };
+  email?: string;
   suggestedTopics: SuggestedTopic[];
 }
 
 export const MOCK_CLINICAL_PATIENT: ClinicalPatientData = {
   code: 'DEMO-001',
-  name: 'Johnathan Doe',
+  name: 'Mike Oxlong',
   age: 68,
   sex: 'Male',
   lastVisit: 'Oct 12, 2025',
+  email: 'johnathan.doe@example.com',
   latestSummary: {
     createdAt: '2 hours ago',
     text: "Patient reports persistent lower back pain originating from early this week after moving heavy boxes. The pain is described as a 'tight, dull ache' when sedentary, but spikes to a 'sharp, stabbing sensation' (Pain 7/10) during lumbar rotation or lifting tasks. He notes slight radiation of numbness down the lateral aspect of the right thigh, terminating at the knee. No history of saddle anesthesia or bowel/bladder dysfunction. He has been using OTC ibuprofen (400mg) with moderate, temporary relief. Sleep quality is moderately impacted (5-6 hours/night) due to difficulty finding a comfortable position. He is concerned about his mobility for an upcoming family trip."
