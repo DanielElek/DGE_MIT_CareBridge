@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../AppContext';
-import { Heart, Settings, User, Stethoscope, ChevronDown, Check, Monitor, LayoutGrid, FileText, Activity } from 'lucide-react';
+import { Heart, Settings, User, Stethoscope, Check, Monitor, LayoutGrid, FileText, Activity } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -52,8 +52,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
               <button
                 onClick={() => handleRoleSwitch('patient')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'patient'
-                    ? 'bg-white text-blue-600 shadow-md'
-                    : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-white text-blue-600 shadow-md'
+                  : 'text-slate-500 hover:text-slate-800'
                   }`}
               >
                 <User className="w-4 h-4" />
@@ -62,8 +62,8 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
               <button
                 onClick={() => handleRoleSwitch('doctor')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'doctor'
-                    ? 'bg-white text-blue-600 shadow-md'
-                    : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-white text-blue-600 shadow-md'
+                  : 'text-slate-500 hover:text-slate-800'
                   }`}
               >
                 <Stethoscope className="w-4 h-4" />
@@ -127,31 +127,21 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
         </header>
       )}
 
-      <div className="flex-1 flex flex-col md:flex-row max-w-[1600px] mx-auto w-full">
-        {!hideHeader && (isPatientRoute || isDoctorRoute) && (
-          <aside className="w-full md:w-64 p-6 shrink-0">
-            <nav className="space-y-2 sticky top-24">
-              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-4 px-4">Navigation</div>
-              {role === 'patient' ? (
-                <>
-                  <NavLink to="/patient/complaint" icon={<Monitor className="w-5 h-5" />} label="New Intake" active={location.pathname === '/patient/complaint'} />
-                  <NavLink to="/patient/summary" icon={<LayoutGrid className="w-5 h-5" />} label="My Summary" active={location.pathname === '/patient/summary'} />
-                  <NavLink to="/patient/trends" icon={<Activity className="w-5 h-5" />} label="Health Trends" active={location.pathname === '/patient/trends'} />
-                  <NavLink to="/patient/documents" icon={<FileText className="w-5 h-5" />} label="Records" active={location.pathname.startsWith('/patient/documents')} />
-                </>
-              ) : (
-                <>
-                  <NavLink to="/doctor/patient" icon={<User className="w-5 h-5" />} label="Patient Record" active={location.pathname === '/doctor/patient'} />
-                  <NavLink to="/doctor/session" icon={<Activity className="w-5 h-5" />} label="Active Session" active={location.pathname === '/doctor/session'} />
-                  <NavLink to="/doctor/soap" icon={<FileText className="w-5 h-5" />} label="SOAP Notes" active={location.pathname === '/doctor/soap'} />
-                </>
-              )}
+      <div className="flex-1 flex flex-col md:flex-row w-full overflow-hidden">
+        {!hideHeader && isPatientRoute && (
+          <aside className="w-full md:w-64 p-6 shrink-0 border-r border-slate-100 bg-white/30">
+            <nav className="space-y-1 sticky top-24">
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-4 opacity-70">Patient Portal</div>
+              <NavLink to="/patient/complaint" icon={<Monitor className="w-5 h-5" />} label="New Intake" active={location.pathname === '/patient/complaint'} themeColor={themeColor} />
+              <NavLink to="/patient/summary" icon={<LayoutGrid className="w-5 h-5" />} label="My Summary" active={location.pathname === '/patient/summary'} themeColor={themeColor} />
+              <NavLink to="/patient/trends" icon={<Activity className="w-5 h-5" />} label="Health Trends" active={location.pathname === '/patient/trends'} themeColor={themeColor} />
+              <NavLink to="/patient/documents" icon={<FileText className="w-5 h-5" />} label="Records" active={location.pathname.startsWith('/patient/documents')} themeColor={themeColor} />
             </nav>
           </aside>
         )}
 
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto animate-slide-up">
-          <div className="max-w-4xl mx-auto w-full">
+        <main className={`flex-1 overflow-y-auto animate-slide-up ${isDoctorRoute ? 'p-0' : 'p-6 md:p-8'}`}>
+          <div className={`${isDoctorRoute ? 'max-w-none' : 'max-w-4xl'} mx-auto w-full h-full`}>
             {children}
           </div>
         </main>
@@ -176,16 +166,27 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
   );
 };
 
-const NavLink: React.FC<{ to: string; icon: React.ReactNode; label: string; active: boolean }> = ({ to, icon, label, active }) => (
-  <Link
-    to={to}
-    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${active
-        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+const NavLink: React.FC<{ to: string; icon: React.ReactNode; label: string; active: boolean; themeColor: string }> = ({ to, icon, label, active, themeColor }) => {
+  const colorMap = {
+    blue: 'bg-blue-600 shadow-blue-200',
+    teal: 'bg-teal-600 shadow-teal-200',
+    indigo: 'bg-indigo-600 shadow-indigo-200',
+    slate: 'bg-slate-700 shadow-slate-200'
+  };
+
+  return (
+    <Link
+      to={to}
+      className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all duration-300 ${active
+        ? `${colorMap[themeColor as keyof typeof colorMap] || colorMap.blue} text-white shadow-lg`
         : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
-      }`}
-  >
-    {icon}
-    <span>{label}</span>
-  </Link>
-);
+        }`}
+    >
+      <div className={active ? 'text-white' : 'text-slate-400 group-hover:text-slate-600'}>
+        {icon}
+      </div>
+      <span>{label}</span>
+    </Link>
+  );
+};
 

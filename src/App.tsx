@@ -8,6 +8,7 @@ import { DocumentDetail } from './pages/patient/DocumentDetail';
 import { Patient } from './pages/doctor/Patient';
 import { Session } from './pages/doctor/Session';
 import { SOAP } from './pages/doctor/SOAP';
+import { Treatment } from './pages/doctor/Treatment';
 import { Print } from './pages/Print';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/patient/documents/:docId" element={<DocumentDetail />} />
 
           <Route path="/doctor/patient" element={<Patient />} />
+          <Route path="/doctor/treatment" element={<Treatment />} />
           <Route path="/doctor/session" element={<Session />} />
           <Route path="/doctor/soap" element={<SOAP />} />
 

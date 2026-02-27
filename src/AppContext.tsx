@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import {
   PatientData,
-  SmartIntakeQuestion,
   SmartIntakeAnswer,
   mockTrends,
   mockDocuments,
@@ -9,7 +8,7 @@ import {
   generateSmartIntakeQuestions,
   generateEnrichedComplaint,
   generatePatientSummary,
-  PATIENT_ID
+  ClinicalPatientData
 } from './mockData';
 
 type Role = 'patient' | 'doctor';
@@ -31,6 +30,10 @@ interface AppContextType {
   documents: typeof mockDocuments;
   doctorSession: typeof mockDoctorSession;
   updateSOAP: (soap: typeof mockDoctorSession.soap) => void;
+  currentClinicalPatient: ClinicalPatientData | null;
+  setCurrentClinicalPatient: (data: ClinicalPatientData | null) => void;
+  clinicalNotes: string;
+  setClinicalNotes: (notes: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -41,6 +44,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [themeColor, setThemeColor] = useState<ThemeColor>('blue');
   const [patientData, setPatientData] = useState<PatientData | null>(null);
   const [sessionData, setSessionData] = useState(mockDoctorSession);
+  const [currentClinicalPatient, setCurrentClinicalPatient] = useState<ClinicalPatientData | null>(null);
+  const [clinicalNotes, setClinicalNotes] = useState('');
 
   // Apply text size to root element for global scaling
   useEffect(() => {
@@ -114,7 +119,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         trends: mockTrends,
         documents: mockDocuments,
         doctorSession: sessionData,
-        updateSOAP
+        updateSOAP,
+        currentClinicalPatient,
+        setCurrentClinicalPatient,
+        clinicalNotes,
+        setClinicalNotes
       }}
     >
       <div className={`theme-${themeColor}`}>

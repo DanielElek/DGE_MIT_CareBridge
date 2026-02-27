@@ -64,6 +64,76 @@ export interface DoctorSession {
   };
 }
 
+export interface TimelineItem {
+  id: string;
+  date: string;
+  title: string;
+  notes: string;
+  status: 'completed' | 'ongoing' | 'scheduled';
+  details: string;
+}
+
+export interface SuggestedTopic {
+  id: string;
+  text: string;
+  priority: 'high' | 'med' | 'low';
+  checked: boolean;
+}
+
+export interface ClinicalPatientData {
+  code: string;
+  name: string;
+  age: number;
+  sex: string;
+  lastVisit: string;
+  latestSummary: {
+    text: string;
+    createdAt: string;
+  };
+  timeline: TimelineItem[];
+  snapshot: {
+    allergies: string[];
+    medications: string[];
+    conditions: string[];
+    alerts: string[];
+  };
+  suggestedTopics: SuggestedTopic[];
+}
+
+export const MOCK_CLINICAL_PATIENT: ClinicalPatientData = {
+  code: 'DEMO-001',
+  name: 'Johnathan Doe',
+  age: 68,
+  sex: 'Male',
+  lastVisit: 'Oct 12, 2025',
+  latestSummary: {
+    createdAt: '2 hours ago',
+    text: "Patient reports persistent lower back pain originating from early this week after moving heavy boxes. The pain is described as a 'tight, dull ache' when sedentary, but spikes to a 'sharp, stabbing sensation' (Pain 7/10) during lumbar rotation or lifting tasks. He notes slight radiation of numbness down the lateral aspect of the right thigh, terminating at the knee. No history of saddle anesthesia or bowel/bladder dysfunction. He has been using OTC ibuprofen (400mg) with moderate, temporary relief. Sleep quality is moderately impacted (5-6 hours/night) due to difficulty finding a comfortable position. He is concerned about his mobility for an upcoming family trip."
+  },
+  timeline: [
+    { id: '1', date: 'Oct 12, 2025', title: 'Physiotherapy Assessment', notes: 'Initial lumbar mobility test.', status: 'completed', details: 'Decreased ROM in flexion (45 deg). SLR positive on right at 60 deg. Recommendation: Core stability exercises.' },
+    { id: '2', date: 'Sep 28, 2025', title: 'GP Routine Follow-up', notes: 'BP stable. Discussed weight mgmt.', status: 'completed', details: 'Weight loss of 2kg achieved. HbA1c remains within target range (5.8%).' },
+    { id: '3', date: 'Aug 15, 2025', title: 'Orthopedic Consultation', notes: 'Pre-MRI screening for hip pain.', status: 'completed', details: 'Right hip OA suspected. MRI ordered for confirm. Patient advised to avoid high-impact activity.' },
+    { id: '4', date: 'Jul 02, 2025', title: 'Diagnostic Imaging (MRI)', notes: 'Full spine and hip scan.', status: 'completed', details: 'Mild degenerative changes in L4-L5 discs noted. No significant stenosis.' },
+    { id: '5', date: 'May 10, 2025', title: 'Blood Panel', notes: 'Metabolic and lipid profile.', status: 'completed', details: 'LDL slightly elevated (135 mg/dL). Discussed dietary adjustments.' },
+    { id: '6', date: 'Nov 12, 2024', title: 'Cardiac Screening', notes: 'Annual ECG and stress test.', status: 'completed', details: 'ECG normal. Stress test showed good endurance for age.' },
+  ],
+  snapshot: {
+    allergies: ['Penicillin', 'Latex'],
+    medications: ['Lisinopril 10mg', 'Atorvastatin 20mg'],
+    conditions: ['Hypertension', 'Type 2 Diabetes (Controlled)', 'Mild Osteoarthritis'],
+    alerts: ['High Falls Risk', 'Cardiac History']
+  },
+  suggestedTopics: [
+    { id: '1', text: 'Confirm pain level (reported 7/10)', priority: 'high', checked: false },
+    { id: '2', text: 'Discuss numbness in right thigh', priority: 'high', checked: false },
+    { id: '3', text: 'Review OTC Ibuprofen usage', priority: 'med', checked: false },
+    { id: '4', text: 'Address mobility concerns for family trip', priority: 'med', checked: false },
+    { id: '5', text: 'Perform lumbar rotation mobility test', priority: 'low', checked: false },
+    { id: '6', text: 'Discuss core stability exercises schedule', priority: 'low', checked: false }
+  ]
+};
+
 const generateTrendData = (days: number): TrendEntry[] => {
   const entries: TrendEntry[] = [];
   const today = new Date();

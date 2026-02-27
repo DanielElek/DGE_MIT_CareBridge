@@ -2,227 +2,219 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
-import { Search, ArrowRight, FileText, User, Activity, ShieldCheck, AlertCircle, MoreVertical, ExternalLink } from 'lucide-react';
-import { PATIENT_ID } from '../../mockData';
+import { Search, User, Calendar, ChevronDown, ChevronUp, Save, LogOut, ArrowRight, Clock, Plus, FileText, Heart, Play } from 'lucide-react';
+import { MOCK_CLINICAL_PATIENT } from '../../mockData';
 
 export const Patient: React.FC = () => {
-  const { patientData, trends, textSize } = useApp();
+  const { currentClinicalPatient, setCurrentClinicalPatient, clinicalNotes, setClinicalNotes } = useApp();
   const navigate = useNavigate();
-  const [patientId, setPatientId] = useState(PATIENT_ID);
-  const [isLoaded, setIsLoaded] = useState(true); // Default to true for demo speed
+  const [lookupCode, setLookupCode] = useState('');
+  const [error, setError] = useState('');
+  const [expandedSummary, setExpandedSummary] = useState(false);
+  const [expandedTimeline, setExpandedTimeline] = useState<string | null>(null);
 
-  const handleLoadPatient = () => {
-    setIsLoaded(true);
+  const handleLoad = () => {
+    if (lookupCode.trim().toUpperCase() === 'DEMO-001') {
+      setCurrentClinicalPatient(MOCK_CLINICAL_PATIENT);
+      setError('');
+    } else {
+      setError('Invalid code. Try DEMO-001 for this demo.');
+    }
   };
 
-  return (
-    <Layout>
-      <div className="max-w-7xl mx-auto px-4 py-8 animate-slide-up">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-          <div>
-            <h2 className={`font-black text-slate-900 tracking-tight ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
-              Clinical Dashboard
-            </h2>
-            <p className="text-slate-500 mt-2 text-lg">Comprehensive patient overview and AI insights.</p>
-          </div>
+  const handleReset = () => {
+    setCurrentClinicalPatient(null);
+    setLookupCode('');
+  };
 
-          <div className="flex gap-4 p-1.5 bg-slate-100 rounded-2xl border border-slate-200 shadow-inner w-full md:w-auto">
-            <div className="relative flex-1 md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                value={patientId}
-                onChange={(e) => setPatientId(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-transparent text-sm font-bold text-slate-700 placeholder-slate-400 focus:outline-none"
-                placeholder="Search Patient ID..."
-              />
+  if (!currentClinicalPatient) {
+    return (
+      <Layout hideHeader>
+        <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
+          <div className="w-full max-w-md animate-slide-up">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-blue-200">
+                <Heart className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-3xl font-black text-slate-900 tracking-tight">CareBridge Clinical</h1>
+              <p className="text-slate-500 mt-2">Enter patient secure code to access record.</p>
             </div>
-            <button
-              onClick={handleLoadPatient}
-              className="px-6 py-2 bg-white text-blue-600 rounded-xl font-bold shadow-sm hover:shadow-md transition-all active:scale-95"
-            >
-              Load
-            </button>
+
+            <div className="glass-card p-8 border-slate-200">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Patient Secure Code</label>
+                  <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="text"
+                      className="input-field pl-12 h-14 text-xl font-bold tracking-widest uppercase placeholder:normal-case placeholder:font-medium placeholder:text-slate-300"
+                      placeholder="e.g. DEMO-001"
+                      value={lookupCode}
+                      onChange={(e) => setLookupCode(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleLoad()}
+                    />
+                  </div>
+                  {error && <p className="text-red-500 text-xs mt-2 font-bold flex items-center gap-1"> {error}</p>}
+                </div>
+
+                <button
+                  onClick={handleLoad}
+                  className="btn-primary w-full h-14 text-lg flex items-center justify-center gap-2 group"
+                >
+                  Load Patient Record
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+      </Layout>
+    );
+  }
 
-        {isLoaded ? (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Left Column - Patient Meta & AI Summary */}
-            <div className="lg:col-span-8 space-y-8">
-              {/* Patient Profile Card */}
-              <div className="glass-card p-8 border-slate-200 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -mr-16 -mt-16 opacity-50" />
-                <div className="flex items-center gap-6 relative z-10">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg">
+  return (
+    <Layout hideHeader>
+      <div className="min-h-screen bg-slate-50 flex flex-col">
+        {/* Slim Clinical Header */}
+        <header className="h-16 shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-[100] backdrop-blur-md bg-white/90">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 pr-6">
+              <div className="p-2 bg-blue-600 rounded-xl shadow-lg shadow-blue-200">
+                <Heart className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-lg font-black tracking-tighter text-slate-900 leading-none">CareBridge</h1>
+                <p className="text-[8px] font-black uppercase tracking-widest text-blue-600 leading-tight">Clinical Portal</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button onClick={handleReset} className="btn-secondary h-10 px-4 py-0 flex items-center gap-2 border-slate-200 text-sm font-bold">
+              <LogOut className="w-4 h-4" /> Load Next
+            </button>
+            <button
+              onClick={() => navigate('/doctor/treatment')}
+              className="btn-primary h-10 px-6 py-0 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-sm shadow-lg shadow-blue-100 font-black"
+            >
+              <Play className="w-4 h-4 fill-current" /> START TREATMENT
+            </button>
+          </div>
+        </header>
+
+        {/* Main Dashboard Area */}
+        <main className="flex-1 overflow-hidden p-6">
+          <div className="max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-10 gap-6 h-full items-start">
+
+            {/* Left Column: Summary & Notes (~70%) */}
+            <div className="lg:col-span-7 flex flex-col gap-6 h-full min-h-0">
+              {/* Profile Bar */}
+              <div className="glass-card p-6 border-slate-200 flex items-center justify-between">
+                <div className="flex items-center gap-5">
+                  <div className="w-16 h-16 bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-300">
                     <User className="w-10 h-10" />
                   </div>
                   <div>
-                    <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-2xl font-bold text-slate-900">Johnathan Doe</h3>
-                      <span className="px-2 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] font-bold uppercase tracking-widest">ID: {PATIENT_ID}</span>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-slate-500 font-medium">
-                      <span>68 years • Male</span>
-                      <span className="w-1 h-1 rounded-full bg-slate-300" />
-                      <span>Last Visit: Oct 12, 2025</span>
+                    <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none mb-2">
+                      {currentClinicalPatient.name} <span className="text-xl font-medium text-slate-400 ml-2 tracking-normal">{currentClinicalPatient.code}</span>
+                    </h2>
+                    <div className="flex items-center gap-4 text-sm font-bold text-slate-500 uppercase tracking-wider">
+                      <span>{currentClinicalPatient.age} Years • {currentClinicalPatient.sex}</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                      <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Last Visit: {currentClinicalPatient.lastVisit}</span>
                     </div>
                   </div>
-                  <button className="ml-auto p-2 text-slate-400 hover:text-slate-600 transition-colors">
-                    <MoreVertical className="w-5 h-5" />
+                </div>
+              </div>
+
+              {/* Patient Input Summary */}
+              <div className="glass-card border-indigo-100 flex flex-col min-h-0">
+                <div className="px-6 py-4 border-b border-indigo-50 flex items-center justify-between bg-indigo-50/10">
+                  <h3 className="text-xs font-black text-indigo-700 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <Clock className="w-4 h-4" /> Latest Patient Summary
+                  </h3>
+                  <span className="text-[10px] font-bold text-indigo-400 bg-white px-2 py-0.5 rounded border border-indigo-100">Submitted via Patient App • {currentClinicalPatient.latestSummary.createdAt}</span>
+                </div>
+                <div className="p-6">
+                  <div className={`text-slate-700 font-medium leading-relaxed transition-all duration-300 ${expandedSummary ? '' : 'line-clamp-6'}`}>
+                    {currentClinicalPatient.latestSummary.text}
+                  </div>
+                  <button
+                    onClick={() => setExpandedSummary(!expandedSummary)}
+                    className="mt-4 flex items-center gap-1.5 text-blue-600 font-black text-xs hover:text-blue-800 transition-colors uppercase tracking-widest bg-blue-50 px-3 py-2 rounded-lg"
+                  >
+                    {expandedSummary ? <><ChevronUp className="w-4 h-4" /> Collapse Summary</> : <><ChevronDown className="w-4 h-4" /> Show Full Summary</>}
                   </button>
                 </div>
               </div>
 
-              {/* AI Clinical Summary */}
-              <div className="glass-card border-indigo-100 bg-indigo-50/10 p-8">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
-                      <ShieldCheck className="w-5 h-5" />
-                    </div>
-                    <h4 className="text-xl font-bold text-slate-800">AI Intake Analysis</h4>
+              {/* Doctor Notes */}
+              <div className="glass-card flex-col border-blue-100 shadow-blue-50 p-6">
+                <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                  <FileText className="w-3.5 h-3.5" /> Doctor Notes (Current Visit)
+                </h3>
+                <div className="bg-white rounded-xl border border-slate-100 shadow-inner overflow-hidden flex flex-col">
+                  <textarea
+                    className="w-full p-4 text-sm font-medium text-slate-700 placeholder:text-slate-300 resize-none border-none focus:ring-0 leading-relaxed min-h-[120px]"
+                    placeholder="Start clinical documentation here..."
+                    value={clinicalNotes}
+                    onChange={(e) => setClinicalNotes(e.target.value)}
+                  />
+                  <div className="p-3 border-t border-slate-50 bg-slate-50/50 flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Autosaved to local context</span>
+                    <button className="p-2 bg-blue-600 rounded-lg text-white shadow-lg shadow-blue-200 hover:scale-110 active:scale-95 transition-all"><Save className="w-4 h-4" /></button>
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">Verified Clinical Data</span>
                 </div>
-
-                {patientData && patientData.summary.bullets.length > 0 ? (
-                  <div className="space-y-8">
-                    <div>
-                      <h5 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Chief Complaint & History</h5>
-                      <ul className="grid gap-3">
-                        {patientData.summary.bullets.map((bullet, index) => (
-                          <li key={index} className="flex items-start gap-4 p-4 bg-white rounded-xl border border-slate-100 shadow-sm">
-                            <div className="mt-1.5 w-2 h-2 rounded-full bg-indigo-500" />
-                            <span className="text-slate-700 font-medium leading-relaxed">{bullet}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-4">
-                        <h5 className="text-xs font-bold text-red-400 uppercase tracking-widest px-1">Pertinent Positives</h5>
-                        <div className="flex flex-wrap gap-2">
-                          {patientData.summary.keyPositives.map((item, index) => (
-                            <span key={index} className="px-3 py-1.5 bg-red-50 text-red-700 rounded-lg text-xs font-bold border border-red-100">
-                              + {item}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="space-y-4">
-                        <h5 className="text-xs font-bold text-green-400 uppercase tracking-widest px-1">Pertinent Negatives</h5>
-                        <div className="flex flex-wrap gap-2">
-                          {patientData.summary.keyNegatives.map((item, index) => (
-                            <span key={index} className="px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-bold border border-green-100">
-                              - {item}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-12 text-center">
-                    <AlertCircle className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-                    <p className="text-slate-500 font-medium">Patient has not completed the recent intake form.</p>
-                  </div>
-                )}
               </div>
             </div>
 
-            {/* Right Column - Status, Trends, Actions */}
-            <div className="lg:col-span-4 space-y-8">
-              {/* Quick Metrics */}
-              <div className="grid grid-cols-2 gap-4">
-                <MetricSlot label="Pain" value={patientData?.summary.painLevel || 'N/A'} color="red" />
-                <MetricSlot label="Wellbeing" value={patientData?.summary.wellbeing || 'N/A'} color="blue" />
-              </div>
-
-              {/* Recent Timeline Card */}
-              <div className="glass-card p-6 border-slate-200">
-                <div className="flex items-center justify-between mb-6">
-                  <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Health Trend</h4>
-                  <Activity className="w-4 h-4 text-slate-400" />
+            {/* Right Column: Timeline (~30%) */}
+            <div className="lg:col-span-3 flex flex-col gap-6 h-full min-h-0">
+              {/* Treatment Timeline */}
+              <div className="glass-card flex-1 flex flex-col min-h-0 max-h-[calc(100vh-200px)]">
+                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/80 backdrop-blur-sm z-10">
+                  <h3 className="text-xs font-black text-slate-800 uppercase tracking-[0.2em]">Treatment Timeline</h3>
+                  <button className="p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-400 hover:text-blue-600 transition-all"><Plus className="w-4 h-4" /></button>
                 </div>
-                <div className="space-y-4">
-                  {trends.slice(-4).reverse().map((entry, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100">
-                      <div>
-                        <p className="text-xs font-bold text-slate-900">
-                          {new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                        </p>
-                        <p className="text-[10px] text-slate-400 font-medium">Assessment</p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <div className="text-xs font-black text-red-500">{entry.painLevel}</div>
-                          <div className="text-[8px] text-slate-300 uppercase font-black">Pain</div>
+                <div className="flex-1 overflow-y-auto p-0 scrollbar-thin">
+                  <div className="grid grid-cols-1">
+                    {currentClinicalPatient.timeline.map((item, idx) => (
+                      <div key={item.id} className={`group hover:bg-blue-50/30 transition-all border-b border-slate-50 last:border-none cursor-pointer overflow-hidden ${expandedTimeline === item.id ? 'bg-blue-50/30' : ''}`} onClick={() => setExpandedTimeline(expandedTimeline === item.id ? null : item.id)}>
+                        <div className="p-4 flex items-start gap-4">
+                          <div className="w-2 relative flex-col flex items-center h-10 mt-1 shrink-0">
+                            <div className={`w-2.5 h-2.5 rounded-full border-2 border-white z-10 ${item.status === 'completed' ? 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.4)]' : 'bg-slate-300'}`} />
+                            {idx !== currentClinicalPatient.timeline.length - 1 && <div className="absolute top-3 w-0.5 h-16 bg-slate-100 group-hover:bg-blue-100" />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">{item.date}</span>
+                              <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase ${item.status === 'completed' ? 'bg-blue-50 text-blue-600' : 'bg-slate-50 text-slate-400'}`}>{item.status}</span>
+                            </div>
+                            <h4 className="font-bold text-slate-900 leading-tight text-xs mb-1 truncate">{item.title}</h4>
+                            <p className="text-[10px] font-medium text-slate-500 line-clamp-1">{item.notes}</p>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-xs font-black text-blue-500">{entry.wellbeing}</div>
-                          <div className="text-[8px] text-slate-300 uppercase font-black">Well</div>
+                        <div className={`px-10 pb-4 transition-all duration-300 overflow-hidden ${expandedTimeline === item.id ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                          <div className="bg-white/80 rounded-lg p-3 border border-blue-100 shadow-sm">
+                            <p className="text-[9px] font-black text-blue-600 mb-1.5 uppercase tracking-widest flex items-center gap-1">Details</p>
+                            <p className="text-xs text-slate-700 leading-relaxed font-medium">{item.details}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-                <button className="w-full mt-6 py-3 text-xs font-bold text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors flex items-center justify-center gap-2">
-                  View Full History <ExternalLink className="w-3 h-3" />
-                </button>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="space-y-3 pt-4">
-                <button
-                  onClick={() => navigate('/doctor/session')}
-                  className="btn-primary w-full py-4 text-lg shadow-blue-200 flex items-center justify-center gap-3"
-                >
-                  Start Session
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => navigate('/doctor/soap')}
-                  className="btn-secondary w-full py-4 text-slate-700 flex items-center justify-center gap-3"
-                >
-                  <FileText className="w-5 h-5" />
-                  Generate SOAP
-                </button>
               </div>
             </div>
+
           </div>
-        ) : (
-          <div className="p-24 text-center glass-card border-slate-200 shadow-xl max-w-2xl mx-auto">
-            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-8">
-              <Search className="w-10 h-10 text-slate-300" />
-            </div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-4">No Patient Loaded</h3>
-            <p className="text-slate-500 mb-10">Enter a valid Patient ID above to view the clinical profile and AI insights.</p>
-            <div className="flex justify-center gap-3">
-              <div className="px-4 py-2 bg-slate-100 rounded-lg text-sm font-bold text-slate-500">Suggested: DEMO-001</div>
-            </div>
-          </div>
-        )}
+        </main>
+
+        <footer className="h-10 shrink-0 bg-slate-100/50 border-t border-slate-200 flex items-center justify-center">
+          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">© 2026 Clinical Intelligence Demo • Session Securely Logged • HIPAA Compliant Environment</p>
+        </footer>
       </div>
     </Layout>
   );
 };
-
-const MetricSlot: React.FC<{ label: string; value: string | number; color: 'red' | 'blue' | 'green' }> = ({ label, value, color }) => {
-  const colors = {
-    red: 'bg-red-50 text-red-600 border-red-100',
-    blue: 'bg-blue-50 text-blue-600 border-blue-100',
-    green: 'bg-green-50 text-green-600 border-green-100',
-  };
-
-  return (
-    <div className={`p-4 rounded-2xl border ${colors[color]} flex flex-col items-center justify-center text-center`}>
-      <span className="text-[10px] font-black uppercase tracking-widest mb-1 opacity-60">{label}</span>
-      <span className="text-2xl font-black">{value}</span>
-      <span className="text-[10px] font-bold opacity-40">TARGET: {color === 'red' ? '<3' : '>8'}</span>
-    </div>
-  );
-}
-
