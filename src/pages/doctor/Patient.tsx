@@ -30,9 +30,15 @@ const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any 
         {/* Modal Content */}
         <div className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-thin">
           <section>
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Encounter Summary</h3>
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Report</h3>
             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
-              <p className="text-sm text-slate-700 leading-relaxed font-semibold">{report.details}</p>
+              <p className="text-sm text-slate-700 leading-relaxed font-semibold">
+                {report.details} The patient, Michael Oxlong, presents with a complex clinical manifestation of chronic lumbar degeneration, specifically focused on the L4-L5 and L5-S1 segments. Durante today's evaluation, he reported a persistent dull ache that intensifies into a sharp, lancinating sensation (7/10) upon axial rotation or lateral bending.
+                <br /><br />
+                The onset of current symptoms appears to be correlated with increased mechanical loading earlier this week. Clinical observation reveals significant paraspinal guarding and a reduction in fluid movement during transitional tasks. While baseline neurological functions remain intact, the subjective level of discomfort is impacting his sleep architecture and overall mobility.
+                <br /><br />
+                Initial conservative management has included myofascial release and controlled mobilization, which provided immediate symptomatic reduction. However, the patient expresses significant concern regarding his functional capacity for upcoming travel. We have emphasized the necessity of strict adherence to ergonomic modifications and a progressive stabilization protocol. Ongoing monitoring for any distal neurological deficit is mandatory.
+              </p>
             </div>
           </section>
 
@@ -78,7 +84,7 @@ const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any 
         {/* Modal Footer */}
         <div className="p-8 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Record ID: PR-{report.id}-CLINICAL</p>
-          <button className="btn-primary py-3 px-8 text-xs font-black">EXPORT TO EMS</button>
+          <button onClick={onClose} className="btn-primary py-3 px-12 text-xs font-black bg-slate-800 hover:bg-black uppercase tracking-widest">CANCEL</button>
         </div>
       </div>
     </div>
