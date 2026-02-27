@@ -2,8 +2,88 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
-import { Search, User, Calendar, ChevronDown, ChevronUp, Save, LogOut, ArrowRight, Clock, Plus, FileText, Heart, Play, Info } from 'lucide-react';
+import { Search, User, Calendar, ChevronDown, ChevronUp, Save, LogOut, ArrowRight, Clock, FileText, Heart, Play, Info, ExternalLink, X } from 'lucide-react';
 import { MOCK_CLINICAL_PATIENT, mockTrends } from '../../mockData';
+
+const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any }> = ({ isOpen, onClose, report }) => {
+  if (!isOpen || !report) return null;
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+      <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden flex flex-col max-h-[90vh]">
+        {/* Modal Header */}
+        <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em]">Clinical Report</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">{report.date}</span>
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">{report.title}</h2>
+          </div>
+          <button onClick={onClose} className="p-3 hover:bg-slate-100 rounded-2xl transition-all text-slate-400">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Modal Content */}
+        <div className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-thin">
+          <section>
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Encounter Summary</h3>
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+              <p className="text-sm text-slate-700 leading-relaxed font-semibold">{report.details}</p>
+            </div>
+          </section>
+
+          <section className="grid grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Clinical Findings</h3>
+              <ul className="space-y-2">
+                {[
+                  'Neurological exam within normal limits.',
+                  'No acute inflammation detected.',
+                  'Patient responsive to palpation in lumbar region.'
+                ].map((f, i) => (
+                  <li key={i} className="flex items-center gap-2 text-[11px] font-bold text-slate-600 bg-white p-2 rounded-lg border border-slate-50 shadow-sm">
+                    <div className="w-1 h-1 rounded-full bg-blue-500" /> {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Treatment Plan</h3>
+              <ul className="space-y-2">
+                {[
+                  'Scheduled for MRI imaging.',
+                  'Physical therapy twice weekly.',
+                  'Medication adjustment: OTC Ibuprofen 400mg PRN.'
+                ].map((s, i) => (
+                  <li key={i} className="flex items-center gap-2 text-[11px] font-bold text-slate-600 bg-white p-2 rounded-lg border border-slate-50 shadow-sm">
+                    <div className="w-1 h-1 rounded-full bg-blue-500" /> {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Physician Notes</h3>
+            <p className="text-xs text-slate-500 italic bg-blue-50/50 p-4 rounded-2xl border border-blue-50 font-medium">
+              "The patient's mobility has shown improvement over the last quarter, though recent lower back pain requires careful monitoring during upcoming travel."
+            </p>
+          </section>
+        </div>
+
+        {/* Modal Footer */}
+        <div className="p-8 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
+          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Record ID: PR-{report.id}-CLINICAL</p>
+          <button className="btn-primary py-3 px-8 text-xs font-black">EXPORT TO EMS</button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const TrendChart: React.FC<{
   title: string;
@@ -96,8 +176,10 @@ export const Patient: React.FC = () => {
   const [expandedSummary, setExpandedSummary] = useState(false);
   const [expandedTimeline, setExpandedTimeline] = useState<string | null>(null);
   const [selectedRange, setSelectedRange] = useState(7);
+  const [selectedReport, setSelectedReport] = useState<any>(null);
 
   const filteredTrends = mockTrends.slice(-selectedRange);
+  const visibleTimeline = currentClinicalPatient?.timeline.slice(0, 3) || [];
 
   const handleLoad = () => {
     if (lookupCode.trim().toUpperCase() === 'DEMO-001') {
@@ -208,7 +290,7 @@ export const Patient: React.FC = () => {
                     <div className="flex items-center gap-4 text-sm font-bold text-slate-500 uppercase tracking-wider">
                       <span>{currentClinicalPatient.age} Years • {currentClinicalPatient.sex}</span>
                       <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
-                      <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4" /> Last Visit: {currentClinicalPatient.lastVisit}</span>
+                      <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-slate-400" /> Last Visit: {currentClinicalPatient.lastVisit}</span>
                     </div>
                   </div>
                 </div>
@@ -291,32 +373,42 @@ export const Patient: React.FC = () => {
             <div className="lg:col-span-3 flex flex-col gap-6 h-full min-h-0">
               {/* Treatment Timeline */}
               <div className="glass-card flex-1 flex flex-col min-h-0 max-h-[calc(100vh-200px)]">
-                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/80 backdrop-blur-sm z-10">
-                  <h3 className="text-xs font-black text-slate-800 uppercase tracking-[0.2em]">Treatment Timeline</h3>
-                  <button className="p-1.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-400 hover:text-blue-600 transition-all"><Plus className="w-4 h-4" /></button>
+                <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur-md z-10">
+                  <h3 className="text-xs font-black text-slate-800 uppercase tracking-[0.22em] flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-blue-500" /> Treatment Timeline
+                  </h3>
                 </div>
                 <div className="flex-1 overflow-y-auto p-0 scrollbar-thin">
                   <div className="grid grid-cols-1">
-                    {currentClinicalPatient.timeline.map((item, idx) => (
-                      <div key={item.id} className={`group hover:bg-blue-50/30 transition-all border-b border-slate-50 last:border-none cursor-pointer overflow-hidden ${expandedTimeline === item.id ? 'bg-blue-50/30' : ''}`} onClick={() => setExpandedTimeline(expandedTimeline === item.id ? null : item.id)}>
-                        <div className="p-4 flex items-start gap-4">
-                          <div className="w-2 relative flex-col flex items-center h-10 mt-1 shrink-0">
-                            <div className={`w-2.5 h-2.5 rounded-full border-2 border-white z-10 ${item.status === 'completed' ? 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.4)]' : 'bg-slate-300'}`} />
-                            {idx !== currentClinicalPatient.timeline.length - 1 && <div className="absolute top-3 w-0.5 h-16 bg-slate-100 group-hover:bg-blue-100" />}
+                    {visibleTimeline.map((item: any, idx: number) => (
+                      <div key={item.id} className={`group hover:bg-slate-50/50 transition-all border-b border-slate-50 last:border-none cursor-pointer overflow-hidden ${expandedTimeline === item.id ? 'bg-blue-50/30' : ''}`} onClick={() => setExpandedTimeline(expandedTimeline === item.id ? null : item.id)}>
+                        <div className="p-5 flex items-start gap-4">
+                          <div className="w-2 relative flex flex-col items-center h-full mt-1.5 shrink-0">
+                            <div className={`w-2 h-2 rounded-full border border-white z-10 transition-transform group-hover:scale-125 ${expandedTimeline === item.id ? 'bg-blue-600 ring-4 ring-blue-100' : 'bg-slate-400'}`} />
+                            {idx !== visibleTimeline.length - 1 && <div className="absolute top-2 w-px h-[200px] bg-slate-100 group-hover:bg-blue-50" />}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">{item.date}</span>
-                              <span className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase ${item.status === 'completed' ? 'bg-blue-50 text-blue-600' : 'bg-slate-50 text-slate-400'}`}>{item.status}</span>
-                            </div>
-                            <h4 className="font-bold text-slate-900 leading-tight text-xs mb-1 truncate">{item.title}</h4>
-                            <p className="text-[10px] font-medium text-slate-500 line-clamp-1">{item.notes}</p>
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.1em] mb-1.5 block">{item.date}</span>
+                            <h4 className="font-black text-slate-900 leading-tight text-xs mb-1 group-hover:text-blue-600 transition-colors uppercase tracking-tight">{item.title}</h4>
+                            <p className="text-[10px] font-bold text-slate-500 line-clamp-1 italic">{item.notes}</p>
                           </div>
                         </div>
-                        <div className={`px-10 pb-4 transition-all duration-300 overflow-hidden ${expandedTimeline === item.id ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                          <div className="bg-white/80 rounded-lg p-3 border border-blue-100 shadow-sm">
-                            <p className="text-[9px] font-black text-blue-600 mb-1.5 uppercase tracking-widest flex items-center gap-1">Details</p>
-                            <p className="text-xs text-slate-700 leading-relaxed font-medium">{item.details}</p>
+                        <div className={`px-11 pb-5 transition-all duration-500 ease-in-out overflow-hidden ${expandedTimeline === item.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                          <div className="bg-white rounded-2xl p-4 border border-blue-100 shadow-sm space-y-3">
+                            <div>
+                              <p className="text-[9px] font-black text-blue-600 mb-2 uppercase tracking-[0.2em]">Encounter Details</p>
+                              <p className="text-[11px] text-slate-600 leading-relaxed font-bold">{item.details}</p>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedReport(item);
+                              }}
+                              className="w-full h-8 bg-slate-50 hover:bg-blue-600 hover:text-white border border-slate-200 hover:border-blue-600 rounded-xl flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all group/btn shadow-sm"
+                            >
+                              Open Full Report
+                              <ExternalLink className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -333,6 +425,15 @@ export const Patient: React.FC = () => {
           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">© 2026 Clinical Intelligence Demo • Session Securely Logged • HIPAA Compliant Environment</p>
         </footer>
       </div>
+
+      {/* Full Report Backdrop & Modal */}
+      {selectedReport && (
+        <ReportModal
+          isOpen={!!selectedReport}
+          onClose={() => setSelectedReport(null)}
+          report={selectedReport}
+        />
+      )}
     </Layout>
   );
 };
