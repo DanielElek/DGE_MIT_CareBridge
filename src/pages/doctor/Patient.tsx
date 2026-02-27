@@ -2,8 +2,90 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
-import { Search, User, Calendar, ChevronDown, ChevronUp, Save, LogOut, ArrowRight, Clock, Plus, FileText, Heart, Play } from 'lucide-react';
+import { Search, User, Calendar, ChevronDown, ChevronUp, Save, LogOut, ArrowRight, Clock, Plus, FileText, Heart, Play, Info } from 'lucide-react';
 import { MOCK_CLINICAL_PATIENT, mockTrends } from '../../mockData';
+
+const TrendChart: React.FC<{
+  title: string;
+  data: number[];
+  color: string;
+  unit: string;
+  max: number;
+  inverted?: boolean;
+  description: string;
+}> = ({ title, data, color, unit, max, inverted, description }) => {
+  const chartHeight = 80;
+  const chartWidth = 280;
+  const paddingLeft = 25;
+  const points = data.map((val, i) => {
+    const x = paddingLeft + (i / (data.length - 1)) * (chartWidth - paddingLeft);
+    const y = chartHeight - (val / max) * chartHeight;
+    return `${x},${y}`;
+  }).join(' ');
+
+  const lastValue = data[data.length - 1];
+  const avgValue = (data.reduce((a, b) => a + b, 0) / data.length).toFixed(1);
+  const gridLines = [0, 0.5, 1]; // 0, 5, 10
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center gap-1.5 group/info relative">
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{title}</span>
+          <Info className="w-3 h-3 text-slate-300 hover:text-blue-500 cursor-help transition-colors" />
+
+          {/* Light Tooltip */}
+          <div className="absolute bottom-full left-0 mb-2 w-56 p-4 bg-white/95 backdrop-blur-md border border-blue-100 rounded-2xl text-[10px] opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all z-50 shadow-[0_10px_30px_rgba(0,0,0,0.08)] pointer-events-none">
+            <p className="font-black mb-1.5 uppercase tracking-wider text-blue-600">Clinical Guide</p>
+            <p className="text-slate-600 leading-relaxed mb-3 font-semibold">{description}</p>
+            <div className="pt-2.5 border-t border-slate-100 flex justify-between items-center">
+              <span className="text-slate-400 font-black uppercase tracking-[0.15em] text-[8px]">Period Average</span>
+              <span className="text-xs font-black text-slate-900 bg-blue-50 px-2 py-0.5 rounded-lg border border-blue-100">{avgValue}{unit}</span>
+            </div>
+            {/* Tooltip Arrow */}
+            <div className="absolute top-full left-4 -mt-1 border-[6px] border-transparent border-t-white drop-shadow-[0_1px_0_rgba(191,219,254,1)]" />
+          </div>
+        </div>
+        <span className={`text-xs font-black ${inverted && lastValue > 7 ? 'text-red-500' : 'text-slate-900'}`}>{lastValue}{unit}</span>
+      </div>
+      <div className="h-28 bg-white rounded-2xl border border-slate-100 flex items-end p-2 overflow-hidden relative shadow-sm">
+        <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full h-full overflow-visible">
+          {/* Grid Lines & Y-Axis Labels */}
+          {gridLines.map((line, i) => (
+            <g key={i}>
+              <line
+                x1={paddingLeft}
+                y1={chartHeight - (line * chartHeight)}
+                x2={chartWidth}
+                y2={chartHeight - (line * chartHeight)}
+                stroke="#f1f5f9"
+                strokeWidth="1"
+              />
+              <text
+                x="0"
+                y={chartHeight - (line * chartHeight) + 3}
+                className="text-[8px] fill-slate-300 font-bold"
+              >
+                {Math.round(line * max)}
+              </text>
+            </g>
+          ))}
+
+          <polyline
+            fill="none"
+            stroke={color}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            points={points}
+            className="transition-all duration-700"
+          />
+          <circle cx={chartWidth} cy={chartHeight - (lastValue / max) * chartHeight} r="3" fill={color} className="animate-pulse" />
+        </svg>
+      </div>
+    </div>
+  );
+};
 
 
 export const Patient: React.FC = () => {
@@ -13,6 +95,9 @@ export const Patient: React.FC = () => {
   const [error, setError] = useState('');
   const [expandedSummary, setExpandedSummary] = useState(false);
   const [expandedTimeline, setExpandedTimeline] = useState<string | null>(null);
+  const [selectedRange, setSelectedRange] = useState(7);
+
+  const filteredTrends = mockTrends.slice(-selectedRange);
 
   const handleLoad = () => {
     if (lookupCode.trim().toUpperCase() === 'DEMO-001') {
@@ -150,22 +235,54 @@ export const Patient: React.FC = () => {
                 </div>
               </div>
 
-              {/* Doctor Notes */}
+              {/* Unified Health Trends Section */}
               <div className="glass-card flex-col border-blue-100 shadow-blue-50 p-6">
-                <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
-                  <FileText className="w-3.5 h-3.5" /> Doctor Notes (Current Visit)
-                </h3>
-                <div className="bg-white rounded-xl border border-slate-100 shadow-inner overflow-hidden flex flex-col">
-                  <textarea
-                    className="w-full p-4 text-sm font-medium text-slate-700 placeholder:text-slate-300 resize-none border-none focus:ring-0 leading-relaxed min-h-[120px]"
-                    placeholder="Start clinical documentation here..."
-                    value={clinicalNotes}
-                    onChange={(e) => setClinicalNotes(e.target.value)}
-                  />
-                  <div className="p-3 border-t border-slate-50 bg-slate-50/50 flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Autosaved to local context</span>
-                    <button className="p-2 bg-blue-600 rounded-lg text-white shadow-lg shadow-blue-200 hover:scale-110 active:scale-95 transition-all"><Save className="w-4 h-4" /></button>
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5" /> Longitudinal Health Insights
+                  </h3>
+                  <div className="flex bg-slate-100 p-1 rounded-xl">
+                    {[7, 30, 90].map((days) => (
+                      <button
+                        key={days}
+                        onClick={() => setSelectedRange(days)}
+                        className={`px-3 py-1 text-[10px] font-bold rounded-lg transition-all ${selectedRange === days ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                      >
+                        {days}D
+                      </button>
+                    ))}
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Sleep Chart */}
+                  <TrendChart
+                    title="Sleep Quality"
+                    data={filteredTrends.map(t => t.sleepHours)}
+                    color="#3b82f6"
+                    unit="h"
+                    max={12}
+                    description="Measures total restorative sleep duration and quality metrics over time."
+                  />
+                  {/* Wellbeing Chart */}
+                  <TrendChart
+                    title="Well-being"
+                    data={filteredTrends.map(t => t.wellbeing)}
+                    color="#8b5cf6"
+                    unit="/10"
+                    max={10}
+                    description="Self-reported psychological and physical state based on daily check-ins."
+                  />
+                  {/* Pain Level Chart */}
+                  <TrendChart
+                    title="Pain Level"
+                    data={filteredTrends.map(t => t.painLevel)}
+                    color="#ef4444"
+                    unit="/10"
+                    max={10}
+                    inverted
+                    description="Subjective pain scale rating. Decreasing trends indicate positive treatment response."
+                  />
                 </div>
               </div>
             </div>

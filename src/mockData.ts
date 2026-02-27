@@ -103,7 +103,7 @@ export interface ClinicalPatientData {
 
 export const MOCK_CLINICAL_PATIENT: ClinicalPatientData = {
   code: 'DEMO-001',
-  name: 'Mike Oxlong',
+  name: 'Michael Oxlong',
   age: 68,
   sex: 'Male',
   lastVisit: 'Oct 12, 2025',
