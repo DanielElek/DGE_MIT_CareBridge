@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import {
   PatientData,
   SmartIntakeQuestion,
@@ -14,12 +14,15 @@ import {
 
 type Role = 'patient' | 'doctor';
 type TextSize = 'normal' | 'large';
+type ThemeColor = 'blue' | 'teal' | 'indigo' | 'slate';
 
 interface AppContextType {
   role: Role;
   setRole: (role: Role) => void;
   textSize: TextSize;
   setTextSize: (size: TextSize) => void;
+  themeColor: ThemeColor;
+  setThemeColor: (color: ThemeColor) => void;
   patientData: PatientData | null;
   setPatientData: (data: PatientData | null) => void;
   updateComplaint: (complaint: string) => void;
@@ -35,8 +38,19 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [role, setRole] = useState<Role>('patient');
   const [textSize, setTextSize] = useState<TextSize>('normal');
+  const [themeColor, setThemeColor] = useState<ThemeColor>('blue');
   const [patientData, setPatientData] = useState<PatientData | null>(null);
   const [sessionData, setSessionData] = useState(mockDoctorSession);
+
+  // Apply text size to root element for global scaling
+  useEffect(() => {
+    const root = document.documentElement;
+    if (textSize === 'large') {
+      root.style.fontSize = '115%';
+    } else {
+      root.style.fontSize = '100%';
+    }
+  }, [textSize]);
 
   const updateComplaint = (complaint: string) => {
     const questions = generateSmartIntakeQuestions(complaint);
@@ -91,6 +105,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setRole,
         textSize,
         setTextSize,
+        themeColor,
+        setThemeColor,
         patientData,
         setPatientData,
         updateComplaint,
@@ -101,7 +117,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         updateSOAP
       }}
     >
-      {children}
+      <div className={`theme-${themeColor}`}>
+        {children}
+      </div>
     </AppContext.Provider>
   );
 };
@@ -113,3 +131,4 @@ export const useApp = () => {
   }
   return context;
 };
+

@@ -2,39 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
-import { Printer, Copy, Upload, Sparkles, CheckCircle2, XCircle, Info } from 'lucide-react';
+import { Copy, CheckCircle2, XCircle, ShieldCheck, FileText, Download, Save, Zap, Hash } from 'lucide-react';
 
 export const SOAP: React.FC = () => {
   const { doctorSession, updateSOAP, textSize } = useApp();
   const navigate = useNavigate();
-  const [hasTranscript, setHasTranscript] = useState(false);
-  const [isTranscribing, setIsTranscribing] = useState(false);
-  const [includePatientSummary, setIncludePatientSummary] = useState(true);
-  const [soapGenerated, setSoapGenerated] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [soap, setSOAP] = useState(doctorSession.soap);
   const [copied, setCopied] = useState(false);
-
-  const buttonSizeClass = textSize === 'large' ? 'px-8 py-4 text-lg min-h-[56px]' : 'px-6 py-3 text-base min-h-[48px]';
-  const cardPaddingClass = textSize === 'large' ? 'p-8' : 'p-6';
-  const inputSizeClass = textSize === 'large' ? 'text-lg p-4' : 'text-base p-3';
-
-  const handleUploadAudio = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setIsTranscribing(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsTranscribing(false);
-    setHasTranscript(true);
-  };
-
-  const handleGenerateSOAP = async () => {
-    setIsGenerating(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsGenerating(false);
-    setSoapGenerated(true);
-  };
 
   const handleSOAPChange = (field: keyof typeof soap, value: string) => {
     const updatedSOAP = { ...soap, [field]: value };
@@ -49,252 +23,165 @@ export const SOAP: React.FC = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handlePrint = () => {
-    navigate('/print?type=soap');
-  };
-
   return (
     <Layout>
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className={`font-bold text-gray-900 ${textSize === 'large' ? 'text-3xl' : 'text-2xl'}`}>
-            SOAP Note
-          </h2>
-          <div className={`flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-2 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
-            <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-            <span className="font-medium text-green-900">Local AI mode: ON</span>
-            <div className="group relative">
-              <Info className="w-4 h-4 text-green-600 cursor-help" />
-              <div className={`absolute right-0 top-6 w-64 bg-gray-900 text-white p-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 ${textSize === 'large' ? 'text-sm' : 'text-xs'}`}>
-                Runs locally for privacy. Please review outputs.
-              </div>
+      <div className="max-w-7xl mx-auto px-4 py-8 animate-slide-up">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
+              <ShieldCheck className="w-3 h-3" /> HIPAA Compliant Local AI
             </div>
+            <h2 className={`font-black text-slate-900 tracking-tight ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
+              Clinical Note
+            </h2>
+            <p className="text-slate-500 mt-2 text-lg">AI-Drafted SOAP Note based on session audio.</p>
+          </div>
+
+          <div className="flex gap-3">
+            <button onClick={() => navigate('/doctor/session')} className="btn-secondary flex items-center gap-2">
+              Back to Session
+            </button>
+            <button onClick={handleCopySOAP} className="btn-secondary flex items-center gap-2">
+              {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {copied ? 'Copied' : 'Copy'}
+            </button>
+            <button onClick={() => { }} className="btn-primary flex items-center gap-2 shadow-blue-200">
+              <Save className="w-4 h-4" /> Finalize & Sign
+            </button>
           </div>
         </div>
 
-        <div className="space-y-6">
-          {!hasTranscript ? (
-            <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-              <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                Conversation Audio
-              </h3>
-              {isTranscribing ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                  <p className={`text-gray-600 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
-                    Transcribing locally...
-                  </p>
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <label className={`inline-flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer ${buttonSizeClass}`}>
-                    <Upload className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
-                    Upload conversation audio
-                    <input
-                      type="file"
-                      accept="audio/*"
-                      onChange={handleUploadAudio}
-                      className="hidden"
-                    />
-                  </label>
-                  <p className={`text-gray-500 mt-3 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
-                    MP3, WAV, or M4A files accepted
-                  </p>
-                </div>
-              )}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left - SOAP Note Editor */}
+          <div className="lg:col-span-8 space-y-8">
+            <div className="glass-card border-slate-200 overflow-hidden">
+              <div className="grid grid-cols-1 divide-y divide-slate-100">
+                <SoapSection
+                  id="subjective"
+                  label="Subjective"
+                  value={soap.subjective}
+                  onChange={(val) => handleSOAPChange('subjective', val)}
+                  hints={['History of lower back pain', 'Onset: 3 days ago', 'Sharp pain with movement']}
+                />
+                <SoapSection
+                  id="objective"
+                  label="Objective"
+                  value={soap.objective}
+                  onChange={(val) => handleSOAPChange('objective', val)}
+                  hints={['Normal gait', 'Pain localized to L4-L5', 'Positive straight leg raise right']}
+                />
+                <SoapSection
+                  id="assessment"
+                  label="Assessment"
+                  value={soap.assessment}
+                  onChange={(val) => handleSOAPChange('assessment', val)}
+                  hints={['Acute lumbar radiculopathy', 'Lumbar strain']}
+                />
+                <SoapSection
+                  id="plan"
+                  label="Plan"
+                  value={soap.plan}
+                  onChange={(val) => handleSOAPChange('plan', val)}
+                  hints={['Prescribe NSAIDs', 'Physical therapy referral', 'Follow-up in 2 weeks']}
+                />
+              </div>
             </div>
-          ) : (
-            <>
-              <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-                <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                  Transcript
-                </h3>
-                <div className={`bg-gray-50 rounded-lg p-4 border border-gray-200 max-h-64 overflow-y-auto ${textSize === 'large' ? 'text-lg leading-relaxed' : 'text-base leading-relaxed'}`}>
-                  <p className="text-gray-700 whitespace-pre-line">
-                    {doctorSession.mockTranscript}
-                  </p>
-                </div>
+          </div>
+
+          {/* Right - AI Clinical Tools */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Clinical Codes */}
+            <div className="glass-card p-6 border-indigo-100 bg-indigo-50/10">
+              <div className="flex items-center gap-2 mb-6">
+                <Hash className="w-4 h-4 text-indigo-600" />
+                <h4 className="text-xs font-bold text-slate-800 uppercase tracking-widest">Suggested ICD-10 Codes</h4>
               </div>
-
-              <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-                <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                  Completeness hints
-                </h3>
-                <div className="space-y-3">
-                  {doctorSession.completenessHints.map((hint, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      {hint.status === 'covered' ? (
-                        <CheckCircle2 className={`text-green-600 flex-shrink-0 ${textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'}`} />
-                      ) : (
-                        <XCircle className={`text-gray-400 flex-shrink-0 ${textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'}`} />
-                      )}
-                      <span className={`${textSize === 'large' ? 'text-lg' : 'text-base'} ${hint.status === 'covered' ? 'text-gray-900' : 'text-gray-500'}`}>
-                        {hint.item}
-                      </span>
-                      <span className={`ml-auto text-xs px-3 py-1 rounded-full ${hint.status === 'covered' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
-                        {hint.status === 'covered' ? 'Covered' : 'Not mentioned'}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+              <div className="space-y-3">
+                <CodeItem code="M54.50" desc="Low back pain, unspecified" />
+                <CodeItem code="M54.16" desc="Radiculopathy, lumbar region" />
+                <CodeItem code="S39.012" desc="Strain of muscle, fascia and tendon of lower back" />
               </div>
+            </div>
 
-              <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-                <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                  Suggested follow-up questions
-                </h3>
-                <ul className={`space-y-2 ${textSize === 'large' ? 'text-lg leading-relaxed' : 'text-base leading-relaxed'}`}>
-                  {doctorSession.suggestedFollowUps.map((question, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="text-blue-600 mr-3 mt-1">•</span>
-                      <span className="text-gray-700">{question}</span>
-                    </li>
-                  ))}
-                </ul>
+            {/* Quality Checks */}
+            <div className="glass-card p-6 border-slate-200">
+              <div className="flex items-center justify-between mb-6">
+                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Note Quality</h4>
+                <div className="w-8 h-8 rounded-full border-2 border-green-500 flex items-center justify-center text-[10px] font-bold text-green-600">92%</div>
               </div>
-
-              <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-                <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                  Key terms
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {doctorSession.keyTerms.map((term, index) => (
-                    <span
-                      key={index}
-                      className={`inline-block bg-blue-50 border-2 border-blue-300 text-blue-700 rounded-full px-4 py-2 font-medium ${textSize === 'large' ? 'text-base' : 'text-sm'}`}
-                    >
-                      {term}
-                    </span>
-                  ))}
-                </div>
+              <div className="space-y-4">
+                <QualityCheck label="Patient ID verified" checked />
+                <QualityCheck label="Red flags discussed" checked />
+                <QualityCheck label="Risk profile assessed" checked />
+                <QualityCheck label="Billing compliance" checked />
               </div>
+            </div>
 
-              {!soapGenerated && (
-                <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-                  <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                    Generate SOAP Note
-                  </h3>
-                  <div className="flex items-center gap-3 mb-6">
-                    <input
-                      type="checkbox"
-                      id="includePatientSummary"
-                      checked={includePatientSummary}
-                      onChange={(e) => setIncludePatientSummary(e.target.checked)}
-                      className={`rounded border-gray-300 text-blue-600 focus:ring-blue-500 ${textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'}`}
-                    />
-                    <label
-                      htmlFor="includePatientSummary"
-                      className={`font-medium text-gray-700 cursor-pointer ${textSize === 'large' ? 'text-lg' : 'text-base'}`}
-                    >
-                      Include patient summary
-                    </label>
-                  </div>
-                  <button
-                    onClick={handleGenerateSOAP}
-                    disabled={isGenerating}
-                    className={`w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 ${buttonSizeClass}`}
-                  >
-                    {isGenerating ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                        Generating SOAP...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
-                        Generate SOAP
-                      </>
-                    )}
-                  </button>
-                </div>
-              )}
-
-              {soapGenerated && (
-                <>
-                  <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-                    <h3 className={`font-bold text-gray-900 mb-6 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                      SOAP Note
-                    </h3>
-
-                    <div className="space-y-6">
-                      <div>
-                        <label className={`block font-bold text-gray-900 mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
-                          SUBJECTIVE
-                        </label>
-                        <textarea
-                          value={soap.subjective}
-                          onChange={(e) => handleSOAPChange('subjective', e.target.value)}
-                          rows={textSize === 'large' ? 6 : 5}
-                          className={`w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${inputSizeClass} ${textSize === 'large' ? 'leading-relaxed' : ''}`}
-                        />
-                      </div>
-
-                      <div>
-                        <label className={`block font-bold text-gray-900 mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
-                          OBJECTIVE
-                        </label>
-                        <textarea
-                          value={soap.objective}
-                          onChange={(e) => handleSOAPChange('objective', e.target.value)}
-                          rows={textSize === 'large' ? 6 : 5}
-                          className={`w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${inputSizeClass} ${textSize === 'large' ? 'leading-relaxed' : ''}`}
-                        />
-                      </div>
-
-                      <div>
-                        <label className={`block font-bold text-gray-900 mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
-                          ASSESSMENT
-                        </label>
-                        <textarea
-                          value={soap.assessment}
-                          onChange={(e) => handleSOAPChange('assessment', e.target.value)}
-                          rows={textSize === 'large' ? 5 : 4}
-                          className={`w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${inputSizeClass} ${textSize === 'large' ? 'leading-relaxed' : ''}`}
-                        />
-                      </div>
-
-                      <div>
-                        <label className={`block font-bold text-gray-900 mb-3 ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
-                          PLAN
-                        </label>
-                        <textarea
-                          value={soap.plan}
-                          onChange={(e) => handleSOAPChange('plan', e.target.value)}
-                          rows={textSize === 'large' ? 6 : 5}
-                          className={`w-full border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none ${inputSizeClass} ${textSize === 'large' ? 'leading-relaxed' : ''}`}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <button
-                      onClick={handlePrint}
-                      className={`flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors ${buttonSizeClass}`}
-                    >
-                      <Printer className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
-                      Print SOAP
-                    </button>
-                    <button
-                      onClick={handleCopySOAP}
-                      className={`flex items-center justify-center gap-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors ${buttonSizeClass}`}
-                    >
-                      <Copy className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
-                      {copied ? 'Copied!' : 'Copy SOAP'}
-                    </button>
-                    <button
-                      onClick={() => navigate('/doctor/session')}
-                      className={`flex items-center justify-center gap-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors ${buttonSizeClass}`}
-                    >
-                      Back to session
-                    </button>
-                  </div>
-                </>
-              )}
-            </>
-          )}
+            {/* Export Panel */}
+            <div className="glass-card p-6 border-slate-200">
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Export Note</h4>
+              <div className="grid grid-cols-2 gap-3">
+                <button className="flex flex-col items-center justify-center p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors border border-slate-200 text-slate-600">
+                  <FileText className="w-6 h-6 mb-2" />
+                  <span className="text-[10px] font-bold uppercase">PDF</span>
+                </button>
+                <button className="flex flex-col items-center justify-center p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors border border-slate-200 text-slate-600">
+                  <Download className="w-6 h-6 mb-2" />
+                  <span className="text-[10px] font-bold uppercase">HL7/EMR</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>
   );
 };
+
+const SoapSection: React.FC<{ id: string; label: string; value: string; onChange: (v: string) => void; hints: string[] }> = ({ label, value, onChange, hints }) => (
+  <div className="p-8 group hover:bg-slate-50/50 transition-all">
+    <div className="flex items-center justify-between mb-4">
+      <span className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">{label}</span>
+      <button className="text-[10px] font-bold text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">Auto-correct</button>
+    </div>
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      rows={4}
+      className="w-full bg-transparent border-none p-0 focus:ring-0 text-slate-800 font-medium leading-relaxed resize-none text-lg min-h-[120px]"
+      placeholder={`Enter ${label.toLowerCase()} notes...`}
+    />
+    <div className="mt-4 flex flex-wrap gap-2">
+      {hints.map((hint, i) => (
+        <button
+          key={i}
+          onClick={() => onChange(value + (value ? ' ' : '') + hint + '.')}
+          className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-500 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm"
+        >
+          + {hint}
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
+const CodeItem: React.FC<{ code: string; desc: string }> = ({ code, desc }) => (
+  <div className="p-3 bg-white rounded-xl border border-indigo-100 shadow-sm hover:shadow-md transition-all cursor-pointer group">
+    <div className="flex items-center justify-between mb-1">
+      <span className="text-xs font-black text-indigo-600">{code}</span>
+      <div className="p-1 bg-indigo-50 rounded-md opacity-0 group-hover:opacity-100 transition-all">
+        <Zap className="w-3 h-3 text-indigo-400" />
+      </div>
+    </div>
+    <p className="text-[10px] font-medium text-slate-500 leading-tight">{desc}</p>
+  </div>
+);
+
+const QualityCheck: React.FC<{ label: string; checked: boolean }> = ({ label, checked }) => (
+  <div className="flex items-center gap-3">
+    {checked ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-slate-300" />}
+    <span className={`text-[11px] font-bold ${checked ? 'text-slate-700' : 'text-slate-400'}`}>{label}</span>
+  </div>
+);
+

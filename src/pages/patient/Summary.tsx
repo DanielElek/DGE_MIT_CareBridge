@@ -2,28 +2,28 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
-import { Share2, Printer, TrendingUp } from 'lucide-react';
+import { Share2, Printer, TrendingUp, AlertCircle, CheckCircle2, Calendar, Clock, Gauge, Moon, Smile, ArrowRight, Sparkles } from 'lucide-react';
 
 export const Summary: React.FC = () => {
   const { patientData, textSize, setRole } = useApp();
   const navigate = useNavigate();
 
-  const buttonSizeClass = textSize === 'large' ? 'px-8 py-4 text-lg min-h-[56px]' : 'px-6 py-3 text-base min-h-[48px]';
-  const cardPaddingClass = textSize === 'large' ? 'p-8' : 'p-6';
-
   if (!patientData || !patientData.summary.bullets.length) {
     return (
       <Layout>
-        <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className={`bg-yellow-50 border border-yellow-200 rounded-lg ${cardPaddingClass}`}>
-            <p className={`text-yellow-800 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
-              Please complete the complaint form first to generate your summary.
-            </p>
+        <div className="max-w-2xl mx-auto px-4 py-12 animate-slide-up">
+          <div className="glass-card p-12 text-center border-amber-200 bg-amber-50/30">
+            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertCircle className="w-8 h-8 text-amber-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-4">No summary available yet</h2>
+            <p className="text-slate-600 mb-8">Please describe your symptoms first so our AI can generate a professional summary for your doctor.</p>
             <button
               onClick={() => navigate('/patient/complaint')}
-              className={`mt-4 bg-yellow-600 text-white rounded-lg font-medium hover:bg-yellow-700 transition-colors ${buttonSizeClass}`}
+              className="btn-primary flex items-center gap-2 mx-auto"
             >
-              Go to Complaint Form
+              Start New Intake
+              <ArrowRight className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -42,53 +42,68 @@ export const Summary: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <h2 className={`font-bold text-gray-900 mb-6 ${textSize === 'large' ? 'text-3xl' : 'text-2xl'}`}>
-          Your Health Summary
-        </h2>
+      <div className="max-w-4xl mx-auto px-4 py-8 animate-slide-up">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
+              <Sparkles className="w-3 h-3" /> AI Analysis Complete
+            </div>
+            <h2 className={`font-bold text-slate-900 ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
+              Doctor-Ready Summary
+            </h2>
+            <p className="text-slate-500 mt-2 text-lg">Professional overview of your current condition.</p>
+          </div>
+          <div className="flex gap-3">
+            <button onClick={handlePrint} className="btn-secondary flex items-center gap-2">
+              <Printer className="w-4 h-4" /> Print
+            </button>
+            <button onClick={handleShareWithDoctor} className="btn-primary flex items-center gap-2 shadow-blue-200">
+              <Share2 className="w-4 h-4" /> Share with Doctor
+            </button>
+          </div>
+        </div>
 
-        <div className="space-y-6">
-          <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-            <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-              Doctor-ready summary
-            </h3>
-            <ul className={`space-y-3 ${textSize === 'large' ? 'text-lg leading-relaxed' : 'text-base'}`}>
+        <div className="grid grid-cols-1 gap-6">
+          {/* Main Summary Card */}
+          <div className="glass-card p-8 border-slate-200">
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-6">Clinical Narrative</h3>
+            <ul className="space-y-4">
               {patientData.summary.bullets.map((bullet, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="text-blue-600 mr-3 mt-1">•</span>
-                  <span className="text-gray-700">{bullet}</span>
+                <li key={index} className="flex items-start gap-4">
+                  <div className="mt-1.5 w-2 h-2 rounded-full bg-blue-500 shrink-0" />
+                  <span className={`text-slate-700 font-medium ${textSize === 'large' ? 'text-xl' : 'text-lg'}`}>
+                    {bullet}
+                  </span>
                 </li>
               ))}
             </ul>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-              <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                Key positives
-              </h3>
+            {/* Key Positives */}
+            <div className="glass-card p-6 border-red-100 bg-red-50/10">
+              <div className="flex items-center gap-2 mb-4 text-red-600">
+                <AlertCircle className="w-5 h-5" />
+                <h3 className="font-bold uppercase tracking-wider text-sm">Key Positives (Present)</h3>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {patientData.summary.keyPositives.map((item, index) => (
-                  <span
-                    key={index}
-                    className={`inline-block bg-red-50 text-red-700 rounded-full px-4 py-2 font-medium border border-red-200 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}
-                  >
+                  <span key={index} className="px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm font-bold border border-red-200">
                     {item}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-              <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                Key negatives
-              </h3>
+            {/* Key Negatives */}
+            <div className="glass-card p-6 border-green-100 bg-green-50/10">
+              <div className="flex items-center gap-2 mb-4 text-green-600">
+                <CheckCircle2 className="w-5 h-5" />
+                <h3 className="font-bold uppercase tracking-wider text-sm">Key Negatives (Absent)</h3>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {patientData.summary.keyNegatives.map((item, index) => (
-                  <span
-                    key={index}
-                    className={`inline-block bg-green-50 text-green-700 rounded-full px-4 py-2 font-medium border border-green-200 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}
-                  >
+                  <span key={index} className="px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm font-bold border border-green-200">
                     {item}
                   </span>
                 ))}
@@ -96,122 +111,75 @@ export const Summary: React.FC = () => {
             </div>
           </div>
 
-          <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-            <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-              Timeline
-            </h3>
+          {/* Metrics Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <MetricCard
+              icon={<Calendar className="w-5 h-5 text-indigo-500" />}
+              label="Onset"
+              value={patientData.summary.onset}
+              subValue="Estimated"
+            />
+            <MetricCard
+              icon={<Clock className="w-5 h-5 text-orange-500" />}
+              label="Duration"
+              value={patientData.summary.duration}
+              subValue="Self-reported"
+            />
+            <MetricCard
+              icon={<Gauge className="w-5 h-5 text-red-500" />}
+              label="Pain Level"
+              value={`${patientData.summary.painLevel}/10`}
+              subValue="Current focus"
+            />
+            <MetricCard
+              icon={<Smile className="w-5 h-5 text-teal-500" />}
+              label="Wellbeing"
+              value={`${patientData.summary.wellbeing}/10`}
+              subValue="Overall state"
+            />
+          </div>
+
+          {/* Discussion Suggestions */}
+          <div className="glass-card p-8 bg-blue-600 text-white shadow-blue-200">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-white/20 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-xl font-bold">Suggested for Discussion</h3>
+            </div>
             <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <p className={`text-gray-600 mb-1 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
-                  Onset
-                </p>
-                <p className={`font-medium text-gray-900 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
-                  {patientData.summary.onset}
-                </p>
-              </div>
-              <div>
-                <p className={`text-gray-600 mb-1 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
-                  Duration
-                </p>
-                <p className={`font-medium text-gray-900 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
-                  {patientData.summary.duration}
-                </p>
-              </div>
+              {[
+                "Review treatment options for pain management",
+                "Discuss physical therapy or exercises",
+                "Consider imaging if symptoms persist",
+                "Monitor sleep quality improvements"
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3 p-3 bg-white/10 rounded-xl border border-white/20">
+                  <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold">{i + 1}</div>
+                  <span className="font-medium text-blue-50">{item}</span>
+                </div>
+              ))}
             </div>
           </div>
+        </div>
 
-          <div className={`bg-white rounded-lg shadow-sm border border-gray-200 ${cardPaddingClass}`}>
-            <h3 className={`font-bold text-gray-900 mb-4 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-              Severity snapshot
-            </h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div>
-                <p className={`text-gray-600 mb-2 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
-                  Pain Level
-                </p>
-                <div className="flex items-baseline">
-                  <span className={`font-bold text-red-600 ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
-                    {patientData.summary.painLevel}
-                  </span>
-                  <span className={`text-gray-500 ml-2 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
-                    /10
-                  </span>
-                </div>
-              </div>
-              <div>
-                <p className={`text-gray-600 mb-2 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
-                  Wellbeing
-                </p>
-                <div className="flex items-baseline">
-                  <span className={`font-bold text-blue-600 ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
-                    {patientData.summary.wellbeing}
-                  </span>
-                  <span className={`text-gray-500 ml-2 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
-                    /10
-                  </span>
-                </div>
-              </div>
-              <div>
-                <p className={`text-gray-600 mb-2 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
-                  Sleep Hours
-                </p>
-                <div className="flex items-baseline">
-                  <span className={`font-bold text-green-600 ${textSize === 'large' ? 'text-4xl' : 'text-3xl'}`}>
-                    {patientData.summary.sleep}
-                  </span>
-                  <span className={`text-gray-500 ml-2 ${textSize === 'large' ? 'text-lg' : 'text-base'}`}>
-                    hrs
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={`bg-blue-50 rounded-lg border border-blue-200 ${cardPaddingClass}`}>
-            <h3 className={`font-bold text-blue-900 mb-3 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-              What to discuss next
-            </h3>
-            <ul className={`space-y-2 ${textSize === 'large' ? 'text-lg leading-relaxed' : 'text-base'}`}>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-3 mt-1">•</span>
-                <span className="text-blue-900">Review treatment options for pain management</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-3 mt-1">•</span>
-                <span className="text-blue-900">Discuss physical therapy or exercises</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-3 mt-1">•</span>
-                <span className="text-blue-900">Consider imaging if symptoms persist</span>
-              </li>
-            </ul>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={handleShareWithDoctor}
-              className={`flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors ${buttonSizeClass}`}
-            >
-              <Share2 className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
-              Share with doctor
-            </button>
-            <button
-              onClick={handlePrint}
-              className={`flex items-center justify-center gap-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors ${buttonSizeClass}`}
-            >
-              <Printer className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
-              Print
-            </button>
-            <button
-              onClick={() => navigate('/patient/trends')}
-              className={`flex items-center justify-center gap-2 bg-white border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors ${buttonSizeClass}`}
-            >
-              <TrendingUp className={textSize === 'large' ? 'w-6 h-6' : 'w-5 h-5'} />
-              View trends
-            </button>
-          </div>
+        <div className="mt-12 flex justify-center">
+          <button onClick={() => navigate('/patient/trends')} className="group flex items-center gap-3 text-slate-400 hover:text-blue-600 font-bold transition-all">
+            View your long-term health trends
+            <TrendingUp className="w-5 h-5 group-hover:translate-x-1 transition-all" />
+          </button>
         </div>
       </div>
     </Layout>
   );
 };
+
+const MetricCard: React.FC<{ icon: React.ReactNode; label: string; value: string; subValue: string }> = ({ icon, label, value, subValue }) => (
+  <div className="glass-card p-5 border-slate-100 flex flex-col items-center text-center">
+    <div className="p-2.5 bg-slate-50 rounded-xl mb-4">{icon}</div>
+    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{label}</div>
+    <div className="text-xl font-bold text-slate-800 mb-1">{value}</div>
+    <div className="text-[10px] text-slate-400">{subValue}</div>
+  </div>
+);
+

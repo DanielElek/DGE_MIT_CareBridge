@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../AppContext';
-import { Heart } from 'lucide-react';
+import { Heart, Settings, User, Stethoscope, ChevronDown, Check, Monitor, LayoutGrid, FileText, Activity } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,9 +9,10 @@ interface LayoutProps {
 }
 
 export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) => {
-  const { role, setRole, textSize, setTextSize } = useApp();
+  const { role, setRole, textSize, setTextSize, themeColor, setThemeColor } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleRoleSwitch = (newRole: 'patient' | 'doctor') => {
     setRole(newRole);
@@ -25,176 +26,166 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
   const isPatientRoute = location.pathname.startsWith('/patient');
   const isDoctorRoute = location.pathname.startsWith('/doctor');
 
-  const textSizeClass = textSize === 'large' ? 'text-lg' : 'text-base';
-  const headingSizeClass = textSize === 'large' ? 'text-3xl' : 'text-2xl';
-  const buttonSizeClass = textSize === 'large' ? 'px-8 py-4 text-lg' : 'px-6 py-3 text-base';
+  const themes: { name: string; color: any; value: any }[] = [
+    { name: 'Medical Blue', color: '#3b82f6', value: 'blue' },
+    { name: 'Healing Teal', color: '#0d9488', value: 'teal' },
+    { name: 'Royal Indigo', color: '#6366f1', value: 'indigo' },
+    { name: 'Deep Slate', color: '#475569', value: 'slate' },
+  ];
 
   return (
-    <div className={`min-h-screen flex flex-col bg-gray-50 ${textSizeClass}`}>
+    <div className={`min-h-screen flex flex-col bg-slate-50 overflow-x-hidden`}>
       {!hideHeader && (
-        <>
-          <header className="bg-white border-b border-gray-200 shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between items-center h-16">
-                <div className="flex items-center space-x-3">
-                  <Heart className="w-8 h-8 text-blue-600" />
-                  <h1 className={`font-bold text-blue-600 ${textSize === 'large' ? 'text-2xl' : 'text-xl'}`}>
-                    CareBridge
-                  </h1>
-                </div>
-
-                <div className="flex items-center space-x-4">
-                  <div className="flex bg-gray-100 rounded-lg p-1">
-                    <button
-                      onClick={() => handleRoleSwitch('patient')}
-                      className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base' : 'text-sm'} ${
-                        role === 'patient'
-                          ? 'bg-white text-blue-600 shadow-sm'
-                          : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                    >
-                      Patient
-                    </button>
-                    <button
-                      onClick={() => handleRoleSwitch('doctor')}
-                      className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base' : 'text-sm'} ${
-                        role === 'doctor'
-                          ? 'bg-white text-blue-600 shadow-sm'
-                          : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                    >
-                      Doctor
-                    </button>
-                  </div>
-
-                  <div className="flex bg-gray-100 rounded-lg p-1">
-                    <button
-                      onClick={() => setTextSize('normal')}
-                      className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base' : 'text-sm'} ${
-                        textSize === 'normal'
-                          ? 'bg-white text-gray-900 shadow-sm'
-                          : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                    >
-                      Normal
-                    </button>
-                    <button
-                      onClick={() => setTextSize('large')}
-                      className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base' : 'text-sm'} ${
-                        textSize === 'large'
-                          ? 'bg-white text-gray-900 shadow-sm'
-                          : 'text-gray-600 hover:text-gray-900'
-                      }`}
-                    >
-                      Large
-                    </button>
-                  </div>
-                </div>
-              </div>
+        <header className="glass-header shadow-sm px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-600 rounded-xl shadow-lg shadow-blue-200">
+              <Heart className="w-6 h-6 text-white" />
             </div>
-          </header>
+            <div>
+              <h1 className="text-xl font-bold tracking-tight text-slate-800">CareBridge</h1>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-blue-600 leading-none">AI Health Companion</p>
+            </div>
+          </div>
 
-          {(isPatientRoute || isDoctorRoute) && (
-            <nav className="bg-white border-b border-gray-200">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex space-x-1 py-2">
-                  {role === 'patient' ? (
-                    <>
-                      <Link
-                        to="/patient/complaint"
-                        className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base min-h-[48px] flex items-center' : 'text-sm'} ${
-                          location.pathname === '/patient/complaint'
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex bg-slate-100/80 p-1 rounded-xl border border-slate-200">
+              <button
+                onClick={() => handleRoleSwitch('patient')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'patient'
+                    ? 'bg-white text-blue-600 shadow-md'
+                    : 'text-slate-500 hover:text-slate-800'
+                  }`}
+              >
+                <User className="w-4 h-4" />
+                Patient View
+              </button>
+              <button
+                onClick={() => handleRoleSwitch('doctor')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'doctor'
+                    ? 'bg-white text-blue-600 shadow-md'
+                    : 'text-slate-500 hover:text-slate-800'
+                  }`}
+              >
+                <Stethoscope className="w-4 h-4" />
+                Doctor View
+              </button>
+            </div>
+
+            <div className="relative">
+              <button
+                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                className="p-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all shadow-sm"
+              >
+                <Settings className="w-5 h-5" />
+              </button>
+
+              {isSettingsOpen && (
+                <div className="absolute right-0 mt-3 w-72 glass-card p-4 animate-slide-up z-[100] border-slate-200">
+                  <div className="mb-6">
+                    <h3 className="text-sm font-bold text-slate-800 mb-3 uppercase tracking-wider">Appearance</h3>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => setTextSize('normal')}
+                        className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${textSize === 'normal' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-200 text-slate-600'
+                          }`}
                       >
-                        Complaint
-                      </Link>
-                      <Link
-                        to="/patient/summary"
-                        className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base min-h-[48px] flex items-center' : 'text-sm'} ${
-                          location.pathname === '/patient/summary'
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
+                        <span className="text-xs font-bold uppercase">Abc</span>
+                        <span className="text-[10px]">Normal Text</span>
+                      </button>
+                      <button
+                        onClick={() => setTextSize('large')}
+                        className={`flex flex-col items-center gap-2 p-3 rounded-xl border transition-all ${textSize === 'large' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-200 text-slate-600'
+                          }`}
                       >
-                        Summary
-                      </Link>
-                      <Link
-                        to="/patient/trends"
-                        className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base min-h-[48px] flex items-center' : 'text-sm'} ${
-                          location.pathname === '/patient/trends'
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
-                      >
-                        Trends
-                      </Link>
-                      <Link
-                        to="/patient/documents"
-                        className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base min-h-[48px] flex items-center' : 'text-sm'} ${
-                          location.pathname.startsWith('/patient/documents')
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
-                      >
-                        Documents
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        to="/doctor/patient"
-                        className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base min-h-[48px] flex items-center' : 'text-sm'} ${
-                          location.pathname === '/doctor/patient'
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
-                      >
-                        Patient
-                      </Link>
-                      <Link
-                        to="/doctor/session"
-                        className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base min-h-[48px] flex items-center' : 'text-sm'} ${
-                          location.pathname === '/doctor/session'
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
-                      >
-                        Session
-                      </Link>
-                      <Link
-                        to="/doctor/soap"
-                        className={`px-4 py-2 rounded-md font-medium transition-colors ${textSize === 'large' ? 'text-base min-h-[48px] flex items-center' : 'text-sm'} ${
-                          location.pathname === '/doctor/soap'
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                        }`}
-                      >
-                        SOAP
-                      </Link>
-                    </>
-                  )}
+                        <span className="text-lg font-bold uppercase leading-none">Abc</span>
+                        <span className="text-[10px]">Large Text</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-800 mb-3 uppercase tracking-wider">Theme Color</h3>
+                    <div className="flex flex-wrap gap-3">
+                      {themes.map((t) => (
+                        <button
+                          key={t.value}
+                          onClick={() => setThemeColor(t.value as any)}
+                          className={`w-10 h-10 rounded-full border-2 transition-all flex items-center justify-center ${themeColor === t.value ? 'border-slate-800 scale-110' : 'border-transparent'
+                            }`}
+                          style={{ backgroundColor: t.color }}
+                          title={t.name}
+                        >
+                          {themeColor === t.value && <Check className="w-4 h-4 text-white" />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </nav>
-          )}
-        </>
+              )}
+            </div>
+          </div>
+        </header>
       )}
 
-      <main className="flex-1">
-        {children}
-      </main>
+      <div className="flex-1 flex flex-col md:flex-row max-w-[1600px] mx-auto w-full">
+        {!hideHeader && (isPatientRoute || isDoctorRoute) && (
+          <aside className="w-full md:w-64 p-6 shrink-0">
+            <nav className="space-y-2 sticky top-24">
+              <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-4 px-4">Navigation</div>
+              {role === 'patient' ? (
+                <>
+                  <NavLink to="/patient/complaint" icon={<Monitor className="w-5 h-5" />} label="New Intake" active={location.pathname === '/patient/complaint'} />
+                  <NavLink to="/patient/summary" icon={<LayoutGrid className="w-5 h-5" />} label="My Summary" active={location.pathname === '/patient/summary'} />
+                  <NavLink to="/patient/trends" icon={<Activity className="w-5 h-5" />} label="Health Trends" active={location.pathname === '/patient/trends'} />
+                  <NavLink to="/patient/documents" icon={<FileText className="w-5 h-5" />} label="Records" active={location.pathname.startsWith('/patient/documents')} />
+                </>
+              ) : (
+                <>
+                  <NavLink to="/doctor/patient" icon={<User className="w-5 h-5" />} label="Patient Record" active={location.pathname === '/doctor/patient'} />
+                  <NavLink to="/doctor/session" icon={<Activity className="w-5 h-5" />} label="Active Session" active={location.pathname === '/doctor/session'} />
+                  <NavLink to="/doctor/soap" icon={<FileText className="w-5 h-5" />} label="SOAP Notes" active={location.pathname === '/doctor/soap'} />
+                </>
+              )}
+            </nav>
+          </aside>
+        )}
+
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto animate-slide-up">
+          <div className="max-w-4xl mx-auto w-full">
+            {children}
+          </div>
+        </main>
+      </div>
 
       {!hideHeader && (
-        <footer className="bg-white border-t border-gray-200 mt-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <p className={`text-center text-gray-500 ${textSize === 'large' ? 'text-base' : 'text-sm'}`}>
-              Not medical advice. Discuss with your clinician.
-            </p>
+        <footer className="px-6 py-6 border-t border-slate-200 bg-white/50 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-100 rounded-full">
+              <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
+              <p className="text-xs font-bold text-amber-800">
+                Not medical advice. Discuss with your clinician.
+              </p>
+            </div>
+            <div className="text-xs text-slate-400 font-medium">
+              &copy; 2026 CareBridge Demo • Built with Local AI
+            </div>
           </div>
         </footer>
       )}
     </div>
   );
 };
+
+const NavLink: React.FC<{ to: string; icon: React.ReactNode; label: string; active: boolean }> = ({ to, icon, label, active }) => (
+  <Link
+    to={to}
+    className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${active
+        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+        : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+      }`}
+  >
+    {icon}
+    <span>{label}</span>
+  </Link>
+);
+

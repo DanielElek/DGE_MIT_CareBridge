@@ -64,37 +64,32 @@ export interface DoctorSession {
   };
 }
 
-const generateTrendData = (): TrendEntry[] => {
+const generateTrendData = (days: number): TrendEntry[] => {
   const entries: TrendEntry[] = [];
   const today = new Date();
 
-  for (let i = 9; i >= 0; i--) {
+  for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
 
+    // Create some realistic trends
+    const basePain = 6;
+    const painVariation = Math.sin(i * 0.2) * 2;
+    const recoveryTrend = i / days * 3;
+
     entries.push({
       date: date.toISOString().split('T')[0],
-      painLevel: 5 + Math.floor(Math.random() * 3) - 1 + (i < 5 ? -1 : 0),
-      wellbeing: 6 + Math.floor(Math.random() * 2) + (i < 5 ? 1 : 0),
-      sleepHours: 5 + Math.floor(Math.random() * 2) + (i < 5 ? 1 : 0),
+      painLevel: Math.max(0, Math.min(10, Math.round(basePain + painVariation - recoveryTrend))),
+      wellbeing: Math.max(0, Math.min(10, Math.round(5 + (recoveryTrend * 1.5) + (Math.random() - 0.5)))),
+      sleepHours: Math.max(0, Math.min(12, Math.round(6 + (i > 60 ? 1 : 0) + (Math.random() - 0.5)))),
     });
   }
 
   return entries;
 };
 
-export const mockTrends: TrendEntry[] = [
-  { date: '2026-02-17', painLevel: 6, wellbeing: 5, sleepHours: 5 },
-  { date: '2026-02-18', painLevel: 7, wellbeing: 5, sleepHours: 6 },
-  { date: '2026-02-19', painLevel: 6, wellbeing: 6, sleepHours: 5 },
-  { date: '2026-02-20', painLevel: 7, wellbeing: 5, sleepHours: 5 },
-  { date: '2026-02-21', painLevel: 6, wellbeing: 6, sleepHours: 6 },
-  { date: '2026-02-22', painLevel: 5, wellbeing: 7, sleepHours: 7 },
-  { date: '2026-02-23', painLevel: 4, wellbeing: 7, sleepHours: 7 },
-  { date: '2026-02-24', painLevel: 4, wellbeing: 8, sleepHours: 7 },
-  { date: '2026-02-25', painLevel: 3, wellbeing: 8, sleepHours: 8 },
-  { date: '2026-02-26', painLevel: 3, wellbeing: 8, sleepHours: 7 },
-];
+export const mockTrends: TrendEntry[] = generateTrendData(90);
+
 
 export const mockDocuments: Document[] = [
   {
