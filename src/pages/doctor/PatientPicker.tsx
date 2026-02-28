@@ -5,6 +5,7 @@ import { Layout } from '../../components/Layout';
 import { Search, Heart, ChevronRight, LogOut, Calendar } from 'lucide-react';
 import { MonogramAvatar } from '../../components/MonogramAvatar';
 import { MOCK_CLINICAL_PATIENT } from '../../mockData';
+import { FEATURES } from '../../config/features';
 
 interface Patient {
     code: string;
@@ -169,9 +170,11 @@ export const PatientPicker: React.FC = () => {
                             <p className="text-[8px] font-black uppercase tracking-widest text-accent-500 leading-tight">Clinical Portal</p>
                         </div>
                     </div>
-                    <button onClick={() => navigate('/')} className="flex items-center gap-2 text-text-muted hover:text-text-strong font-black text-[10px] uppercase tracking-widest transition-colors">
-                        <LogOut className="w-4 h-4" /> Switch Role
-                    </button>
+                    {FEATURES.patientPortal && (
+                        <button onClick={() => navigate('/')} className="flex items-center gap-2 text-text-muted hover:text-text-strong font-black text-[10px] uppercase tracking-widest transition-colors">
+                            <LogOut className="w-4 h-4" /> Switch Role
+                        </button>
+                    )}
                 </header>
 
                 <main className="flex-1 max-w-[1600px] w-full mx-auto px-8 py-10">

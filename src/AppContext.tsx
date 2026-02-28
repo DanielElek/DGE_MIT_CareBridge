@@ -10,6 +10,7 @@ import {
   generatePatientSummary,
   ClinicalPatientData
 } from './mockData';
+import { FEATURES } from './config/features';
 
 type Role = 'patient' | 'doctor';
 type TextSize = 'normal' | 'large';
@@ -39,7 +40,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [role, setRole] = useState<Role>('patient');
+  const [role, setRole] = useState<Role>(FEATURES.patientPortal ? 'patient' : 'doctor');
   const [textSize, setTextSize] = useState<TextSize>('normal');
   const [themeColor, setThemeColor] = useState<ThemeColor>('blue');
   const [patientData, setPatientData] = useState<PatientData | null>(null);

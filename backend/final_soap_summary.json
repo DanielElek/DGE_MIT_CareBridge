@@ -1,45 +1,54 @@
 {
     "soap": {
-        "subjective": "Patient reports a headache for the past two days, located in the back of the head. Patient denies any improvement with increased water intake and reports working at a computer for long hours. Patient's occupation involves prolonged screen time and uses glasses for vision correction.",
-        "objective": "No specific objective findings provided in the dialogue. The focus is on the patient's subjective symptoms and occupational habits.",
-        "assessment": "The patient's headache could be related to prolonged screen time and/or eye strain. The absence of specific objective findings makes it difficult to pinpoint the exact cause.",
-        "plan": "Not discussed."
+        "subjective": "Patient reports a sore throat and dry cough for four days, mild fever on the first day around 38 degrees Celsius, no chest pain, and no known allergies or regular medications. Patient's coworker had a cold last week.",
+        "objective": "Physical exam reveals a red throat and clear lung sounds with normal oxygen levels. No chest pain or breathing difficulties observed.",
+        "assessment": "Diagnosis of a viral upper respiratory infection. Differential diagnosis includes other viral or bacterial infections of the upper respiratory tract.",
+        "plan": "Treatment plan includes fluids, rest, and ibuprofen for pain relief. Patient is advised to return for urgent care if symptoms worsen or complications arise. Antibiotics are not indicated at this time."
     },
     "quotes": {
         "subjective": [
             {
-                "sentence": "Patient reports a headache for the past two days, located in the back of the head.",
-                "quote": "\"And where are you? Feel it? It's somewhere in the back of my head.\""
+                "sentence": "Patient reports a sore throat and dry cough for four days, mild fever on the first day around 38 degrees Celsius, no chest pain, and no known allergies or regular medications.",
+                "quote": "\"I've had a sore throat and a dry cough for about four days. I had a mild fever on the first day around 38 degrees, but no chest pain. Breathing is fine. No allergies. I'm not on any daily meds. My coworker had a cold last week.\""
             },
             {
-                "sentence": "Patient denies any improvement with increased water intake and reports working at a computer for long hours.",
-                "quote": "\"And where are you? Feel it? It's somewhere in the back of my head. I tried drinking a lot of water, but even though I drink like four liters per day, it did not help.\""
-            },
-            {
-                "sentence": "Patient's occupation involves prolonged screen time and uses glasses for vision correction.",
-                "quote": "\"I work at the computer.\""
+                "sentence": "Patient's coworker had a cold last week.",
+                "quote": "\"My coworker had a cold last week.\""
             }
         ],
         "objective": [
             {
-                "sentence": "No specific objective findings provided in the dialogue.",
-                "quote": "None"
+                "sentence": "Physical exam reveals a red throat and clear lung sounds with normal oxygen levels.",
+                "quote": "\"your throat is a bit red, lungs sounds clear\""
             },
             {
-                "sentence": "The focus is on the patient's subjective symptoms and occupational habits.",
-                "quote": "None"
+                "sentence": "No chest pain or breathing difficulties observed.",
+                "quote": "\"Breathing is fine.\""
             }
         ],
         "assessment": [
             {
-                "sentence": "The patient's headache could be related to prolonged screen time and/or eye strain.",
-                "quote": "\"I work at the computer. Oh, so you watch the screen for the day?\""
+                "sentence": "Diagnosis of a viral upper respiratory infection.",
+                "quote": "\"This looks like a viral upper respiration infection.\""
             },
             {
-                "sentence": "The absence of specific objective findings makes it difficult to pinpoint the exact cause.",
-                "quote": "\"The absence of specific objective findings makes it difficult to pinpoint the exact cause.\""
+                "sentence": "Differential diagnosis includes other viral or bacterial infections of the upper respiratory tract.",
+                "quote": "\"This looks like a viral upper respiration infection.\""
             }
         ],
-        "plan": []
+        "plan": [
+            {
+                "sentence": "Treatment plan includes fluids, rest, and ibuprofen for pain relief.",
+                "quote": "\"I recommend fluids, rest and ibuprofen if you need it.\""
+            },
+            {
+                "sentence": "Patient is advised to return for urgent care if symptoms worsen or complications arise.",
+                "quote": "\"If you develop high fever, worsening symptoms or breathing trouble, come back and seek urgent care.\""
+            },
+            {
+                "sentence": "Antibiotics are not indicated at this time.",
+                "quote": "\"Do I need antibiotics? Not right now.\""
+            }
+        ]
     }
 }

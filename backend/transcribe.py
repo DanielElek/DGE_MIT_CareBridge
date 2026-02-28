@@ -16,7 +16,7 @@ import time
 from whisperx.diarize import DiarizationPipeline
 
 # Path configurations for models and files
-model_dir = "distil-large-v35-ct2" 
+model_dir = "whisper-large-v3" 
 audio_file = "converted_audio.wav"
 output_json = "transcript.json"
 output_txt = "formatted_dialogue.txt"

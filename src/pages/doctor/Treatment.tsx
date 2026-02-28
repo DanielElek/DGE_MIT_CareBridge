@@ -163,10 +163,6 @@ export const Treatment: React.FC = () => {
     }, [currentClinicalPatient, navigate]);
 
     useEffect(() => {
-        // Preload backend AI models asynchronously on mount
-        fetch('http://127.0.0.1:8000/api/preload', { method: 'POST' })
-            .catch(err => console.error("Failed to trigger preload:", err));
-
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
         };

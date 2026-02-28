@@ -1,27 +1,18 @@
-Doctor: Hey doctor, I came to you because I have a really bad headache for the past two days.
-Doctor: And where are you?
-Doctor: Feel it?
-Doctor: It's somewhere in the back of my head.
-Doctor: I tried drinking a lot of water, but even though I drink like four liters per day, it did not help.
-Doctor: And have you sleep enough?
-Doctor: Yes, well, I guess, like seven hours, seven hours, yeah?
-Doctor: Or I sleep around seven hours per day.
-Doctor: Okay, and how many hours work?
-Doctor: In Monday.
-Doctor: Ah, so how many hours I work?
-Doctor: I work...
-Doctor: Like 12.
-Patient: And it's physical or just office jobs?
-Doctor: Office jobs.
-Doctor: I work at the computer.
-Patient: Oh, so you watch the screen for the day?
-Doctor: Yes, yes, the entire day actually.
-Doctor: And have you glasses or something?
-Doctor: Yeah, I just know more glasses for vision correction.
-Patient: Okay, maybe that was the problem.
-Patient: So try it with the glass.
-Doctor: Ah, okay.
-Doctor: Okay.
-Doctor: Then I will try looking at the computer without glasses.
-Doctor: Thank you, Doc.
-Doctor: Bye.
+Doctor: Hi, what brings you in today?
+Doctor: I've had a sore throat and a dry cough for about four days.
+Doctor: Any fever, shortness of breath or chest pain?
+Patient: I had a mild fever on the first day around 38 degrees, but no chest pain.
+Patient: Breathing is fine.
+Doctor: Any allergies or regular medications?
+Patient: No allergies.
+Patient: I'm not on any daily meds.
+Doctor: Have you been around anyone sick recently?
+Patient: My coworker had a cold last week.
+Doctor: Okay, on exam your throat is a bit red, lungs sounds clear and your oxygen level is normal.
+Doctor: This looks like a viral upper respiration infection.
+Doctor: Do I need antibiotics?
+Doctor: Not right now.
+Doctor: I recommend fluids, rest and ibuprofen if you need it.
+Doctor: If you develop high fever, worsening symptoms or breathing trouble, come back and seek urgent care.
+Patient: Alright, thank you.
+Patient: Continue, continue, continue.

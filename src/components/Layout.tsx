@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../AppContext';
 import { Heart, Settings, User, Stethoscope, Check, Monitor, LayoutGrid, FileText, Activity } from 'lucide-react';
+import { FEATURES } from '../config/features';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -45,28 +46,30 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
           </div>
 
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex bg-surface-muted p-1 rounded-xl border border-border">
-              <button
-                onClick={() => handleRoleSwitch('patient')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'patient'
-                  ? 'bg-white text-primary shadow-md'
-                  : 'text-text-muted hover:text-text-strong'
-                  }`}
-              >
-                <User className="w-4 h-4" />
-                Patient View
-              </button>
-              <button
-                onClick={() => handleRoleSwitch('doctor')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'doctor'
-                  ? 'bg-white text-primary shadow-md'
-                  : 'text-text-muted hover:text-text-strong'
-                  }`}
-              >
-                <Stethoscope className="w-4 h-4" />
-                Doctor View
-              </button>
-            </div>
+            {FEATURES.patientPortal && (
+              <div className="hidden md:flex bg-surface-muted p-1 rounded-xl border border-border">
+                <button
+                  onClick={() => handleRoleSwitch('patient')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'patient'
+                    ? 'bg-white text-primary shadow-md'
+                    : 'text-text-muted hover:text-text-strong'
+                    }`}
+                >
+                  <User className="w-4 h-4" />
+                  Patient View
+                </button>
+                <button
+                  onClick={() => handleRoleSwitch('doctor')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${role === 'doctor'
+                    ? 'bg-white text-primary shadow-md'
+                    : 'text-text-muted hover:text-text-strong'
+                    }`}
+                >
+                  <Stethoscope className="w-4 h-4" />
+                  Doctor View
+                </button>
+              </div>
+            )}
 
             <div className="relative">
               <button
@@ -125,7 +128,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, hideHeader = false }) 
       )}
 
       <div className="flex-1 flex flex-col md:flex-row w-full overflow-hidden">
-        {!hideHeader && isPatientRoute && (
+        {!hideHeader && isPatientRoute && FEATURES.patientPortal && (
           <aside className="w-full md:w-64 p-6 shrink-0 border-r border-slate-100 bg-white/30">
             <nav className="space-y-1 sticky top-24">
               <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-4 opacity-70">Patient Portal</div>
