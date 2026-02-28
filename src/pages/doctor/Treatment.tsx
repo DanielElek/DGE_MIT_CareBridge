@@ -34,6 +34,63 @@ interface SOAPDraft {
 }
 
 // --- MOCK AI FUNCTIONS ---
+// --- CONSENT MODAL COMPONENT ---
+const ConsentModal: React.FC<{
+    isOpen: boolean;
+    onClose: () => void;
+    onConfirm: () => void;
+    onDeny: () => void;
+}> = ({ isOpen, onClose, onConfirm, onDeny }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-primary/40 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+            <div className="bg-white w-full max-w-md rounded-[3rem] shadow-2xl relative animate-scale-up overflow-hidden p-10">
+                <div className="flex items-center gap-4 mb-6">
+                    <div className="w-14 h-14 bg-accent-500/10 rounded-2xl flex items-center justify-center shrink-0">
+                        <Mic className="w-7 h-7 text-accent-600" />
+                    </div>
+                    <h2 className="text-2xl font-black text-text-strong tracking-tight leading-tight">Patient Recording Consent</h2>
+                </div>
+
+                <div className="space-y-4 mb-10">
+                    <p className="text-base text-text font-medium leading-relaxed">
+                        Does the patient agree to an audio recording of this appointment for clinical documentation and local AI analysis?
+                    </p>
+                    <div className="bg-surface-muted p-4 rounded-2xl border border-border">
+                        <p className="text-[11px] text-text-muted font-bold leading-normal">
+                            <span className="text-accent-600 block mb-1">NOTE:</span>
+                            Data is processed locally on this device. You can continue with manual typed notes if the patient declines.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                    <button
+                        onClick={onConfirm}
+                        className="w-full h-14 bg-primary text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-primary-900 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
+                    >
+                        <Check className="w-4 h-4" /> I Confirm Consent
+                    </button>
+                    <button
+                        onClick={onDeny}
+                        className="w-full h-14 bg-white border border-border text-danger/80 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-red-50 hover:border-red-100 transition-all flex items-center justify-center gap-2"
+                    >
+                        <Trash2 className="w-4 h-4" /> Decline / Typed Notes
+                    </button>
+                    <button
+                        onClick={onClose}
+                        className="w-full h-10 text-[10px] font-bold text-text-muted hover:text-text uppercase tracking-widest transition-colors"
+                    >
+                        Maybe Later
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const localAI = {
     analyzeInitial: async (_audioUrl: string) => {
         await new Promise(r => setTimeout(r, 3000));
@@ -133,6 +190,11 @@ export const Treatment: React.FC = () => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
+    // Consent & Alternative Note State
+    const [consentState, setConsentState] = useState<"unknown" | "granted" | "denied">("unknown");
+    const [typedNotes, setTypedNotes] = useState("");
+    const [isConsentModalOpen, setIsConsentModalOpen] = useState(false);
+
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const chunksRef = useRef<Blob[]>([]);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -171,6 +233,11 @@ export const Treatment: React.FC = () => {
     };
 
     const startRecording = async () => {
+        if (consentState !== "granted") {
+            setIsConsentModalOpen(true);
+            return;
+        }
+
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             const mediaRecorder = new MediaRecorder(stream);
@@ -232,6 +299,16 @@ export const Treatment: React.FC = () => {
         }
     };
 
+    const handleConsentConfirm = () => {
+        setConsentState("granted");
+        setIsConsentModalOpen(false);
+    };
+
+    const handleConsentDeny = () => {
+        setConsentState("denied");
+        setIsConsentModalOpen(false);
+    };
+
     const resetRecording = () => {
         setAudioUrl(null);
         setElapsedTime(0);
@@ -287,6 +364,28 @@ export const Treatment: React.FC = () => {
             setIsSaving(false);
             alert("Session committed to patient record.");
         }, 1500);
+    };
+
+    const handleAnalyzeTypedNotes = async () => {
+        if (!typedNotes.trim()) return;
+        setSessionStep("analyzing_initial");
+        try {
+            await new Promise(r => setTimeout(r, 2500));
+            // Simulate AI summary based on notes
+            const summary = `Manual Entry Summary: ${typedNotes.substring(0, 150)}${typedNotes.length > 150 ? '...' : ''} [Clinical analysis completed based on manual practitioner input]`;
+            setAiSummary(summary);
+
+            // Generate SOAP draft immediately for a fast manual workflow
+            const soapResult = await localAI.generateSOAP(summary);
+            setSoapDraft(soapResult);
+
+            setSessionStep("final_ready");
+            setAudioUrl(null);
+            setElapsedTime(0);
+        } catch (e) {
+            setSessionStep("recording_initial");
+            alert("Analysis of notes failed. Please check the content and try again.");
+        }
     };
 
     const handleSendEmail = () => {
@@ -405,12 +504,59 @@ export const Treatment: React.FC = () => {
                                                 {sessionStep === "recording_initial" && (
                                                     <button
                                                         onClick={startRecording}
-                                                        className="w-full h-16 bg-gradient-to-br from-primary to-primary-900 text-white rounded-2xl flex items-center justify-center gap-4 hover:shadow-2xl hover:shadow-primary/30 transition-all group overflow-hidden relative"
+                                                        className={`w-full h-16 rounded-2xl flex items-center justify-center gap-4 transition-all group overflow-hidden relative ${consentState === "denied"
+                                                            ? "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
+                                                            : "bg-gradient-to-br from-primary to-primary-900 text-white hover:shadow-2xl hover:shadow-primary/30"
+                                                            }`}
+                                                        disabled={consentState === "denied"}
                                                     >
-                                                        <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                                                        <Mic className="w-5 h-5 relative z-10" />
-                                                        <span className="text-[11px] font-black uppercase tracking-[0.2em] relative z-10">Start Recording</span>
+                                                        {consentState === "granted" ? (
+                                                            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                                                        ) : null}
+                                                        <Mic className={`w-5 h-5 relative z-10 ${consentState === "denied" ? "opacity-30" : ""}`} />
+                                                        <span className="text-[11px] font-black uppercase tracking-[0.2em] relative z-10">
+                                                            {consentState === "unknown" ? "Request Consent" : "Start Recording"}
+                                                        </span>
                                                     </button>
+                                                )}
+
+                                                {consentState === "denied" && (
+                                                    <div className="space-y-4 animate-fade-in border-t border-slate-50 pt-8">
+                                                        <div className="flex items-center gap-3 px-1">
+                                                            <div className="p-2 bg-slate-100 rounded-lg text-slate-500">
+                                                                <AlertCircle className="w-4 h-4" />
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest leading-none mb-1">Manual Mode</p>
+                                                                <p className="text-[9px] font-bold text-slate-400 leading-none">Recording was declined</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="relative">
+                                                            <textarea
+                                                                value={typedNotes}
+                                                                onChange={(e) => setTypedNotes(e.target.value)}
+                                                                placeholder="Type examination notes here instead..."
+                                                                className="w-full h-44 p-4 rounded-2xl bg-surface-muted border border-border text-xs font-medium focus:ring-2 focus:ring-accent-500/10 focus:border-accent-500 outline-none transition-all resize-none shadow-inner placeholder:italic placeholder:opacity-40"
+                                                            />
+                                                            <div className="absolute bottom-3 right-3">
+                                                                <div className="bg-white/80 backdrop-blur-sm px-2 py-1 rounded-lg border border-border text-[8px] font-black text-text-muted uppercase tracking-widest">
+                                                                    {typedNotes.length > 0 ? "Content Active" : "Empty"}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <button
+                                                            onClick={handleAnalyzeTypedNotes}
+                                                            disabled={!typedNotes.trim() || sessionStep !== "recording_initial"}
+                                                            className="w-full h-12 bg-primary text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-900 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                            {sessionStep === "analyzing_initial" ? (
+                                                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                                            ) : (
+                                                                <Sparkles className="w-3.5 h-3.5" />
+                                                            )}
+                                                            Process & Generate SOAP
+                                                        </button>
+                                                    </div>
                                                 )}
 
                                                 {sessionStep === "ready_to_analyze_initial" && (
@@ -593,6 +739,13 @@ export const Treatment: React.FC = () => {
 
                     </div>
                 </main>
+
+                <ConsentModal
+                    isOpen={isConsentModalOpen}
+                    onClose={() => setIsConsentModalOpen(false)}
+                    onConfirm={handleConsentConfirm}
+                    onDeny={handleConsentDeny}
+                />
             </div>
         </Layout>
     );
