@@ -1,0 +1,1307 @@
+[
+  {
+    "start": 1.111,
+    "end": 9.464,
+    "text": " Hey doctor, I came to you because I have a really bad headache for the past two days.",
+    "words": [
+      {
+        "word": "Hey",
+        "start": 1.111,
+        "end": 1.552,
+        "score": 0.556,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "doctor,",
+        "start": 1.612,
+        "end": 2.012,
+        "score": 0.949,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "I",
+        "start": 2.774,
+        "end": 3.034,
+        "score": 0.819,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "came",
+        "start": 3.054,
+        "end": 3.214,
+        "score": 0.469,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "to",
+        "start": 3.234,
+        "end": 3.294,
+        "score": 0.626,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "you",
+        "start": 3.314,
+        "end": 3.415,
+        "score": 0.804,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "because",
+        "start": 3.455,
+        "end": 3.755,
+        "score": 0.787,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "I",
+        "start": 3.915,
+        "end": 4.016,
+        "score": 0.88,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "have",
+        "start": 4.056,
+        "end": 4.216,
+        "score": 0.962,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "a",
+        "start": 4.296,
+        "end": 4.336,
+        "score": 0.979,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "really",
+        "start": 4.456,
+        "end": 4.897,
+        "score": 0.41,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "bad",
+        "start": 5.077,
+        "end": 5.298,
+        "score": 0.711,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "headache",
+        "start": 5.318,
+        "end": 5.658,
+        "score": 0.681,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "for",
+        "start": 5.718,
+        "end": 5.858,
+        "score": 0.871,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "the",
+        "start": 5.918,
+        "end": 5.999,
+        "score": 0.891,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "past",
+        "start": 6.059,
+        "end": 6.539,
+        "score": 0.594,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "two",
+        "start": 6.559,
+        "end": 6.92,
+        "score": 0.598,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "days.",
+        "start": 7.04,
+        "end": 9.464,
+        "score": 0.86,
+        "speaker": "SPEAKER_00"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 9.484,
+    "end": 11.026,
+    "text": "And where are you?",
+    "words": [
+      {
+        "word": "And",
+        "start": 9.484,
+        "end": 9.664,
+        "score": 0.74,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "where",
+        "start": 9.945,
+        "end": 10.045,
+        "score": 0.002,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "are",
+        "start": 10.065,
+        "end": 10.225,
+        "score": 0.576,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "you?",
+        "start": 10.265,
+        "end": 11.026,
+        "score": 0.897,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 11.046,
+    "end": 11.387,
+    "text": "Feel it?",
+    "words": [
+      {
+        "word": "Feel",
+        "start": 11.046,
+        "end": 11.227,
+        "score": 0.631,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "it?",
+        "start": 11.247,
+        "end": 11.387,
+        "score": 0.508,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 13.49,
+    "end": 15.974,
+    "text": "It's somewhere in the back of my head.",
+    "words": [
+      {
+        "word": "It's",
+        "start": 13.49,
+        "end": 13.951,
+        "score": 0.604,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "somewhere",
+        "start": 14.011,
+        "end": 14.452,
+        "score": 0.95,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "in",
+        "start": 14.472,
+        "end": 14.512,
+        "score": 0.498,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "the",
+        "start": 14.692,
+        "end": 14.852,
+        "score": 0.805,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "back",
+        "start": 14.993,
+        "end": 15.253,
+        "score": 0.936,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "of",
+        "start": 15.333,
+        "end": 15.393,
+        "score": 0.932,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "my",
+        "start": 15.493,
+        "end": 15.694,
+        "score": 0.998,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "head.",
+        "start": 15.774,
+        "end": 15.974,
+        "score": 0.815,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 16.194,
+    "end": 24.267,
+    "text": "I tried drinking a lot of water, but even though I drink like four liters per day, it did not help.",
+    "words": [
+      {
+        "word": "I",
+        "start": 16.194,
+        "end": 16.335,
+        "score": 0.942,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "tried",
+        "start": 16.595,
+        "end": 16.896,
+        "score": 0.717,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "drinking",
+        "start": 17.116,
+        "end": 17.476,
+        "score": 0.888,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "a",
+        "start": 17.537,
+        "end": 17.557,
+        "score": 0.967,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "lot",
+        "start": 17.617,
+        "end": 17.757,
+        "score": 0.958,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "of",
+        "start": 17.797,
+        "end": 17.837,
+        "score": 0.999,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "water,",
+        "start": 17.877,
+        "end": 18.258,
+        "score": 0.857,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "but",
+        "start": 19.259,
+        "end": 19.419,
+        "score": 0.585,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "even",
+        "start": 19.96,
+        "end": 20.101,
+        "score": 0.821,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "though",
+        "start": 20.121,
+        "end": 20.261,
+        "score": 0.795,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "I",
+        "start": 20.301,
+        "end": 20.341,
+        "score": 0.965,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "drink",
+        "start": 20.401,
+        "end": 20.661,
+        "score": 0.907,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "like",
+        "start": 20.722,
+        "end": 20.862,
+        "score": 0.878,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "four",
+        "start": 21.162,
+        "end": 21.383,
+        "score": 0.916,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "liters",
+        "start": 21.423,
+        "end": 21.823,
+        "score": 0.738,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "per",
+        "start": 22.484,
+        "end": 22.665,
+        "score": 0.832,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "day,",
+        "start": 22.725,
+        "end": 23.085,
+        "score": 0.967,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "it",
+        "start": 23.125,
+        "end": 23.165,
+        "score": 0.458,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "did",
+        "start": 23.185,
+        "end": 23.426,
+        "score": 0.549,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "not",
+        "start": 23.466,
+        "end": 23.626,
+        "score": 0.981,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "help.",
+        "start": 23.686,
+        "end": 24.267,
+        "score": 0.956,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 24.247,
+    "end": 25.429,
+    "text": " And have you slept enough?",
+    "words": [
+      {
+        "word": "And",
+        "start": 24.247,
+        "end": 24.508,
+        "score": 0.888,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "have",
+        "start": 24.568,
+        "end": 24.708,
+        "score": 0.964,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "you",
+        "start": 24.748,
+        "end": 24.868,
+        "score": 0.948,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "slept",
+        "start": 24.908,
+        "end": 25.189,
+        "score": 0.594,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "enough?",
+        "start": 25.209,
+        "end": 25.429,
+        "score": 0.9,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 26.171,
+    "end": 31.481,
+    "text": "Yes, well, I guess like seven hours, seven hours, yeah.",
+    "words": [
+      {
+        "word": "Yes,",
+        "start": 26.171,
+        "end": 26.391,
+        "score": 0.795,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "well,",
+        "start": 27.794,
+        "end": 28.035,
+        "score": 0.775,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "I",
+        "start": 28.275,
+        "end": 28.315,
+        "score": 0.849,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "guess",
+        "start": 28.375,
+        "end": 28.676,
+        "score": 0.784,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "like",
+        "start": 28.816,
+        "end": 29.016,
+        "score": 0.913,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "seven",
+        "start": 29.077,
+        "end": 29.357,
+        "score": 0.849,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "hours,",
+        "start": 29.397,
+        "end": 29.798,
+        "score": 0.853,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "seven",
+        "start": 29.858,
+        "end": 30.299,
+        "score": 0.757,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "hours,",
+        "start": 30.359,
+        "end": 30.74,
+        "score": 0.765,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "yeah.",
+        "start": 30.8,
+        "end": 31.481,
+        "score": 0.631,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 32.263,
+    "end": 34.006,
+    "text": "I sleep around seven hours per day.",
+    "words": [
+      {
+        "word": "I",
+        "start": 32.263,
+        "end": 32.423,
+        "score": 0.636,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "sleep",
+        "start": 32.443,
+        "end": 32.604,
+        "score": 0.517,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "around",
+        "start": 32.664,
+        "end": 32.884,
+        "score": 0.846,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "seven",
+        "start": 32.904,
+        "end": 33.165,
+        "score": 0.809,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "hours",
+        "start": 33.225,
+        "end": 33.505,
+        "score": 0.83,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "per",
+        "start": 33.606,
+        "end": 33.766,
+        "score": 0.662,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "day.",
+        "start": 33.806,
+        "end": 34.006,
+        "score": 0.869,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 34.307,
+    "end": 37.834,
+    "text": "Okay, and how many hours work?",
+    "words": [
+      {
+        "word": "Okay,",
+        "start": 34.307,
+        "end": 34.527,
+        "score": 0.209,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "and",
+        "start": 34.547,
+        "end": 34.668,
+        "score": 0.856,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "how",
+        "start": 34.708,
+        "end": 34.848,
+        "score": 0.939,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "many",
+        "start": 34.868,
+        "end": 35.269,
+        "score": 0.908,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "hours",
+        "start": 35.93,
+        "end": 36.311,
+        "score": 0.576,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "work?",
+        "start": 36.732,
+        "end": 37.834,
+        "score": 0.833,
+        "speaker": "SPEAKER_00"
+      }
+    ],
+    "speaker": "SPEAKER_00",
+    "speaker_label": "Doctor"
+  },
+  {
+    "start": 39.316,
+    "end": 55.485,
+    "text": " Monday ah so how many hours I work I work like 12 it's physical or just office jobs office jobs I work at the computer oh so you watch the screen all the day",
+    "words": [
+      {
+        "word": "Monday",
+        "start": 39.316,
+        "end": 39.977,
+        "score": 0.802,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "ah",
+        "start": 39.997,
+        "end": 41.139,
+        "score": 0.657,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "so",
+        "start": 41.34,
+        "end": 41.44,
+        "score": 0.982,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "how",
+        "start": 41.5,
+        "end": 41.58,
+        "score": 0.966,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "many",
+        "start": 41.62,
+        "end": 41.76,
+        "score": 0.906,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "hours",
+        "start": 41.8,
+        "end": 42.101,
+        "score": 0.802,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "I",
+        "start": 42.121,
+        "end": 42.141,
+        "score": 0.996,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "work",
+        "start": 42.442,
+        "end": 42.682,
+        "score": 0.844,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "I",
+        "start": 42.702,
+        "end": 42.722,
+        "score": 0.937,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "work",
+        "start": 43.343,
+        "end": 43.724,
+        "score": 0.917,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "like",
+        "start": 44.666,
+        "end": 44.826,
+        "score": 0.937,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "12",
+        "start": 44.846,
+        "end": 45.187,
+        "score": 0.825,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "it's",
+        "start": 45.808,
+        "end": 46.349,
+        "score": 0.486,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "physical",
+        "start": 46.369,
+        "end": 46.709,
+        "score": 0.898,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "or",
+        "start": 46.829,
+        "end": 47.03,
+        "score": 0.792,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "just",
+        "start": 48.112,
+        "end": 48.252,
+        "score": 0.784,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "office",
+        "start": 48.352,
+        "end": 48.593,
+        "score": 0.554,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "jobs",
+        "start": 48.633,
+        "end": 48.833,
+        "score": 0.696,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "office",
+        "start": 49.194,
+        "end": 49.675,
+        "score": 0.595,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "jobs",
+        "start": 49.695,
+        "end": 49.915,
+        "score": 0.73,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "I",
+        "start": 49.995,
+        "end": 50.055,
+        "score": 0.862,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "work",
+        "start": 50.095,
+        "end": 50.456,
+        "score": 0.757,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "at",
+        "start": 50.496,
+        "end": 50.536,
+        "score": 0.908,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "the",
+        "start": 50.576,
+        "end": 50.636,
+        "score": 0.847,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "computer",
+        "start": 50.676,
+        "end": 51.117,
+        "score": 0.828,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "oh",
+        "start": 51.658,
+        "end": 51.778,
+        "score": 0.787,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "so",
+        "start": 52.199,
+        "end": 52.339,
+        "score": 0.911,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "you",
+        "start": 52.359,
+        "end": 52.46,
+        "score": 0.903,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "watch",
+        "start": 52.5,
+        "end": 53.582,
+        "score": 0.875,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "the",
+        "start": 53.642,
+        "end": 53.902,
+        "score": 0.819,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "screen",
+        "start": 54.062,
+        "end": 54.423,
+        "score": 0.436,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "all",
+        "start": 54.443,
+        "end": 54.523,
+        "score": 0.243,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "the",
+        "start": 54.704,
+        "end": 54.784,
+        "score": 0.924,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "day",
+        "start": 54.824,
+        "end": 55.485,
+        "score": 0.936,
+        "speaker": "SPEAKER_00"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 55.465,
+    "end": 57.49,
+    "text": " Yes, yes, the entire day, actually.",
+    "words": [
+      {
+        "word": "Yes,",
+        "start": 55.465,
+        "end": 55.866,
+        "score": 0.772,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "yes,",
+        "start": 56.026,
+        "end": 56.247,
+        "score": 0.838,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "the",
+        "start": 56.307,
+        "end": 56.467,
+        "score": 0.869,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "entire",
+        "start": 56.507,
+        "end": 56.848,
+        "score": 0.896,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "day,",
+        "start": 56.888,
+        "end": 57.049,
+        "score": 0.89,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "actually.",
+        "start": 57.089,
+        "end": 57.49,
+        "score": 0.434,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 57.55,
+    "end": 60.557,
+    "text": "And have you glasses or something?",
+    "words": [
+      {
+        "word": "And",
+        "start": 57.55,
+        "end": 57.69,
+        "score": 0.416,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "have",
+        "start": 57.73,
+        "end": 57.971,
+        "score": 0.543,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "you",
+        "start": 58.011,
+        "end": 58.412,
+        "score": 0.843,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "glasses",
+        "start": 58.873,
+        "end": 59.314,
+        "score": 0.902,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "or",
+        "start": 60.076,
+        "end": 60.116,
+        "score": 0.006,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "something?",
+        "start": 60.136,
+        "end": 60.557,
+        "score": 0.846,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 60.597,
+    "end": 64.205,
+    "text": "Yeah, just normal glasses for vision correction.",
+    "words": [
+      {
+        "word": "Yeah,",
+        "start": 60.597,
+        "end": 61.459,
+        "score": 0.528,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "just",
+        "start": 61.619,
+        "end": 61.759,
+        "score": 0.614,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "normal",
+        "start": 61.84,
+        "end": 62.16,
+        "score": 0.79,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "glasses",
+        "start": 62.2,
+        "end": 62.702,
+        "score": 0.846,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "for",
+        "start": 63.303,
+        "end": 63.443,
+        "score": 0.757,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "vision",
+        "start": 63.463,
+        "end": 63.724,
+        "score": 0.826,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "correction.",
+        "start": 63.764,
+        "end": 64.205,
+        "score": 0.867,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 64.305,
+    "end": 66.49,
+    "text": "Okay, maybe that was the problem.",
+    "words": [
+      {
+        "word": "Okay,",
+        "start": 64.305,
+        "end": 65.388,
+        "score": 0.426,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "maybe",
+        "start": 65.408,
+        "end": 65.748,
+        "score": 0.63,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "that",
+        "start": 65.768,
+        "end": 65.909,
+        "score": 0.428,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "was",
+        "start": 65.949,
+        "end": 66.049,
+        "score": 0.452,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "the",
+        "start": 66.089,
+        "end": 66.149,
+        "score": 0.924,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "problem.",
+        "start": 66.189,
+        "end": 66.49,
+        "score": 0.928,
+        "speaker": "SPEAKER_00"
+      }
+    ],
+    "speaker": "SPEAKER_00",
+    "speaker_label": "Doctor"
+  },
+  {
+    "start": 67.292,
+    "end": 69.818,
+    "text": "So try without the glass.",
+    "words": [
+      {
+        "word": "So",
+        "start": 67.292,
+        "end": 67.553,
+        "score": 0.953,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "try",
+        "start": 67.653,
+        "end": 68.014,
+        "score": 0.831,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "without",
+        "start": 68.856,
+        "end": 69.196,
+        "score": 0.424,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "the",
+        "start": 69.377,
+        "end": 69.477,
+        "score": 0.769,
+        "speaker": "SPEAKER_00"
+      },
+      {
+        "word": "glass.",
+        "start": 69.517,
+        "end": 69.818,
+        "score": 0.924,
+        "speaker": "SPEAKER_00"
+      }
+    ],
+    "speaker": "SPEAKER_00",
+    "speaker_label": "Doctor"
+  },
+  {
+    "start": 70.539,
+    "end": 71.983,
+    "text": "Ah, okay, okay.",
+    "words": [
+      {
+        "word": "Ah,",
+        "start": 70.539,
+        "end": 70.7,
+        "score": 0.713,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "okay,",
+        "start": 70.98,
+        "end": 71.441,
+        "score": 0.783,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "okay.",
+        "start": 71.461,
+        "end": 71.983,
+        "score": 0.743,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 72.003,
+    "end": 76.653,
+    "text": "Then I will try looking at the computer without glasses.",
+    "words": [
+      {
+        "word": "Then",
+        "start": 72.003,
+        "end": 72.123,
+        "score": 0.888,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "I",
+        "start": 72.183,
+        "end": 72.263,
+        "score": 0.955,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "will",
+        "start": 72.303,
+        "end": 72.524,
+        "score": 0.636,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "try",
+        "start": 73.065,
+        "end": 73.486,
+        "score": 0.892,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "looking",
+        "start": 75.15,
+        "end": 75.39,
+        "score": 0.989,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "at",
+        "start": 75.451,
+        "end": 75.511,
+        "score": 0.976,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "the",
+        "start": 75.551,
+        "end": 75.611,
+        "score": 0.989,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "computer",
+        "start": 75.651,
+        "end": 75.972,
+        "score": 0.887,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "without",
+        "start": 76.012,
+        "end": 76.252,
+        "score": 0.886,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "glasses.",
+        "start": 76.313,
+        "end": 76.653,
+        "score": 0.903,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 77.094,
+    "end": 77.616,
+    "text": "Thank you, doc.",
+    "words": [
+      {
+        "word": "Thank",
+        "start": 77.094,
+        "end": 77.235,
+        "score": 0.818,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "you,",
+        "start": 77.255,
+        "end": 77.355,
+        "score": 0.601,
+        "speaker": "SPEAKER_01"
+      },
+      {
+        "word": "doc.",
+        "start": 77.375,
+        "end": 77.616,
+        "score": 0.858,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  },
+  {
+    "start": 78.678,
+    "end": 79.6,
+    "text": "Bye.",
+    "words": [
+      {
+        "word": "Bye.",
+        "start": 78.678,
+        "end": 79.6,
+        "score": 0.69,
+        "speaker": "SPEAKER_01"
+      }
+    ],
+    "speaker": "SPEAKER_01",
+    "speaker_label": "Patient"
+  }
+]

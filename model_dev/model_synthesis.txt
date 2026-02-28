@@ -1,0 +1,81 @@
+# Behavioral Synthesis: SOAP Note Generation Model Evaluation
+
+## 1. Overall Performance
+
+The model demonstrates **below-average to mediocre performance** across the 13 evaluated cases, with a mean score of approximately **2.85 out of 5**. No case received a score above 4, and nearly a third of cases (4 out of 13) received the lowest observed score of 2. The model is capable of producing structurally coherent SOAP notes and captures broad clinical narratives, but it is undermined by persistent, clinically significant errors that compromise the reliability and accuracy of its output.
+
+## 2. Recurring Strengths
+
+- **Structural adherence**: The model consistently produces notes organized in proper SOAP format, demonstrating understanding of the framework's purpose and layout.
+- **Core complaint capture**: Across most cases, the subjective section successfully identifies the primary presenting complaint and general symptom timeline (e.g., duration of illness, progression of symptoms).
+- **Reasonable assessment sections**: When the dialogue contains clear diagnostic impressions, the model generally reflects them in the assessment, often listing plausible differential diagnoses (Rows 3, 7, 8, 10, 11).
+- **Symptom aggregation**: The model shows competence in synthesizing multiple symptoms mentioned throughout a conversation into a cohesive narrative (e.g., congestion, cough, phlegm characteristics, headache patterns).
+
+## 3. Recurring Weaknesses
+
+### A. **Fabrication of Clinical Content (Most Critical)**
+This is the model's most dangerous and pervasive flaw. Across the majority of cases, the model invents information not present in the dialogue:
+- **Fabricated examination findings** (Rows 2, 5, 6, 9, 12, 13): The model generates physical exam results (e.g., "no acute abnormalities in lungs," "no fever detected during examination") when no examination was performed or documented.
+- **Fabricated plan elements** (Rows 2, 4, 9, 10, 12, 13): The model routinely adds treatments (antibiotics, decongestants, mucolytics), follow-up appointments, and patient education (hydration, rest) that were never discussed by the physician. This occurred in at least 8 of 13 cases.
+
+### B. **Factual Contradictions**
+The model directly contradicts patient-reported information in multiple cases:
+- Describing a cough as "dry" when the patient said "very wet" (Row 2)
+- Stating "no sore throat" when the patient reported one (Row 4)
+- Denying facial pain when the patient described it (Row 1)
+- Stating "no shortness of breath" when the patient explicitly reported it (Row 5)
+
+These are not omissions—they are inversions of reported facts, which is clinically dangerous.
+
+### C. **Subjective-Objective Boundary Confusion**
+A systematic issue across evaluations (Rows 1, 2, 5, 6, 11, 12, 13): the model frequently places patient-reported symptoms (self-reported temperature, phlegm descriptions, symptom denials) in the objective section, and occasionally places clinician observations in the subjective section. This reflects a fundamental misunderstanding of the SOAP framework's epistemological distinctions.
+
+### D. **Clinically Significant Omissions**
+The model regularly drops important details:
+- Sleep disruption from symptoms (Rows 2, 3, 6)
+- Dyspnea/shortness of breath (Rows 5, 10)
+- Failed OTC treatments and their side effects (Row 12)
+- Specific phlegm characteristics (Rows 8, 9)
+- Body aches, fatigue, and chest tightness (Row 11)
+- Severity ratings provided by patients (Row 3)
+
+### E. **Vague or Redundant Content**
+- Objective sections sometimes list everything as "pending" without clinical utility (Row 7)
+- Redundant differential diagnoses (e.g., "post-nasal drip and postnasal drip" in Row 6)
+- Nonsensical phrases appearing in output (e.g., "follow-inspiration" in Row 9)
+
+## 4. Score Distribution Insights
+
+| Score | Count | Percentage |
+|-------|-------|------------|
+| 2     | 4     | 30.8%      |
+| 3     | 5     | 38.5%      |
+| 4     | 4     | 30.8%      |
+| 5     | 0     | 0%         |
+
+The distribution is clustered between 2 and 4 with **no cases achieving excellence**. The model never produces a fully accurate, complete, and well-structured note. The bimodal clustering at 2 and 4 suggests the model's performance is **inconsistent and context-dependent**—it can perform adequately on straightforward cases but degrades significantly when dialogues are more nuanced, incomplete, or when examinations haven't yet occurred. The absence of any score of 5 indicates a ceiling effect likely driven by the fabrication and boundary-confusion issues, which appear to be systemic rather than sporadic.
+
+## 5. Recommendations
+
+### Immediate / High Priority
+1. **Implement strict grounding constraints**: The model must be explicitly instructed (or architecturally constrained) to **never generate clinical findings, treatments, or plans not explicitly stated in the source dialogue**. A "when in doubt, omit" principle should be enforced. Consider adding a post-generation verification step that cross-references plan items and exam findings against the transcript.
+
+2. **Add explicit S/O boundary rules**: The prompt or fine-tuning data should include clear definitions and examples distinguishing patient-reported information (subjective) from clinician-observed/measured findings (objective). Patient self-reports of temperature, symptom denials, and phlegm descriptions belong in S, not O.
+
+3. **Implement contradiction detection**: Before finalizing output, the model should verify that no statement in the note directly contradicts information stated in the dialogue. This could be achieved through a self-review chain-of-thought step or a secondary validation pass.
+
+### Medium Priority
+4. **Improve completeness through structured extraction**: Use a checklist-based approach during generation—systematically extracting all symptoms, their characteristics (onset, duration, severity, aggravating/alleviating factors), medications tried, and their effects before composing the narrative.
+
+5. **Handle "pending" examinations appropriately**: When a dialogue captures a pre-examination conversation, the objective section should explicitly state "Physical examination not yet performed" rather than fabricating findings or listing vague "pending" items.
+
+6. **Differentiate between discussed and inferred plan items**: If the model adds clinically reasonable but undiscussed plan items, these should be clearly marked as suggestions rather than presented as the physician's stated plan.
+
+### Lower Priority
+7. **Quality control for linguistic coherence**: Implement output filtering to catch nonsensical phrases and redundant entries in differential diagnoses.
+
+8. **Fine-tune on high-quality annotated SOAP note datasets** that specifically penalize fabrication and reward accurate source attribution, with particular attention to cases where examinations are incomplete or pending.
+
+---
+
+**Summary**: The model produces structurally sound but clinically unreliable SOAP notes. Its most critical failure mode—fabrication of examination findings and treatment plans—poses a patient safety risk if used in clinical settings. The subjective-objective boundary confusion and factual contradictions further erode trust. Addressing the fabrication issue alone would likely shift the score distribution meaningfully upward, as the model's core comprehension and narrative synthesis capabilities are adequate when it stays grounded in the source material.

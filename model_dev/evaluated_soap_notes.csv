@@ -1,0 +1,506 @@
+input_text,response,model_used,accuracy_score,evaluation_summary
+"Doctor: Hello, how are you today?
+
+Patient: Not good.
+
+Doctor: What happened?
+
+Patient: I have a lot of congestion. I also am coughing a lot. It feels like I am choking on something.
+
+Doctor: I’m sorry to hear that. When you say you feel like you’re choking, is that happening only when you cough, or do you feel like there is something stuck in your throat even when you aren't coughing?
+
+Patient: It’s mostly when I lie down at night or right after a coughing fit. It feels like thick mucus is just sitting in the back of my throat and I can't clear it, no matter how hard I try.
+
+Doctor: I see. How long has this been going on?
+
+Patient: It started about four days ago as a scratchy throat, but the congestion really hit yesterday. Now I can’t breathe through my nose at all.
+
+Doctor: Are you coughing anything up, or is it a dry, hacking cough?
+
+Patient: I’m coughing up some thick, yellowish stuff. It’s pretty gross. 
+
+Doctor: Have you noticed any other symptoms, like a fever, chills, or any pain in your face or ears?
+
+Patient: My forehead and the area under my eyes feel really heavy and sore, especially when I lean forward. I haven't taken my temperature, but I’ve felt a bit flushed.
+
+Doctor: It sounds like it could be a sinus infection or acute bronchitis, but I want to take a closer look. I’m going to check your oxygen levels, listen to your lungs, and then look at your throat and nasal passages. 
+
+Patient: Okay. Do you think I’ll need an inhaler? The choking feeling is making it really hard to sleep.
+
+Doctor: We’ll see. If I hear any wheezing in your chest, an inhaler might help open those airways. In the meantime, are you taking any over-the-counter medications?
+
+Patient: I took some ibuprofen for the headache and a cough syrup, but the syrup didn't seem to do much.
+
+Doctor: Alright. Let's start the exam. Take a deep breath in through your mouth for me...","```json
+{
+  ""subjective"": ""Patient reports significant congestion and choking sensation in the throat, exacerbated by lying down. Symptoms started four days ago as a scratchy throat and progressed to difficulty breathing through the nose. Patient describes thick, yellowish mucus and feels heavy and sore in the forehead and under the eyes. Patient took ibuprofen for headache and cough syrup, with no significant relief."",
+  ""objective"": ""No specific objective data provided in the dialogue. The doctor plans to assess oxygen levels, listen to lungs, and examine throat and nasal passages to determine the cause of the symptoms."",
+  ""assessment"": ""Differential diagnosis includes sinus infection and acute bronchitis. The patient's symptoms and response to initial treatments suggest a possible sinus infection or acute bronchitis. Further diagnostic tests are necessary to confirm the diagnosis."",
+  ""plan"": ""The plan includes assessing oxygen levels, listening to lungs, and examining the throat and nasal passages to confirm the diagnosis. If wheezing is present, an inhaler will be administered. The patient will be educated on the importance of rest and hydration. Referral to a specialist for further evaluation and management will be considered if necessary.""
+}
+```",google/gemini-3-flash-preview,3,"The subjective section is well-captured with most key details, though it omits the productive cough and the feeling of being flushed. The objective section correctly notes the lack of exam findings, but the assessment and plan sections overreach by adding elements not discussed in the dialogue, such as referral to a specialist, patient education on rest and hydration, and stating an inhaler ""will be administered"" rather than accurately reflecting the doctor's conditional language about wheezing."
+"Doctor: Good morning. I see you’re here for some respiratory issues today. How are you feeling?
+
+Patient: Honestly, not good at all. I haven't slept more than two hours at a time for the past three nights.
+
+Doctor: I’m sorry to hear that. Tell me more about what's going on. When did this start?
+
+Patient: It started as a scratchy throat on Monday, but by Wednesday, it turned into this heavy congestion in my chest. I'm coughing constantly now, and it’s exhausting. 
+
+Doctor: Is it a dry cough, or are you bringing anything up when you cough?
+
+Patient: It’s very wet. I’m coughing up thick, yellowish mucus. But the worst part is the sensation—it feels like I am choking on something. Like there is a plug sitting right at the base of my throat that I just can’t clear.
+
+Doctor: That sounds very uncomfortable. When you get that ""choking"" feeling, are you having any actual difficulty catching your breath, or is it more of a tightness?
+
+Patient: It’s more like a tightness and a constant Need to gag because of the drainage. My chest feels heavy, like someone is sitting on it, especially when I try to lie down flat.
+
+Doctor: I see. Have you run a fever or noticed any body aches or chills?
+
+Patient: I had a low-grade fever of 100.4 last night. My muscles ache, but I can't tell if that's from the illness or just from the strain of coughing so hard. 
+
+Doctor: Valid point. Are you experiencing any wheezing—a whistling sound when you breathe out?
+
+Patient: Yes, my spouse mentioned they could hear it from across the room last night. 
+
+Doctor: Alright. Based on that heavy congestion and the whistling, I’d like to take a listen to your lungs and check your oxygen levels. I want to make sure this hasn't moved into a secondary infection like bronchitis or pneumonia. If you could please sit up straight for me and take some slow, deep breaths through your mouth...","```json
+{
+  ""subjective"": ""Patient reports a three-night history of a scratchy throat progressing to heavy congestion in the chest, accompanied by a wet cough and a choking sensation. The patient experiences a low-grade fever of 100.4 last night and muscle aches. The patient's spouse notes the presence of wheezing."",
+  ""objective"": ""Physical examination reveals a wheezing sound during respiration. The patient's oxygen levels are not provided. The patient's temperature is 100.4°F. The patient's chest feels heavy, and there is a sensation of choking. The patient's oxygen saturation is not provided."",
+  ""assessment"": ""Differential diagnosis includes bronchitis and pneumonia. The patient's symptoms and physical examination findings suggest a possible respiratory infection. Further evaluation is needed to rule out secondary infections."",
+  ""plan"": ""Plan to conduct a physical examination and order a chest X-ray to assess the extent of the respiratory infection. The patient will be educated on the importance of hydration and rest. If the chest X-ray reveals any abnormalities, the patient will be referred to a specialist for further evaluation and treatment. The patient will be educated on the importance of monitoring symptoms and returning for follow-up as needed.""
+}
+```",google/gemini-3-flash-preview,2,"The SOAP note has significant issues: the subjective section omits key details like the timeline (started Monday, worsened by Wednesday), sleep disruption, thick yellowish mucus, worsening when lying flat, and the gagging/drainage sensation; the objective section inappropriately includes subjective complaints (choking sensation, heavy chest feeling) and fabricates findings since the physical exam hadn't been completed yet in the dialogue; the assessment is vague and noncommittal; and the plan fabricates interventions like chest X-ray and specialist referral that were never discussed by the doctor, who only mentioned listening to lungs and checking oxygen levels."
+"**Doctor:** Hello, how are you today?  
+**Patient:** Not so good, to be honest.  
+
+**Doctor:** I’m sorry to hear that. What seems to be bothering you?  
+
+**Patient:** I've been feeling really congested for a few days now. My nose is all stuffed up, and I'm coughing a lot. It kind of feels like I’m choking on something, especially when I lie down.  
+
+**Doctor:** That sounds uncomfortable. On a scale from one to ten, how would you rate your congestion and coughing?  
+
+**Patient:** I’d say it’s about a seven. The coughing really interrupts my sleep.   
+
+**Doctor:** I can understand how that would be frustrating. Have you noticed any other symptoms, like a sore throat, fever, or body aches?  
+
+**Patient:** Yes, my throat has been sore, especially when I cough. I had a mild fever for a couple of days, but it seems to have gone down. I’ve also felt a bit more tired than usual.  
+
+**Doctor:** Thanks for sharing that. Have you been exposed to anything recently that might explain your symptoms, like someone who was sick or any allergens?  
+
+**Patient:** Well, my coworker had a cold last week, and I did spend a lot of time in my garden this past weekend. Maybe it’s a combination?  
+
+**Doctor:** It's possible. Allergies can cause significant congestion and coughing, especially this time of year. Did you have any previous history of allergies or respiratory issues?  
+
+**Patient:** I’ve had seasonal allergies in the past, but they were manageable. This feels different, though—more severe.  
+
+**Doctor:** Understood. Let's do a quick examination to check your throat and listen to your lungs. After that, we can discuss some treatment options. How does that sound?  
+
+**Patient:** That sounds good. I’m really hoping to find something to help me breathe easier.  
+
+**Doctor:** Absolutely, let’s take a look. *[performs examination]* Okay, your throat does look a bit inflamed, and I can hear some wheezing when you breathe. It’s likely that you might have either a viral infection or an allergy flare-up. Since you've also been feeling very fatigued, we’ll want to rule out anything more serious.  
+
+**Patient:** What do you suggest we do next?  
+
+**Doctor:** I recommend starting with a saline nasal spray to help with the congestion and an over-the-counter antihistamine to alleviate your other symptoms. If your cough continues, using a humidifier at night might also help. If you don’t start to feel better in a few days, or if your symptoms worsen, I’d like to do a follow-up appointment.  
+
+**Patient:** Thank you, that sounds like a plan. Is there anything else I should be mindful of?  
+
+**Doctor:** Yes, drink plenty of fluids and try to rest as much as possible. If you notice any difficulty breathing or if the coughing worsens, don’t hesitate to contact me.  
+
+**Patient:** I appreciate that advice. I really hope this clears up soon!  
+
+**Doctor:** I understand, and I’m here to help. Feel free to reach out if you have any questions or concerns. Take care, and let’s get you feeling better soon!  
+
+**Patient:** Thank you, Doctor!","```json
+{
+  ""subjective"": ""Patient reports congestion, coughing, and a sore throat. Symptoms include difficulty breathing and fatigue. Patient's coworker had a cold last week, and the patient spent time in the garden. Patient has a history of seasonal allergies, but current symptoms are more severe."",
+  ""objective"": ""Examination reveals inflamed throat and wheezing during breathing. No fever noted."",
+  ""assessment"": ""Differential diagnosis includes viral infection and allergy flare-up. Further evaluation is needed to rule out more serious conditions."",
+  ""plan"": ""Initiate treatment with saline nasal spray and over-the-counter antihistamine. Recommend humidifier use at night. Schedule a follow-up appointment if symptoms don't improve or worsen. Advise patient to drink plenty of fluids and rest. Instruct patient to contact the doctor immediately if breathing difficulties or worsening of symptoms occur.""
+}
+",openai/gpt-4o-mini,4,"The SOAP note accurately captures the key elements of the dialogue, including symptoms, examination findings, differential diagnosis, and treatment plan. Minor omissions include the patient's self-rated severity of 7/10 for congestion/coughing, the history of mild fever that resolved, and the specific symptom of feeling like choking when lying down; additionally, the objective section could have noted the resolved fever rather than simply stating ""no fever noted,"" which slightly misrepresents the clinical picture."
+"Doctor: Hello, how are you today?
+
+Patient: Not good.
+
+Doctor: What happened?
+
+Patient: I have a lot of congestion. I also am coughing a lot. It feels like I am choking on something.
+
+Doctor: I’m sorry to hear that. When you say you feel like you’re choking, is it a sharp sensation in your throat, or does it feel more like thick mucus is stuck back there?
+
+Patient: It’s the mucus. Every time I try to take a deep breath, I start hacking. It feels like there’s a heavy weight on my chest, and I just can't clear it out.
+
+Doctor: I see. How long has this been going on?
+
+Patient: It started as a tickle in my throat about four days ago, but the congestion really settled in my chest yesterday. I barely slept last night because I was sitting upright just to breathe easier.
+
+Doctor: Have you noticed any other symptoms, like a fever, body aches, or a sore throat?
+
+Patient: My throat is a little sore, but I think that’s just from all the coughing. I haven't checked my temperature, but I’ve been feeling some chills off and on.
+
+Doctor: And the cough—are you bringing anything up, or is it dry?
+
+Patient: I’m bringing up some thick, yellowish phlegm. It’s pretty constant.
+
+Doctor: Okay. I’m going to take a listen to your lungs and check your oxygen levels. I want to make sure that congestion hasn't turned into bronchitis or pneumonia. Have you tried any over-the-counter medicines yet?
+
+Patient: I took some cough syrup this morning, but it didn't seem to touch it. I just feel really tight in my chest.
+
+Doctor: Understood. Let's start by checking your vitals, and then we’ll decide if we need an X-ray or perhaps a nebulizer treatment to help open those airways up.","```json
+{
+  ""subjective"": ""Patient reports significant congestion and coughing, feeling like choking. Symptoms started as a tickle in the throat four days ago, progressing to a heavy feeling in the chest. Patient experiences chills and sore throat. No fever reported."",
+  ""objective"": ""Patient's vitals to be taken. Examination of lungs and oxygen levels to be conducted. Assessment of the need for X-ray or nebulizer treatment based on these findings."",
+  ""assessment"": ""Differential diagnosis includes bronchitis and pneumonia. Assessment pending upon examination of lungs and oxygen levels."",
+  ""plan"": ""Initiate examination of lungs and oxygen levels. If indicated, proceed with X-ray or nebulizer treatment. Monitor patient's response to treatment and adjust as necessary. Educate patient on the importance of hydration and rest. Follow-up appointment to be scheduled to reassess and adjust treatment plan as needed.""
+}
+```",google/gemini-3-flash-preview,3,"The SOAP note captures the main complaints and differential diagnoses but omits several important subjective details, including the productive cough with thick yellowish phlegm, difficulty sleeping due to needing to sit upright, and the failed attempt at over-the-counter cough syrup. The objective section is essentially empty since no examination had been completed, which is understandable given the dialogue, but the note could have better documented observable findings such as the patient's apparent distress; the plan reasonably reflects the doctor's stated intentions but adds elements like hydration education and follow-up that were not discussed."
+"Doctor: Hello, how can I help you today?
+
+Patient: Not good, Doctor. I feel pretty miserable.
+
+Doctor: I’m sorry to hear that. What exactly is going on?
+
+Patient: I have a lot of congestion in my chest and my nose is completely blocked. I also am coughing a lot—it's a deep, wet cough. It actually feels like I am choking on something every time I try to take a deep breath.
+
+Doctor: That sounds very uncomfortable. How long has this been going on?
+
+Patient: It started as a tickle in my throat about four days ago, but the heavy congestion and the ""choking"" feeling started yesterday morning. 
+
+Doctor: Are you coughing up any phlegm or mucus? If so, what color is it?
+
+Patient: Yes, quite a bit. It’s mostly thick and yellowish-green. 
+
+Doctor: Okay. Have you noticed any shortness of breath, or are you running a fever?
+
+Patient: I feel short of breath because of all the gunk in my chest, and I checked my temperature an hour ago—it was 101.2. I also have a sharp pain in my side when I cough really hard.
+
+Doctor: I see. That sharp pain is likely from strained muscles or inflammation from the coughing. I’d like to take a listen to your lungs. Please take a slow, deep breath in through your mouth for me... and again... 
+
+Patient: (Coughs deeply) Sorry, I can't even get a full breath out without coughing.
+
+Doctor: It’s alright. I can hear some crackling and wheezing in your lower right lobe. Based on your fever and the color of the phlegm, I’m concerned you might have a respiratory infection, possibly bronchitis or early pneumonia. I’m going to order a chest X-ray just to be sure.
+
+Patient: Is that why I feel like I'm choking?
+
+Doctor: Yes, the ""choking"" sensation is likely post-nasal drip combined with a large amount of mucus sitting in your bronchial tubes. Your body is trying to clear it out, but it’s very thick. I’m going to recommend an expectorant to help thin that mucus so you can cough it up more easily, but let’s get that X-ray done first. 
+
+Patient: Okay, thank you. I just want to be able to breathe clearly again.","```json
+{
+  ""subjective"": ""Patient reports feeling miserable with congestion in the chest, blocked nose, and a deep, wet cough. The cough feels like choking. Symptoms started as a tickle in the throat four days ago, with the heavy congestion and choking sensation starting yesterday morning. Patient also experiences shortness of breath and a sharp pain in the side when coughing. Fever is reported at 101.2. Patient reports coughing up thick, yellowish-green phlegm."",
+  ""objective"": ""Physical exam reveals crackling and wheezing in the lower right lobe of the lungs. Patient's temperature is 101.2. No other objective findings are mentioned."",
+  ""assessment"": ""Differential diagnosis includes bronchitis and early pneumonia. The symptoms and physical exam findings suggest a respiratory infection. The possibility of post-nasal drip exacerbating the condition is also considered."",
+  ""plan"": ""Plan to order a chest X-ray to confirm diagnosis and assess the extent of the infection. Prescribe an expectorant to help thin the mucus and facilitate its clearance. Educate the patient on the importance of hydration and rest to aid in recovery. Monitor the patient's response to the treatment and adjust the plan as needed. Provide follow-up instructions to ensure the patient's condition improves and to address any complications that may arise.""
+}
+```",google/gemini-3-flash-preview,4,"The SOAP note accurately captures the key subjective complaints, objective findings, and assessment from the dialogue, with a well-structured differential diagnosis. Minor issues include the plan adding recommendations not explicitly discussed in the dialogue (hydration, rest, follow-up instructions), and the sharp side pain explanation (strained muscles/inflammation from coughing) mentioned by the doctor could have been noted in the assessment; the temperature in the objective section is also patient-reported rather than independently measured, which could be more clearly noted."
+"Doctor: Hello, how are you today?
+
+Patient: Not good.
+
+Doctor: What happened?
+
+Patient: I have a lot of congestion. I also am coughing a lot. It feels like I am choking on something.
+
+Doctor: I’m sorry to hear that. When you say you feel like you’re choking, is that mostly when you’re lying down, or does it happen all day?
+
+Patient: It’s definitely worse at night. As soon as my head hits the pillow, I start hacking. It feels like thick liquid is just sitting in the back of my throat and I can't clear it, no matter how hard I cough.
+
+Doctor: I see. That sounds like it could be post-nasal drip. Are you coughing anything up, or is it a dry, ""tickling"" cough?
+
+Patient: It’s mostly dry and unproductive, but sometimes a little bit of clear or yellowish mucus comes up. My throat is starting to feel raw from all the straining.
+
+Doctor: Have you had a fever, chills, or any body aches lately?
+
+Patient: No fever. I just feel very congested in my sinuses—right behind my eyes and bridge of my nose. My head feels like a bowling ball.
+
+Doctor: How long has this been going on?
+
+Patient: It started about five days ago as a simple sniffle, but the past two nights have been miserable. I haven't slept more than three hours because of the coughing fits.
+
+Doctor: Understood. I’m going to take a look at your throat and listen to your lungs to make sure this hasn't moved down into your chest. Does it hurt when you take a deep breath?
+
+Patient: No, it doesn't hurt to breathe deep, it just triggers another coughing spell. 
+
+Doctor: Alright. Based on what you're describing, it sounds like an upper respiratory infection with significant sinus drainage. I’m going to examine you now to see if we need to discuss a nasal steroid or just some over-the-counter options to thin that mucus out.","```json
+{
+  ""subjective"": ""Patient reports significant congestion and coughing, with symptoms worsening at night. Patient describes a choking sensation and difficulty clearing secretions. Symptoms began five days ago as a simple sniffle, with recent worsening. Patient denies fever, chills, or body aches. Patient reports a dry, ""tickling"" cough with occasional clear or yellowish mucus. No chest pain or discomfort with deep breathing."",
+  ""objective"": ""Examination reveals significant congestion in sinuses behind eyes and bridge of nose, with a feeling of a \""bowling ball\"" in the head. No fever, chills, or body aches. No chest pain or discomfort with deep breathing."",
+  ""assessment"": ""Diagnosis of upper respiratory infection with significant sinus drainage. Differential diagnosis includes post-nasal drip and post-nasal drip with possible sinus infection."",
+  ""plan"": ""Plan to discuss nasal steroid options and over-the-counter medications to thin mucus. Monitor patient' headaches and sleep quality. Educate patient on the importance of hydration and rest. If symptoms do not improve, consider further evaluation and possible referral to an ENT specialist.""
+}
+```",google/gemini-3-flash-preview,2,"The objective section inappropriately includes subjective patient complaints (bowling ball sensation, denial of fever) rather than actual physical examination findings, and the note fabricates plan elements not discussed in the dialogue such as monitoring headaches, hydration education, and ENT referral. The assessment also redundantly lists post-nasal drip twice as separate differential diagnoses, and the doctor had not yet completed the examination, so documenting objective findings as though they were observed is inaccurate."
+"Doctor: Hello, how are you today?
+
+Patient: Not good.
+
+Doctor: What happened?
+
+Patient: I have a lot of congestion. I also am coughing a lot. It feels like I am choking on something.
+
+Doctor: I’m sorry to hear that. When you say it feels like you are ""choking,"" is that happening specifically when you cough, or does it feel like there is a constant physical blockage in your throat?
+
+Patient: It’s mostly when I lay down at night. I start coughing and then it feels like I can't catch my breath because there is so much thick phlegm back there. It’s a very tight, suffocating feeling.
+
+Doctor: I see. How long has this been going on?
+
+Patient: It started about five days ago as a scratchy throat, but the congestion really settled in my chest and throat over the last forty-eight hours. 
+
+Doctor: Are you coughing anything up? And if so, what color is it?
+
+Patient: Yes, quite a bit. It’s mostly thick and yellowish-green. 
+
+Doctor: Have you had a fever or any chills?
+
+Patient: I felt a bit feverish last night, but I took some acetaminophen so it went down. I’ve also had a pounding headache right between my eyes.
+
+Doctor: That pressure between your eyes, combined with the drainage you’re describing, suggests it could be a sinus infection moving into your bronchial tubes. I’d like to take a look at your throat and then listen to your lungs. Does it hurt when you take a deep breath?
+
+Patient: It doesn't hurt, exactly, but it triggers another coughing fit every time I try to breathe deeply. 
+
+Doctor: Understood. Let's start the exam. I’m going to check your oxygen levels and your temperature first. Based on your symptoms, we need to determine if this is viral or if we need to start you on an antibiotic to clear that congestion.","```json
+{
+  ""subjective"": ""Patient reports significant congestion and coughing, with a sensation of choking, particularly when lying down. Symptoms started five days ago as a scratchy throat, progressing to a congested chest and throat. Patient experiences a pounding headache between the eyes and reports a feverish feeling that subsided after taking acetaminophen. The patient describes the sputum as thick and yellowish-green in color."",
+  ""objective"": ""Patient's oxygen levels and temperature are pending. Examination of the throat and lungs is planned to assess the nature of the congestion and to determine if it is viral or bacterial. The patient's response to deep breaths triggers coughing fits, suggesting possible bronchial involvement."",
+  ""assessment"": ""Differential diagnosis includes viral or bacterial infection of the sinuses and bronchial tubes. The patient's symptoms and response to deep breaths suggest possible bronchial involvement. Further diagnostic tests are necessary to confirm the nature of the infection and to guide treatment."",
+  ""plan"": ""Plan to conduct a physical examination of the throat and lungs to assess the nature of the congestion. Pending the examination, the plan includes considering antiviral or antibiotic treatment based on the results of the examination. The patient will be educated on the importance of hydration and rest to support the body's natural healing process. Follow-up will be scheduled to reassess the patient's condition and to adjust the treatment plan as needed.""
+}
+```",google/gemini-3-flash-preview,3,"The subjective section is well-captured with accurate symptom details, timeline, and descriptions from the dialogue. However, the objective section inappropriately includes clinical reasoning and pending results rather than actual findings, the assessment lacks specific diagnostic terms (e.g., acute sinusitis, acute bronchitis) and instead reads as vague differential reasoning, and the plan fabricates details not discussed in the dialogue such as hydration education and follow-up scheduling, while the doctor's stated plan to check oxygen levels and temperature is listed as pending rather than documented as ordered."
+"Doctor: Hello, how are you today?
+
+Patient: Not good.
+
+Doctor: I’m sorry to hear that. What’s going on?
+
+Patient: I have a lot of congestion. I also am coughing a lot. It feels like I am choking on something.
+
+Doctor: When you say it feels like you're choking, is it a feeling of something stuck in the back of your throat, or are you actually struggling to get air into your lungs?
+
+Patient: It’s more like a constant thick drainage in my throat. I keep trying to clear it, but it won’t budge. When I lay down at night, it gets much worse and I start coughing so hard I gag.
+
+Doctor: I see. How long has this been going on?
+
+Patient: About five days now. It started as a scratchy throat and a runny nose, but now everything feels heavy in my chest and throat.
+
+Doctor: Have you noticed any fever, chills, or body aches?
+
+Patient: Short chills a couple of nights ago, but no real fever. My head just feels like it’s under a lot of pressure, especially behind my eyes.
+
+Doctor: Are you coughing anything up? And if so, what color is it?
+
+Patient: Yes, it’s mostly thick and yellowish-green.
+
+Doctor: Okay. I’m going to take a look at your throat and then listen to your lungs. I want to make sure that congestion isn't moving down into your chest. Can you open wide and say ""Ah""?
+
+Patient: Ahhh.
+
+Doctor: Your throat is definitely red and I can see some post-nasal drip. Now, take a few deep breaths for me... deep breath in... and out. (Pauses) Again... and out.
+
+Patient: Does it sound bad?
+
+Doctor: Your lungs actually sound fairly clear, which is good news. It sounds like most of this is localized in your sinuses and the upper part of your airway. The ""choking"" feeling is likely caused by that thick mucus draining down your throat and triggering your gag reflex.
+
+Patient: That makes sense. Is there anything I can take to make it stop? I haven't slept well in three days.
+
+Doctor: I’m going to recommend a saline nasal rinse to clear the drainage at the source, and a prescription-strength expectorant to thin that mucus out so you can cough it up more easily. I also want you to use a humidifier at night. If the pressure in your face doesn't improve in the next 48 hours, we may need to discuss an antibiotic for a sinus infection. How does that sound?
+
+Patient: As long as I can stop coughing long enough to sleep, that sounds great. Thank you, Doctor.","```json
+{
+  ""subjective"": ""Patient reports a five-day history of congestion, coughing, and a feeling of choking in the throat. The patient describes the sensation as thick mucus draining down the throat, triggering a gag reflex. The patient also mentions chills and pressure behind the eyes. No fever reported."",
+  ""objective"": ""Physical examination reveals a red throat with post-nasal drip. Lung auscultation shows clear lungs. No fever noted."",
+  ""assessment"": ""Localized congestion and post-nasal drip are suspected to be the cause of the patient's symptoms. Differential diagnosis includes localized sinusitis and postnasal drip."",
+  ""plan"": ""Recommend saline nasal rinse and prescription-strength expectorant to clear drainage and thin mucus. Advise use of a humidifier at night. If symptoms do not improve within 48 hours, consider antibiotic for suspected sinusitis. Educate patient on the importance of follow-up if symptoms persist or worsen.""
+}
+```",google/gemini-3-flash-preview,4,"The SOAP note accurately captures the key elements of the dialogue, including the five-day history, symptoms, physical findings, and treatment plan. Minor omissions include the yellowish-green sputum color in both subjective and objective sections, the worsening symptoms when lying down, the progression from scratchy throat/runny nose, and the patient's report of three days of poor sleep, which could be relevant for clinical decision-making."
+"Doctor: Hello, how are you today?
+
+Patient: Not good.
+
+Doctor: I’m sorry to hear that. What’s going on?
+
+Patient: I have a lot of congestion. I also am coughing a lot. It feels like I am choking on something.
+
+Doctor: That sounds very uncomfortable. When you say it feels like you're choking, does it feel like there is something stuck in your windpipe, or is it more like thick drainage coming down from your nose?
+
+Patient: It's like thick mucus is just sitting in the back of my throat. Every time I try to breathe deeply, I start coughing because it feels like I’m inhaling liquid.
+
+Doctor: I see. How long has this been going on?
+
+Patient: It started as a tickle in my throat about four days ago, but the last two nights have been the worst. I can’t even lie flat to sleep because I feel like I can’t catch my breath.
+
+Doctor: Are you coughing anything up? And if so, what color is it?
+
+Patient: Yes, it’s mostly clear or a little yellowish. It’s just very thick. My chest feels heavy, too.
+
+Doctor: Have you had a fever, or noticed any aching in your joints or ears?
+
+Patient: No fever, but my face hurts. Right under my eyes and across my forehead, there is a lot of pressure.
+
+Doctor: It sounds like you might be dealing with a significant sinus infection that is causing post-nasal drip, which is what's making you feel like you're choking. I’m going to take a look in your throat and then listen to your lungs to make sure the congestion hasn't moved down into your chest. 
+
+Patient: Okay, thank you. I just want to be able to breathe clearly again.","```json
+{
+  ""subjective"": ""Patient reports significant congestion and choking sensation, with thick mucus in the back of the throat. Symptoms started as a tickle in the throat four days ago, worsening over the last two nights. Patient experiences difficulty breathing and feels heavy chest. No fever reported, but face hurts under eyes and across forehead."",
+  ""objective"": ""Physical examination to include throat and lung assessment to determine the extent of congestion. No specific lab values or imaging results provided in the dialogue."",
+  ""assessment"": ""Differential diagnosis includes significant sinus infection with post-nasal drip. The patient's symptoms suggest postnasal drip causing choking sensation and congestion."",
+  ""plan"": ""Plan to include a physical examination of the throat and lungs to assess the extent of congestion. Further management will depend on the examination results, potentially including antibiotics for sinus infection and supportive care for postnasal drip. Patient education on hygiene and avoiding irritants to the throat will also be provided.""
+}
+```",google/gemini-3-flash-preview,2,"The objective section fails to document any actual examination findings and instead describes planned actions, which is a fundamental SOAP format violation. The subjective section is reasonably complete but omits key details like the inability to lie flat, the clear-to-yellowish color of sputum, and facial pressure specifics, while the plan fabricates details not discussed in the dialogue such as antibiotics and patient education on hygiene."
+"Doctor: Hello! I’m Dr. Aris. It’s good to see you, though I wish it were under better circumstances. How are you feeling today?
+
+Patient: Honestly, not good at all. I've been feeling pretty miserable since Tuesday.
+
+Doctor: I’m sorry to hear that. Let's look into it. What exactly has been going on?
+
+Patient: I have a lot of congestion in my chest and my nose is completely stuffed up. But the worst part is the cough. I am coughing a lot, especially at night. It feels like I am choking on something thick in the back of my throat.
+
+Doctor: That sounds very uncomfortable. When you say it feels like you're choking, is it because of the phlegm, or does it feel like your throat is actually tightening?
+
+Patient: It's the phlegm. It feels like there’s a constant heavy drip at the back of my throat that I just can’t clear, no matter how much I cough. It makes me gag sometimes.
+
+Doctor: I see. That sounds like post-nasal drip triggering a gag reflex. Have you noticed what color the mucus is when you cough or blow your nose? 
+
+Patient: It’s been a dark yellowish-green color. 
+
+Doctor: Okay. And have you had any other symptoms, like a fever, chills, or any sharp pains in your chest when you take a deep breath?
+
+Patient: I had a mild fever of 100.4 last night. My chest doesn't exactly hurt, but it feels very tight, like someone is sitting on it. 
+
+Doctor: Are you feeling short of breath, even when you're just sitting down?
+
+Patient: Not while sitting, but even walking from the car to the front desk here made me feel pretty winded.
+
+Doctor: Understood. I’d like to take a look at your throat and then listen to your lungs to see if that congestion is sitting in your upper airway or if it’s moved down into your chest. Have you tried any over-the-counter medicines yet?
+
+Patient: I’ve been taking some cough syrup and ibuprofen, but they aren't really touching it. The cough syrup helps for maybe an hour, and then the ""choking"" feeling comes right back.
+
+Doctor: Alright. Let's start the exam. I’m going to check your oxygen levels and your temperature first, and then we’ll figure out if this is a stubborn viral infection or if we need to look at something like bronchitis or a sinus infection.","```json
+{
+  ""subjective"": ""Patient reports feeling miserable since Tuesday with significant congestion in the chest and a constant choking sensation at the back of the throat. The cough is severe, especially at night, and the mucus is described as dark yellowish-green. Patient also mentions a mild fever of 100.4 last night and shortness of breath when walking. Patient has tried over-the-counter medications like cough syrup and ibuprofen without significant relief."",
+  ""objective"": ""No specific objective data provided in the dialogue. The focus is on the patient's subjective symptoms and the need for further examination to determine the cause of the symptoms."",
+  ""assessment"": ""Differential diagnosis includes post-nasal drip, bronchitis, and sinus infection. The patient's symptoms suggest a possible post-nasal drip with complications such as a gag reflex and potential for progression to bronchitis or sinus infection."",
+  ""plan"": ""Plan to include a physical examination of the throat and lungs to assess the extent of the congestion and to rule out other potential causes. The examination will help to determine the appropriate treatment plan, which may include antibiotics, bronchodilators, or other medications as needed. Referral to an otolaryngologist may be considered if the condition does not improve with initial treatment.""
+}
+```",google/gemini-3-flash-preview,3,"The subjective section captures most key symptoms but omits nasal stuffiness and chest tightness details, and incorrectly describes the choking sensation as being ""at the back of the throat"" rather than attributing it clearly to post-nasal drip with phlegm. The objective section correctly notes the lack of exam findings but misses that vital signs (oxygen levels, temperature) were about to be checked, the assessment introduces reasonable differentials but adds speculative language about ""progression,"" and the plan fabricates specific treatment considerations (antibiotics, bronchodilators, ENT referral) that were never discussed in the dialogue."
+"Doctor: Hello, how are you feeling today?
+
+Patient: Honestly, not good at all. I’ve been struggling for the last few days.
+
+Doctor: I’m sorry to hear that. Let’s see if we can figure out what’s going on. What are your main symptoms?
+
+Patient: I have a massive amount of congestion in my chest and my nose. I’m also coughing constantly, but it’s a deep, heavy cough. Sometimes it feels like I’m actually choking on something because the phlegm is so thick.
+
+Doctor: That sounds very uncomfortable. Is the cough productive—meaning, are you coughing anything up—or is it dry?
+
+Patient: It’s definitely productive. When I can finally get a deep breath, I’m coughing up thick yellow or greenish mucus. It’s worst at night when I lay down.
+
+Doctor: I see. Have you been running a fever or experiencing any chills?
+
+Patient: I had a slight fever yesterday—about 101 degrees—but I took some ibuprofen and it went down. I still feel very achy and tired, though.
+
+Doctor: And how is your breathing? Do you feel short of breath even when you aren't coughing?
+
+Patient: A little bit. My chest feels very tight, like there is a heavy weight sitting on it. That’s the part that scares me—that feeling of not being able to get a full lungful of air.
+
+Doctor: I understand. That sensation of choking is likely the post-nasal drip and the congestion in your bronchioles. I’d like to take a listen to your lungs. Please take a few deep breaths through your mouth... 
+
+Patient: *Coughs heavily* Sorry, it’s hard to take a deep breath without triggering another coughing fit.
+
+Doctor: That’s alright, take your time. I'm hearing some crackling and wheezing in the lower lobes of your lungs. Based on what you’ve told me and what I’m hearing, it sounds like this might have started as a cold but has progressed into acute bronchitis or possibly a mild pneumonia.
+
+Patient: Is that why I feel like I'm choking?
+
+Doctor: Yes. The inflammation makes your airways narrower, and the excess mucus makes it feel like your throat is ""clogged."" I’m going to order a chest X-ray just to be sure there’s no significant infection in the lungs, and I’ll likely prescribe a nebulizer treatment or an inhaler to help open those airways up.
+
+Patient: Thank you, Doctor. I just want to be able to breathe clearly again.","```json
+{
+  ""subjective"": ""Patient reports significant chest congestion, constant coughing with thick, yellow/green mucus, and a feeling of choking. Patient experiences a slight fever yesterday which subsided with ibuprofen. Patient feels achy and tired. Reports shortness of breath and a heavy feeling in the chest."",
+  ""objective"": ""Physical exam reveals crackling and wheezing in the lower lobes of the lungs. Patient's temperature was 101 degrees Fahrenheit yesterday, which subsided with ibuprofen. No significant findings on initial assessment."",
+  ""assessment"": ""Differential diagnosis includes acute bronchitis and mild pneumonia. The patient's symptoms and physical exam findings suggest airway inflammation and mucus buildup."",
+  ""plan"": ""Order a chest X-ray to rule out significant infection. Prescribe nebulizer treatment or inhaler to help open airways. Educate patient on the importance of hydration and rest. Monitor patient's response to treatment and adjust as necessary. Schedule follow-up appointment to assess progress and adjust treatment plan as needed.""
+}
+```",google/gemini-3-flash-preview,4,"The SOAP note accurately captures the key subjective complaints, objective findings, assessment, and plan from the dialogue with good organization and completeness. Minor issues include listing the patient-reported temperature of 101°F in the objective section (it should be in subjective since it was self-reported, not measured in the office), the phrase ""No significant findings on initial assessment"" is vague and somewhat contradicts the documented crackles and wheezing, and the plan items about hydration/rest and follow-up, while reasonable, were not explicitly discussed in the dialogue."
+"Doctor: Hello, how are you today?
+
+Patient: Not good.
+
+Doctor: I’m sorry to hear that. What’s going on?
+
+Patient: I have a lot of congestion. I also am coughing a lot. It feels like I am choking on something.
+
+Doctor: I see. How long has this been going on?
+
+Patient: It started about three or four days ago as a scratchy throat, but it’s moved into my chest now. Every time I lay down, the coughing gets much worse.
+
+Doctor: Are you coughing anything up, or is it a dry cough?
+
+Patient: I’m coughing up some thick, yellowish mucus. It’s hard to get it out, which is why I feel like I’m choking. It's very tight in my chest.
+
+Doctor: Are you experiencing any shortness of breath or wheezing? Any fever?
+
+Patient: I haven't noticed a wheeze, but I did have a low-grade fever of 100.2 last night. My chest just feels very heavy, like someone is sitting on it.
+
+Doctor: Okay. Have you tried any over-the-counter medications yet?
+
+Patient: I tried some cough syrup, but it didn't seem to touch it. I also tried a decongestant, but it made my heart race, so I stopped.
+
+Doctor: That can happen with certain decongestants. I’d like to take a look at your throat and then listen to your lungs. Please take a deep breath in through your mouth for me... and out. Again...
+
+Patient: (Coughs deeply) Sorry, that deep breath triggered it.
+
+Doctor: That’s alright. I can hear some crackling in the lower lobes of your lungs. Based on the mucus and the tightness, it sounds like you might have developed acute bronchitis. I’d like to check your oxygen levels and possibly send you for a chest X-ray just to rule out pneumonia.
+
+Patient: Is that why I feel like I'm choking?
+
+Doctor: Most likely. The mucus is very thick, and when you lie down, it pools in your airways, which triggers that choking sensation and the urge to cough. We can look into an expectorant to help thin that mucus so you can clear it more easily.","```json
+{
+  ""subjective"": ""Patient reports a three-day history of a scratchy throat progressing to a cough with thick, yellowish mucus. The patient experiences choking sensations and a heavy feeling in the chest, exacerbated by lying down. The patient denies wheezing and has a history of a low-grade fever of 100.2 last night. The patient reports no response to over-the-counter medications, including cough syrup and decongestants."",
+  ""objective"": ""Physical examination reveals crackling in the lower lobes of the lungs. The patient's oxygen levels are not discussed, and a chest X-ray is considered to rule out pneumonia."",
+  ""assessment"": ""The patient's symptoms and physical examination findings suggest acute bronchitis. The possibility of pneumonia is being ruled out through a chest X-ray."",
+  ""plan"": ""The plan includes administering an expectorant to help thin the mucus and alleviate the choking sensation. A chest X-ray is scheduled to rule out pneumonia. The patient will be monitored for response to the treatment and further interventions will be considered based on the results of the chest X-ray and the patient's response to the treatment.""
+}
+```",google/gemini-3-flash-preview,4,"The SOAP note accurately captures the key clinical findings including the progression of symptoms, crackling in the lower lobes, suspected acute bronchitis, and the plan for expectorant and chest X-ray. Minor issues include stating ""three-day history"" when the patient said ""three or four days,"" not mentioning the adverse reaction to decongestants (heart racing) which is clinically relevant, not noting that oxygen levels were to be checked, and the objective section could have included throat examination findings rather than noting what wasn't discussed."
+"Doctor: Hello, how are you today?
+
+Patient: Not good.
+
+Doctor: I’m sorry to hear that. What exactly is going on?
+
+Patient: I have a lot of congestion in my chest and my head. I also am coughing a lot. It feels like I am choking on something every time I try to take a deep breath.
+
+Doctor: I see. How long has this been going on?
+
+Patient: It started about four days ago as a scratchy throat, but it moved into my chest yesterday. Now, the coughing fits are so bad I feel like I can’t catch my breath.
+
+Doctor: That sounds very uncomfortable. Are you coughing anything up, or is it a dry cough?
+
+Patient: It’s thick and yellow-green. It’s hard to get it out, which is why I feel like I’m choking. My throat is raw from trying to clear it.
+
+Doctor: Have you had a fever or any chills?
+
+Patient: I had a slight fever last night—about 100.4—and I’ve been feeling really achy in my joints.
+
+Doctor: Okay. I’d like to listen to your lungs. Please take a slow, deep breath in through your mouth for me... and again... okay, one more.
+
+Patient: (Coughs heavily) Sorry, I can’t even take a full breath without that happening.
+
+Doctor: I can hear some wheezing and crackling in the lower base of your right lung. Because of the color of the phlegm and the shortness of breath you’re describing, I’m concerned this might be progressing into pneumonia or acute bronchitis. 
+
+Patient: Is that why my chest feels so heavy? Like someone is sitting on it?
+
+Doctor: Exactly. That heaviness is caused by inflammation and fluid buildup in your airways. I’m going to order a chest X-ray just to be sure, and I’ll likely start you on a nebulizer treatment here in the office to help open those passages up.
+
+Patient: Will that help the choking feeling?
+
+Doctor: It should help loosen the mucus so you can breathe more easily. After the X-ray, we’ll see if we need to start a course of antibiotics. In the meantime, are you having any pain when you swallow?
+
+Patient: No, it’s mostly just the pressure in my chest and the constant coughing. It’s exhausting.
+
+Doctor: I understand. Let's get that X-ray done now so we can get you some relief.","```json
+{
+  ""subjective"": ""Patient reports a four-day history of a scratchy throat progressing to chest congestion and coughing. Experiences choking sensations and difficulty breathing. Reports a slight fever of 100.4 last night and joint aches. Patient describes the phlegm as thick and yellow-green, making it difficult to clear. No pain when swallowing."",
+  ""objective"": ""Physical exam reveals wheezing and crackling in the lower base of the right lung. Patient's breathing is labored, with a choking sensation and difficulty taking deep breaths. No mention of any other physical findings."",
+  ""assessment"": ""Differential diagnosis includes pneumonia and acute bronchitis. The patient's symptoms and physical exam findings suggest a respiratory infection with possible complications such as pneumonia or acute bronchitis."",
+  ""plan"": ""Order a chest X-ray to confirm the diagnosis and assess the severity of the condition. Initiate nebulizer treatment to help clear the airways and relieve symptoms. Monitor the patient's response to the nebulizer treatment and adjust as needed. If the chest X-ray reveals pneumonia, start a course of antibiotics. Educate the patient on the importance of hydration and rest to aid in recovery. Schedule a follow-up appointment to reassess the patient's condition and adjust the treatment plan accordingly.""
+}
+```",google/gemini-3-flash-preview,4,"The SOAP note accurately captures the key subjective complaints, objective findings, assessment, and plan from the dialogue, including the progression of symptoms, productive cough characteristics, fever, lung auscultation findings, and ordered interventions. Minor issues include the objective section incorporating subjective symptoms (choking sensation, difficulty breathing) rather than strictly observable findings, the chest heaviness/pressure complaint being omitted from the subjective section, and the plan adding recommendations (hydration, rest, follow-up) not explicitly discussed in the dialogue, though these are reasonable clinical additions."

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Medical Transcript Sync</title>
+    <style>
+        /* CSS rules for basic page layout and typography */
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; background: #f9f9f9; }
+        
+        /* Keeps the audio player stuck to the top of the screen while scrolling */
+        #controls { position: sticky; top: 0; background: white; padding: 20px; border-bottom: 2px solid #ddd; z-index: 10; }
+        #transcript { padding: 20px; }
+        
+        /* Styling for the container holding each speaker's dialogue */
+        .segment { margin-bottom: 20px; padding: 10px; border-radius: 8px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .speaker { font-weight: bold; color: #2c3e50; display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.8rem; }
+        
+        /* The word class styling. Padding and border-radius have been removed so backgrounds touch seamlessly */
+        .word { 
+            cursor: pointer; 
+            transition: background 0.1s ease; 
+        }
+        
+        /* Slight grey highlight when hovering over a word with the mouse */
+        .word:hover { background: #e0e0e0; }
+        
+        /* The class applied by JavaScript when the word has been spoken */
+        .active-word { 
+            background: #ffeb3b; 
+        }
+    </style>
+</head>
+<body>
+
+<div id="controls">
+    <h2>Consultation Recording</h2>
+    <audio id="audio-player" controls src="converted_audio.wav" style="width: 100%"></audio>
+</div>
+
+<div id="transcript">Loading transcript...</div>
+
+<script>
+    // Grabbing references to the HTML elements so JavaScript can manipulate them
+    const audio = document.getElementById('audio-player');
+    const container = document.getElementById('transcript');
+
+    console.log("DEBUG: Attempting to fetch transcript.json...");
+
+    // fetch executes an HTTP request to load the JSON file from the local server
+    fetch('transcript.json')
+        .then(response => {
+            if (!response.ok) {
+                console.error("DEBUG: Fetch failed. HTTP status:", response.status);
+                throw new Error("Network response was not ok");
+            }
+            console.log("DEBUG: Fetch successful. Parsing JSON...");
+            // Converts the raw text response into a structured JavaScript object
+            return response.json(); 
+        })
+        .then(data => {
+            console.log("DEBUG: JSON parsed successfully. Data length:", data.length);
+            // Passes the parsed object to the rendering function
+            renderTranscript(data);
+        })
+        .catch(error => {
+            console.error("DEBUG: An error occurred during fetch or parse:", error);
+            container.innerHTML = "Error loading transcript. Check console for details.";
+        });
+
+    function renderTranscript(segments) {
+        // Clears the "Loading transcript..." placeholder text
+        container.innerHTML = '';
+        
+        // Iterates through each block of speech in the JSON array
+        segments.forEach(seg => {
+            // Creates a new HTML div element dynamically
+            const div = document.createElement('div');
+            div.className = 'segment';
+            
+            // Creates a span specifically for the speaker's name
+            const speakerLabel = document.createElement('span');
+            speakerLabel.className = 'speaker';
+            speakerLabel.innerText = seg.speaker_label || 'Unknown';
+            div.appendChild(speakerLabel);
+
+            // Iterates through every single word in the current speech block
+            seg.words.forEach(w => {
+                // Creates a span for the word
+                const span = document.createElement('span');
+                span.className = 'word';
+                // Appends a space character so sentences read naturally
+                span.innerText = w.word + ' ';
+                
+                // Embeds the start and end times directly into the HTML element's dataset
+                span.dataset.start = w.start;
+                span.dataset.end = w.end;
+
+                // Attaches a click event that jumps the audio player to this specific word
+                span.onclick = () => { 
+                    audio.currentTime = w.start; 
+                    audio.play(); 
+                };
+                
+                div.appendChild(span);
+            });
+
+            // Adds the fully constructed segment div to the main transcript container
+            container.appendChild(div);
+        });
+
+        // This event listener fires multiple times a second while the audio is playing
+        audio.ontimeupdate = () => {
+            const currentTime = audio.currentTime;
+            
+            // Collects every rendered word element on the page into a list
+            const words = document.querySelectorAll('.word');
+
+            words.forEach(wordSpan => {
+                // Converts the string timestamps from the dataset back into usable numbers
+                const start = parseFloat(wordSpan.dataset.start);
+                const end = parseFloat(wordSpan.dataset.end);
+
+                // If the current audio time has passed the word's start time, it gets highlighted
+                if (currentTime >= start) {
+                    wordSpan.classList.add('active-word');
+                    
+                    // We only want to trigger the auto-scroll for the specific word currently being spoken
+                    if (currentTime <= end) {
+                        wordSpan.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest'
+                        });
+                    }
+                } else {
+                    // Removes the highlight if the user scrubs backwards in the audio timeline
+                    wordSpan.classList.remove('active-word');
+                }
+            });
+        };
+    }
+</script>
+</body>
+</html>

@@ -27,3 +27,9 @@ backend/medgemma_soap_merged_16bit-2k.../
 backend/whisper-large-v3/
 backend/**/*.bin
 backend/**/*.safetensors
+backend/**/*.bin
+backend/**/*.safetensors
+backend/**/*.bin
+backend/**/*.safetensors
+*.bin
+*.safetensors
