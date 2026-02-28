@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider } from './AppContext';
+import { FEATURES } from './config/features';
 import { Complaint } from './pages/patient/Complaint';
 import { Summary } from './pages/patient/Summary';
 import { Trends } from './pages/patient/Trends';
@@ -21,11 +22,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
 
-          <Route path="/patient/complaint" element={<Complaint />} />
-          <Route path="/patient/summary" element={<Summary />} />
-          <Route path="/patient/trends" element={<Trends />} />
-          <Route path="/patient/documents" element={<Documents />} />
-          <Route path="/patient/documents/:docId" element={<DocumentDetail />} />
+          {/* Patient Routes - Gated by feature flag */}
+          <Route path="/patient/complaint" element={FEATURES.patientPortal ? <Complaint /> : <Navigate to="/doctor/patient" replace />} />
+          <Route path="/patient/summary" element={FEATURES.patientPortal ? <Summary /> : <Navigate to="/doctor/patient" replace />} />
+          <Route path="/patient/trends" element={FEATURES.patientPortal ? <Trends /> : <Navigate to="/doctor/patient" replace />} />
+          <Route path="/patient/documents" element={FEATURES.patientPortal ? <Documents /> : <Navigate to="/doctor/patient" replace />} />
+          <Route path="/patient/documents/:docId" element={FEATURES.patientPortal ? <DocumentDetail /> : <Navigate to="/doctor/patient" replace />} />
 
           <Route path="/doctor/patient" element={<PatientPicker />} />
           <Route path="/doctor/dashboard" element={<Patient />} />

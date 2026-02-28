@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Activity, ArrowRight, Heart, Shield } from 'lucide-react';
+import { FEATURES } from '../config/features';
 
 export const Landing: React.FC = () => {
     const navigate = useNavigate();
@@ -76,35 +77,37 @@ export const Landing: React.FC = () => {
                     </div>
 
                     {/* Patient Portal Card */}
-                    <div className="relative group">
-                        {/* Static Subtle Aura */}
-                        <div className="absolute inset-x-0 inset-y-0 bg-accent-500/5 blur-[80px] rounded-full scale-150 -z-10" />
+                    {FEATURES.patientPortal && (
+                        <div className="relative group">
+                            {/* Static Subtle Aura */}
+                            <div className="absolute inset-x-0 inset-y-0 bg-accent-500/5 blur-[80px] rounded-full scale-150 -z-10" />
 
-                        <button
-                            onClick={() => navigate('/patient/complaint')}
-                            className="relative w-full bg-white/90 backdrop-blur-sm p-10 rounded-[3rem] border border-border shadow-[0_20px_50px_rgba(0,0,0,0.02)] hover:-translate-y-3 hover:bg-white hover:shadow-[0_40px_80px_rgba(34,197,139,0.08)] transition-all duration-500 text-left overflow-hidden z-10"
-                        >
-                            <div className="absolute top-0 right-0 w-40 h-40 bg-accent-500/5 blur-[80px] -mr-20 -mt-20 group-hover:bg-accent-500/10 transition-all duration-700" />
-                            <div className="flex items-center justify-between mb-8 relative z-10">
-                                <div className="w-16 h-16 rounded-3xl bg-surface-muted flex items-center justify-center text-text-muted group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-inner">
-                                    <Activity className="w-8 h-8" />
+                            <button
+                                onClick={() => navigate('/patient/complaint')}
+                                className="relative w-full bg-white/90 backdrop-blur-sm p-10 rounded-[3rem] border border-border shadow-[0_20px_50px_rgba(0,0,0,0.02)] hover:-translate-y-3 hover:bg-white hover:shadow-[0_40px_80px_rgba(34,197,139,0.08)] transition-all duration-500 text-left overflow-hidden z-10"
+                            >
+                                <div className="absolute top-0 right-0 w-40 h-40 bg-accent-500/5 blur-[80px] -mr-20 -mt-20 group-hover:bg-accent-500/10 transition-all duration-700" />
+                                <div className="flex items-center justify-between mb-8 relative z-10">
+                                    <div className="w-16 h-16 rounded-3xl bg-surface-muted flex items-center justify-center text-text-muted group-hover:bg-primary group-hover:text-white transition-all duration-300 shadow-inner">
+                                        <Activity className="w-8 h-8" />
+                                    </div>
+                                    <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center group-hover:bg-accent-500/10 group-hover:border-accent-400 transition-all">
+                                        <ArrowRight className="w-5 h-5 text-text-muted group-hover:text-accent-600 group-hover:translate-x-1 transition-all" />
+                                    </div>
                                 </div>
-                                <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center group-hover:bg-accent-500/10 group-hover:border-accent-400 transition-all">
-                                    <ArrowRight className="w-5 h-5 text-text-muted group-hover:text-accent-600 group-hover:translate-x-1 transition-all" />
+                                <div className="space-y-4 relative z-10">
+                                    <h3 className="text-2xl font-black text-text-strong tracking-tight">Patient Portal</h3>
+                                    <p className="text-text font-medium leading-relaxed text-[16px]">
+                                        Intelligent self-management. Submit symptoms, track physiological trends, and access personalized medical data.
+                                    </p>
+                                    <div className="pt-2 flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-accent-500 shadow-[0_0_15px_rgba(34,197,139,0.4)]" />
+                                        <span className="text-[10px] font-black text-accent-600 uppercase tracking-[0.2em]">Patient Access Point</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="space-y-4 relative z-10">
-                                <h3 className="text-2xl font-black text-text-strong tracking-tight">Patient Portal</h3>
-                                <p className="text-text font-medium leading-relaxed text-[16px]">
-                                    Intelligent self-management. Submit symptoms, track physiological trends, and access personalized medical data.
-                                </p>
-                                <div className="pt-2 flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-accent-500 shadow-[0_0_15px_rgba(34,197,139,0.4)]" />
-                                    <span className="text-[10px] font-black text-accent-600 uppercase tracking-[0.2em]">Patient Access Point</span>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 

@@ -397,8 +397,8 @@ export const Patient: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button onClick={handleReset} className="btn-secondary h-10 px-4 py-0 flex items-center gap-2 border-border text-sm font-bold">
-              <LogOut className="w-4 h-4" /> Load Next
+            <button onClick={() => navigate('/doctor/patient')} className="btn-secondary h-10 px-4 py-0 flex items-center gap-2 border-border text-sm font-bold">
+              <LogOut className="w-4 h-4" /> Next patient
             </button>
             <button
               onClick={() => navigate('/doctor/treatment')}
