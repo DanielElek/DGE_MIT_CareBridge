@@ -2,7 +2,8 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
-import { Search, User, Heart, ChevronRight, LogOut, Calendar } from 'lucide-react';
+import { Search, Heart, ChevronRight, LogOut, Calendar } from 'lucide-react';
+import { MonogramAvatar } from '../../components/MonogramAvatar';
 import { MOCK_CLINICAL_PATIENT } from '../../mockData';
 
 interface Patient {
@@ -143,8 +144,8 @@ export const PatientPicker: React.FC = () => {
                 onClick={() => openPatient(patient.code)}
                 className="w-full group p-5 rounded-3xl border border-border bg-white shadow-sm transition-all text-left flex items-center gap-4 hover:shadow-xl hover:shadow-primary/5 hover:border-accent-500/20 hover:-translate-x-1"
             >
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all bg-surface-muted text-text-muted/50 group-hover:bg-accent-500/10 group-hover:text-primary">
-                    <User className="w-6 h-6" />
+                <div className="w-12 h-12 rounded-2xl overflow-hidden flex items-center justify-center transition-all bg-surface-muted text-text-muted/50 group-hover:bg-accent-500/10 group-hover:text-primary">
+                    <MonogramAvatar name={patient.name} className="w-full h-full text-lg" />
                 </div>
                 <div className="flex-1">
                     <h4 className="font-black text-text-strong tracking-tight text-lg leading-tight mb-1">{patient.name}</h4>
@@ -217,8 +218,8 @@ export const PatientPicker: React.FC = () => {
                                                                 onClick={() => openPatient(p.code)}
                                                                 className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all text-left ${isHighlighted ? 'bg-primary text-white shadow-lg' : 'hover:bg-surface-muted text-text-strong'}`}
                                                             >
-                                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isHighlighted ? 'bg-white/20 text-white' : 'bg-surface-muted text-text-muted'}`}>
-                                                                    <User className="w-5 h-5" />
+                                                                <div className={`w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shrink-0 ${isHighlighted ? 'bg-white/20 text-white' : 'bg-surface-muted text-text-muted'}`}>
+                                                                    <MonogramAvatar name={p.name} className="w-full h-full text-sm" />
                                                                 </div>
                                                                 <div className="flex-1">
                                                                     <p className="font-black tracking-tight leading-none mb-1">{p.name}</p>

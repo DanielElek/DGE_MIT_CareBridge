@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
-import { Search, User, Calendar, ChevronDown, ChevronUp, LogOut, ArrowRight, Clock, Heart, Play, Info, ExternalLink, X, Activity } from 'lucide-react';
+import { Search, Calendar, ChevronDown, ChevronUp, LogOut, ArrowRight, Clock, Heart, Play, Info, ExternalLink, X, Activity } from 'lucide-react';
+import { MonogramAvatar } from '../../components/MonogramAvatar';
 import { MOCK_CLINICAL_PATIENT, mockTrends } from '../../mockData';
 
 const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any }> = ({ isOpen, onClose, report }) => {
@@ -385,8 +386,8 @@ export const Patient: React.FC = () => {
               {/* Profile Bar */}
               <div className="glass-card p-6 border-border flex items-center justify-between">
                 <div className="flex items-center gap-5">
-                  <div className="w-16 h-16 bg-surface-muted rounded-2xl flex items-center justify-center text-text-muted/50 border border-border">
-                    <User className="w-10 h-10" />
+                  <div className="w-16 h-16 bg-surface-muted rounded-2xl overflow-hidden flex items-center justify-center text-text-muted/50 border border-border">
+                    <MonogramAvatar name={currentClinicalPatient.name} className="w-full h-full text-2xl" />
                   </div>
                   <div>
                     <h2 className="headline-type text-text-strong mb-1">
@@ -404,7 +405,7 @@ export const Patient: React.FC = () => {
               {/* Patient Input Summary */}
               <div className="glass-card border-accent-500/10 flex flex-col min-h-0">
                 <div className="px-6 py-4 border-b border-accent-500/5 flex items-center justify-between bg-accent-500/5">
-                  <h3 className="text-xs font-black text-accent-700 uppercase tracking-[0.2em] flex items-center gap-2">
+                  <h3 className="text-sm font-black text-accent-700 uppercase tracking-[0.2em] flex items-center gap-2">
                     <Clock className="w-4 h-4" /> Latest Patient Summary
                   </h3>
                   <span className="text-[10px] font-bold text-accent-500 bg-white px-2 py-0.5 rounded border border-accent-500/10">Submitted via Patient App • {currentClinicalPatient.latestSummary.createdAt}</span>
@@ -491,7 +492,7 @@ export const Patient: React.FC = () => {
               {/* Treatment Timeline */}
               <div className="glass-card flex-1 flex flex-col min-h-0 max-h-[calc(100vh-200px)]">
                 <div className="px-6 py-5 border-b border-border flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur-md z-10">
-                  <h3 className="text-xs font-black text-text-strong uppercase tracking-[0.22em] flex items-center gap-2">
+                  <h3 className="text-[14px] font-semibold text-text-strong uppercase tracking-[0.18em] flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-accent-500" /> Treatment Timeline
                   </h3>
                 </div>
@@ -505,9 +506,9 @@ export const Patient: React.FC = () => {
                             {idx !== visibleTimeline.length - 1 && <div className="absolute top-2 w-px h-[200px] bg-border group-hover:bg-accent-500/20" />}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <span className="text-[9px] font-black text-text-muted uppercase tracking-[0.1em] mb-1.5 block">{item.date}</span>
-                            <h4 className="font-black text-text-strong leading-tight text-xs mb-1 group-hover:text-accent-600 transition-colors uppercase tracking-tight">{item.title}</h4>
-                            <p className="text-[10px] font-bold text-text-muted line-clamp-1 italic">{item.notes}</p>
+                            <span className="text-[12px] font-medium text-text-muted tracking-wide mb-1.5 block">{item.date}</span>
+                            <h4 className="text-[16px] font-semibold leading-[1.3] text-text-strong mb-1 group-hover:text-accent-600 transition-colors tracking-tight">{item.title}</h4>
+                            <p className="text-[14px] font-normal leading-[1.45] text-text-muted line-clamp-1 italic">{item.notes}</p>
                           </div>
                         </div>
                         <div className={`px-11 pb-5 transition-all duration-500 ease-in-out overflow-hidden ${expandedTimeline === item.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
