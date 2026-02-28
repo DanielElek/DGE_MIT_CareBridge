@@ -406,7 +406,7 @@ export const Patient: React.FC = () => {
               <div className="glass-card border-accent-500/10 flex flex-col min-h-0">
                 <div className="px-6 py-4 border-b border-accent-500/5 flex items-center justify-between bg-accent-500/5">
                   <h3 className="text-sm font-black text-accent-700 uppercase tracking-[0.2em] flex items-center gap-2">
-                    <Clock className="w-4 h-4" /> Latest Patient Summary
+                    <Clock className="w-4 h-4 text-accent-500" /> Latest Patient Summary
                   </h3>
                   <span className="text-[10px] font-bold text-accent-500 bg-white px-2 py-0.5 rounded border border-accent-500/10">Submitted via Patient App • {currentClinicalPatient.latestSummary.createdAt}</span>
                 </div>
@@ -492,7 +492,7 @@ export const Patient: React.FC = () => {
               {/* Treatment Timeline */}
               <div className="glass-card flex-1 flex flex-col min-h-0 max-h-[calc(100vh-200px)]">
                 <div className="px-6 py-5 border-b border-border flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur-md z-10">
-                  <h3 className="text-[14px] font-semibold text-text-strong uppercase tracking-[0.18em] flex items-center gap-2">
+                  <h3 className="text-sm font-black text-accent-700 uppercase tracking-[0.2em] flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-accent-500" /> Treatment Timeline
                   </h3>
                 </div>
