@@ -21,3 +21,9 @@ dist-ssr
 *.sln
 *.sw?
 .env
+backend/distil-large-v35-ct2/
+backend/medgemma_4b_q4_vanilla_mlx/
+backend/medgemma_soap_merged_16bit-2k.../
+backend/whisper-large-v3/
+backend/**/*.bin
+backend/**/*.safetensors

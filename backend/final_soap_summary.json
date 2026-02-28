@@ -1,0 +1,45 @@
+{
+    "soap": {
+        "subjective": "Patient reports a headache for the past two days, located in the back of the head. Patient denies any improvement with increased water intake and reports working at a computer for long hours. Patient's occupation involves prolonged screen time and uses glasses for vision correction.",
+        "objective": "No specific objective findings provided in the dialogue. The focus is on the patient's subjective symptoms and occupational habits.",
+        "assessment": "The patient's headache could be related to prolonged screen time and/or eye strain. The absence of specific objective findings makes it difficult to pinpoint the exact cause.",
+        "plan": "Not discussed."
+    },
+    "quotes": {
+        "subjective": [
+            {
+                "sentence": "Patient reports a headache for the past two days, located in the back of the head.",
+                "quote": "\"And where are you? Feel it? It's somewhere in the back of my head.\""
+            },
+            {
+                "sentence": "Patient denies any improvement with increased water intake and reports working at a computer for long hours.",
+                "quote": "\"And where are you? Feel it? It's somewhere in the back of my head. I tried drinking a lot of water, but even though I drink like four liters per day, it did not help.\""
+            },
+            {
+                "sentence": "Patient's occupation involves prolonged screen time and uses glasses for vision correction.",
+                "quote": "\"I work at the computer.\""
+            }
+        ],
+        "objective": [
+            {
+                "sentence": "No specific objective findings provided in the dialogue.",
+                "quote": "None"
+            },
+            {
+                "sentence": "The focus is on the patient's subjective symptoms and occupational habits.",
+                "quote": "None"
+            }
+        ],
+        "assessment": [
+            {
+                "sentence": "The patient's headache could be related to prolonged screen time and/or eye strain.",
+                "quote": "\"I work at the computer. Oh, so you watch the screen for the day?\""
+            },
+            {
+                "sentence": "The absence of specific objective findings makes it difficult to pinpoint the exact cause.",
+                "quote": "\"The absence of specific objective findings makes it difficult to pinpoint the exact cause.\""
+            }
+        ],
+        "plan": []
+    }
+}

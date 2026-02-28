@@ -5,8 +5,7 @@ import { Layout } from '../../components/Layout';
 import {
     Mic, Square, Play, Pause, RotateCcw, Save, ArrowLeft,
     Clock, Trash2,
-    ChevronRight, Sparkles, Loader2, Check, AlertCircle, Mail,
-    ChevronUp, ChevronDown
+    ChevronRight, Sparkles, Loader2, Mail, Upload
 } from 'lucide-react';
 
 // --- TYPES ---
@@ -20,13 +19,6 @@ type SessionStep =
     | "analyzing_followup"
     | "final_ready";
 
-interface AIQuestion {
-    id: string;
-    question: string;
-    priority?: "High" | "Medium" | "Low";
-    checked?: boolean;
-}
-
 interface SOAPDraft {
     S: string;
     O: string;
@@ -34,42 +26,35 @@ interface SOAPDraft {
     P: string;
 }
 
-// --- MOCK AI FUNCTIONS ---
-// ConsentModal removed for inline flow
+interface SoapQuoteEntry {
+    sentence: string;
+    quote: string;
+}
 
-const localAI = {
-    analyzeInitial: async (_audioUrl: string) => {
-        await new Promise(r => setTimeout(r, 3000));
-        return {
-            summary: "AI Summary (Initial Conversation): Patient confirms sharp L4-L5 lumbar pain following lifting incident. Pain is localized but increases with rotation. Patient denies saddle anesthesia. Conservative management with Ibuprofen (400mg) provides partial relief. Sleep is disrupted.",
-            questions: [
-                { id: 'q1', question: "Any numbness in the feet or toes?", priority: "High" },
-                { id: 'q2', question: "Have you noticed any weakness when walking or standing?", priority: "High" },
-                { id: 'q3', question: "Is the pain worse in the morning or evening?", priority: "Medium" },
-                { id: 'q4', question: "Does the pain radiate down either leg?", priority: "Medium" },
-                { id: 'q5', question: "Have you had similar back issues in the past?", priority: "Low" }
-            ] as AIQuestion[]
-        };
-    },
-    analyzeFollowup: async (_audioUrl: string) => {
-        await new Promise(r => setTimeout(r, 3500));
-        return {
-            summary: "AI Summary (After Follow-up): Patient confirms no numbness or motor weakness. Pain is worse in the evening after daily activity. Radiation is absent. This is a first-time acute episode. Clinical findings strongly support a localized mechanical lumbar strain without radiculopathy."
-        };
-    },
-    generateSOAP: async (_summaryText: string): Promise<SOAPDraft> => {
-        await new Promise(r => setTimeout(r, 2000));
-        return {
-            S: "Patient reports 4-day history of sharp L4-L5 pain. No radiculopathy. Relieved slightly by NSAIDs. First episode.",
-            O: "Point tenderness at L4. Lumbar flexion limited to 40 degrees. Deep tendon reflexes intact.",
-            A: "Acute mechanical low back pain / lumbar strain. No red flags noted.",
-            P: "Physical therapy referral. Ergonomic education. Review in 2 weeks. NSAIDs as needed."
-        };
-    }
-};
+type SoapQuotes = Record<string, SoapQuoteEntry[]>;
+
+interface TranscriptWord {
+    word: string;
+    start: number;
+    end: number;
+    score?: number;
+    speaker?: string;
+}
+
+interface TranscriptSegment {
+    start: number;
+    end: number;
+    text: string;
+    words: TranscriptWord[];
+    speaker: string;
+    speaker_label: string;
+}
+
+// --- MOCK AI FUNCTIONS ---
+// localAI removed in favor of real backend SSE streaming.
 
 const WaveformAnimated: React.FC<{ isRecording: boolean }> = ({ isRecording }) => (
-    <div className="relative w-full h-32 flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-accent-500/5 to-primary-900/5 border border-white shadow-inner group-hover:border-accent-500/20 transition-all duration-500">
+    <div className="relative w-full h-32 flex items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-accent-500/10 to-primary-900/10 border border-slate-200 shadow-inner group-hover:border-accent-500/30 transition-all duration-500">
         <svg viewBox="0 0 200 60" preserveAspectRatio="none" className={`w-full h-full scale-y-110 transition-opacity duration-700 ${isRecording ? 'opacity-90' : 'opacity-30'}`}>
             <defs>
                 <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -122,9 +107,20 @@ export const Treatment: React.FC = () => {
     const [sessionStep, setSessionStep] = useState<SessionStep>("recording_initial");
     const [initialRecording, setInitialRecording] = useState<{ url: string; blob: Blob } | null>(null);
     const [followupRecording, setFollowupRecording] = useState<{ url: string; blob: Blob } | null>(null);
-    const [aiSummary, setAiSummary] = useState<string | null>(null);
-    const [aiQuestions, setAiQuestions] = useState<AIQuestion[]>([]);
     const [soapDraft, setSoapDraft] = useState<SOAPDraft | null>(null);
+    const [soapQuotes, setSoapQuotes] = useState<SoapQuotes | null>(null);
+    const [highlightedQuote, setHighlightedQuote] = useState<string | null>(null);
+    const [transcription, setTranscription] = useState<string | null>(null);
+    const [detailedTranscript, setDetailedTranscript] = useState<TranscriptSegment[] | null>(null);
+    const [currentPlaybackTime, setCurrentPlaybackTime] = useState(0);
+    const [audioDuration, setAudioDuration] = useState(0);
+    const [isPlaybackPlaying, setIsPlaybackPlaying] = useState(false);
+    const [viewMode, setViewMode] = useState<'transcription' | 'soap'>('soap');
+    const transcriptContainerRef = useRef<HTMLDivElement | null>(null);
+
+    // AI Loading State Variables
+    const [aiLoadingMessage, setAiLoadingMessage] = useState<string>("Processing...");
+    const [aiStepCounter, setAiStepCounter] = useState<string>("Step 1/3");
 
     // UI Feedback States
     const [isSaving, setIsSaving] = useState(false);
@@ -137,13 +133,13 @@ export const Treatment: React.FC = () => {
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
     // Consent & Alternative Note State
-    const [consentChecked, setConsentChecked] = useState(true);
-    const [showSummary, setShowSummary] = useState(false);
+    const [consentChecked, setConsentChecked] = useState(false);
     const [soapManual, setSoapManual] = useState<SOAPDraft>({ S: '', O: '', A: '', P: '' });
 
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const chunksRef = useRef<Blob[]>([]);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
     const sessionStepRef = useRef<SessionStep>("recording_initial");
 
     const isLarge = textSize === 'large';
@@ -167,10 +163,21 @@ export const Treatment: React.FC = () => {
     }, [currentClinicalPatient, navigate]);
 
     useEffect(() => {
+        // Preload backend AI models asynchronously on mount
+        fetch('http://127.0.0.1:8000/api/preload', { method: 'POST' })
+            .catch(err => console.error("Failed to trigger preload:", err));
+
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
         };
     }, []);
+
+    // Auto-dismiss highlight after 3 seconds
+    useEffect(() => {
+        if (!highlightedQuote) return;
+        const timer = setTimeout(() => setHighlightedQuote(null), 3000);
+        return () => clearTimeout(timer);
+    }, [highlightedQuote]);
 
     const startTimer = () => {
         timerRef.current = setInterval(() => {
@@ -251,6 +258,9 @@ export const Treatment: React.FC = () => {
     const resetRecording = () => {
         setAudioUrl(null);
         setElapsedTime(0);
+        setDetailedTranscript(null);
+        setCurrentPlaybackTime(0);
+        setIsPlaybackPlaying(false);
         if (sessionStep === "ready_to_analyze_initial") setSessionStep("recording_initial");
         if (sessionStep === "ready_to_analyze_followup") setSessionStep("recording_followup");
     };
@@ -261,20 +271,154 @@ export const Treatment: React.FC = () => {
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
+    const getAudioDuration = (file: File | Blob): Promise<number> => {
+        return new Promise((resolve) => {
+            const audio = new Audio();
+            audio.src = URL.createObjectURL(file);
+            audio.onloadedmetadata = () => {
+                URL.revokeObjectURL(audio.src);
+                resolve(Math.floor(audio.duration));
+            };
+            audio.onerror = () => {
+                URL.revokeObjectURL(audio.src);
+                resolve(0);
+            };
+        });
+    };
+
     // --- WORKFLOW HANDLERS ---
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, isFollowup = false) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        if (!consentChecked) {
+            alert("Please confirm patient consent before uploading.");
+            return;
+        }
+
+        if (isFollowup) {
+            setSessionStep("analyzing_followup");
+        } else {
+            setSessionStep("analyzing_initial");
+        }
+
+        try {
+            const duration = await getAudioDuration(file);
+            setElapsedTime(duration);
+
+            // Set audioUrl from the uploaded file so it can be played back
+            const url = URL.createObjectURL(file);
+            setAudioUrl(url);
+
+            const soapResult = await processAudioStream(file);
+            if (soapResult) {
+                setSoapDraft(soapResult);
+                setSessionStep("final_ready");
+            }
+        } catch (e) {
+            console.error(e);
+            setSessionStep(isFollowup ? "ready_to_analyze_followup" : "ready_to_analyze_initial");
+            alert("Analysis failed. Please check the backend server logs.");
+        }
+
+        // Reset the file input so the same file can be uploaded again if needed
+        event.target.value = '';
+    };
+
+    const processAudioStream = async (blob: Blob) => {
+        setAiStepCounter("Step 1/3");
+        setAiLoadingMessage("Uploading audio...");
+
+        const formData = new FormData();
+        formData.append("audio", blob, "audio.webm");
+
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/process", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.body) throw new Error("No response body");
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = "";
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+
+                // Keep the last partial line in the buffer
+                buffer = lines.pop() || "";
+
+                for (const line of lines) {
+                    const trimmedLine = line.trim();
+                    if (trimmedLine.startsWith('data: ')) {
+                        try {
+                            const data = JSON.parse(trimmedLine.substring(6));
+                            if (data.status === 'log') {
+                                // Skip raw logs entirely for cleaner UI
+                            } else if (data.status === 'start') {
+                                setAiStepCounter("Step 1/3");
+                                setAiLoadingMessage("Processing audio file...");
+                            } else if (data.status === 'info') {
+                                if (data.message?.includes('complete. Starting generation')) {
+                                    setAiStepCounter("Step 3/3");
+                                    setAiLoadingMessage("Generating SOAP documentation...");
+                                } else if (data.message?.includes('normalized. Starting transcription')) {
+                                    setAiStepCounter("Step 2/3");
+                                    setAiLoadingMessage("Transcribing audio...");
+                                }
+                            } else if (data.status === 'transcription_done') {
+                                setTranscription(data.transcription || "");
+                                if (data.detailed_transcript) {
+                                    setDetailedTranscript(data.detailed_transcript);
+                                }
+                                setViewMode('transcription');
+                            } else if (data.status === 'done') {
+                                const rawObj = data.soap || {};
+                                // Store sentence→quote mappings if available
+                                if (data.quotes) {
+                                    setSoapQuotes(data.quotes);
+                                }
+                                return {
+                                    S: rawObj.subjective || "Not discussed.",
+                                    O: rawObj.objective || "Not discussed.",
+                                    A: rawObj.assessment || "Not discussed.",
+                                    P: rawObj.plan || "Not discussed."
+                                };
+                            } else if (data.status === 'error') {
+                                throw new Error(data.message || "Unknown backend error");
+                            }
+                        } catch (e) {
+                            console.error("Error parsing SSE:", line, e);
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error("Streaming error:", error);
+            throw error;
+        }
+        return null;
+    };
+
     const handleAnalyzeInitial = async () => {
         if (!initialRecording) return;
         setSessionStep("analyzing_initial");
         try {
-            const result = await localAI.analyzeInitial(initialRecording.url);
-            setAiSummary(result.summary);
-            setAiQuestions(result.questions);
-            setSessionStep("followup_questions_ready");
-            setAudioUrl(null);
-            setElapsedTime(0);
+            const soapResult = await processAudioStream(initialRecording.blob);
+            if (soapResult) {
+                setAudioUrl(initialRecording.url);
+                setSoapDraft(soapResult);
+                setSessionStep("final_ready");
+            }
         } catch (e) {
+            console.error(e);
             setSessionStep("ready_to_analyze_initial");
-            alert("Analysis failed. Please retry.");
+            alert("Analysis failed. Please check the backend server logs.");
         }
     };
 
@@ -282,18 +426,16 @@ export const Treatment: React.FC = () => {
         if (!followupRecording) return;
         setSessionStep("analyzing_followup");
         try {
-            const result = await localAI.analyzeFollowup(followupRecording.url);
-            setAiSummary(result.summary);
-            setSessionStep("final_ready");
-            setAudioUrl(null);
-            setElapsedTime(0);
-
-            // AUTOMATIC SOAP GENERATION
-            const soapResult = await localAI.generateSOAP(result.summary);
-            setSoapDraft(soapResult);
+            const soapResult = await processAudioStream(followupRecording.blob);
+            if (soapResult) {
+                setAudioUrl(followupRecording.url);
+                setSoapDraft(soapResult);
+                setSessionStep("final_ready");
+            }
         } catch (e) {
+            console.error(e);
             setSessionStep("ready_to_analyze_followup");
-            alert("Analysis update failed. Please retry.");
+            alert("Analysis update failed. Please check the backend server logs.");
         }
     };
 
@@ -305,28 +447,7 @@ export const Treatment: React.FC = () => {
         }, 1500);
     };
 
-    const handleAnalyzeTypedNotes = async () => {
-        const fullNotes = `Subjective: ${soapManual.S}\nObjective: ${soapManual.O}\nAssessment: ${soapManual.A}\nPlan: ${soapManual.P}`;
-        if (!fullNotes.trim()) return;
-        setSessionStep("analyzing_initial");
-        try {
-            await new Promise(r => setTimeout(r, 2500));
-            // Simulate AI summary based on notes
-            const summary = `Manual Entry Summary: ${fullNotes.substring(0, 150)}${fullNotes.length > 150 ? '...' : ''} [Clinical analysis completed based on manual practitioner input]`;
-            setAiSummary(summary);
 
-            // Generate SOAP draft immediately for a fast manual workflow
-            const soapResult = await localAI.generateSOAP(summary);
-            setSoapDraft(soapResult);
-
-            setSessionStep("final_ready");
-            setAudioUrl(null);
-            setElapsedTime(0);
-        } catch (e) {
-            setSessionStep("recording_initial");
-            alert("Analysis of notes failed. Please check the content and try again.");
-        }
-    };
 
     const handleSendEmail = () => {
         if (!emailInput) {
@@ -349,7 +470,7 @@ export const Treatment: React.FC = () => {
             <div className={`h-screen bg-[#FDFDFF] flex flex-col text-slate-800 overflow-hidden font-sans ${isLarge ? 'text-lg' : 'text-sm'}`}>
 
                 {/* Superior Clinical Header */}
-                <header className="h-14 shrink-0 bg-white/80 backdrop-blur-xl border-b border-slate-100 flex items-center justify-between px-8 z-20 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+                <header className="h-14 shrink-0 bg-white/90 backdrop-blur-xl border-b border-slate-200 flex items-center justify-between px-8 z-20 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
                     <div className="flex items-center gap-6">
                         <button
                             onClick={() => navigate('/doctor/patient')}
@@ -367,9 +488,9 @@ export const Treatment: React.FC = () => {
 
                     <div className="flex items-center gap-4">
                         {!isFinalStep && (
-                            <div className="flex items-center gap-2 px-3 py-1 bg-slate-50 rounded-full border border-slate-100">
+                            <div className="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full border border-slate-200">
                                 <div className={`w-1.5 h-1.5 rounded-full ${isRecording ? (isPaused ? 'bg-amber-400' : 'bg-red-500 animate-pulse') : 'bg-slate-300'}`} />
-                                <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">
+                                <span className="text-[9px] font-black uppercase tracking-widest text-slate-600">
                                     {isRecording ? (isPaused ? 'Paused' : 'Recording Live') : 'Standby Mode'}
                                 </span>
                             </div>
@@ -389,7 +510,7 @@ export const Treatment: React.FC = () => {
                                     disabled={isSaving}
                                 >
                                     {isSaving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                                    Save Encounter
+                                    Save Session
                                 </button>
                             </div>
                         )}
@@ -400,343 +521,463 @@ export const Treatment: React.FC = () => {
                 <main className="flex-1 p-6 lg:p-10 overflow-hidden flex justify-center">
                     <div className="w-full max-w-[1440px] flex flex-col lg:flex-row gap-8 overflow-hidden">
 
-                        {/* LEFT: Controls & Recording (Hidden in Final Step) */}
-                        {!isFinalStep && (
-                            <div className="w-full lg:w-[360px] flex flex-col gap-6 shrink-0 animate-slide-up">
-                                <div className="bg-white border border-slate-100 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.03)] flex flex-col overflow-hidden relative group rounded-[2.5rem]">
+                        {/* LEFT: Controls & Recording */}
+                        <div className="w-full lg:w-[360px] flex flex-col gap-6 shrink-0 animate-slide-up">
+                            <div className="bg-white border border-slate-200 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.05)] flex flex-col overflow-hidden relative group rounded-[2.5rem]">
 
-                                    <WaveformAnimated isRecording={isRecording && !isPaused} />
+                                <WaveformAnimated isRecording={isRecording && !isPaused} />
 
-                                    <div className="mt-10 text-center relative">
-                                        <div className={`${isLarge ? 'text-7xl' : 'text-6xl'} font-black tabular-nums tracking-tighter mb-1 text-text-strong drop-shadow-sm`}>
-                                            {formatTime(elapsedTime)}
-                                        </div>
+                                <div className="mt-10 text-center relative">
+                                    <div className={`${isLarge ? 'text-7xl' : 'text-6xl'} font-black tabular-nums tracking-tighter mb-1 text-text-strong drop-shadow-sm`}>
+                                        {formatTime(elapsedTime)}
+                                    </div>
+                                    <div className="flex flex-col items-center gap-5">
                                         <div className="flex items-center justify-center gap-2">
                                             <Clock className="w-3.5 h-3.5 text-accent-500/50" />
-                                            <p className="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em]">
-                                                {sessionStep.includes("followup") ? "Follow-up Session" : "Encounter duration"}
+                                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">
+                                                {sessionStep.includes("followup") ? "Follow-up Session" : "Session duration"}
                                             </p>
                                         </div>
-                                    </div>
 
-                                    {/* Controls Area */}
-                                    <div className="mt-10 flex flex-col items-center gap-6 relative z-10 w-full">
-                                        {isRecording ? (
-                                            <div className="flex items-center justify-center gap-6">
+                                        {(transcription || isFinalStep) && (audioUrl || initialRecording?.url || followupRecording?.url) && !isRecording && (
+                                            <div className="flex flex-col items-center gap-3 w-full animate-fade-in mt-2">
                                                 <button
-                                                    onClick={isPaused ? resumeRecording : pauseRecording}
-                                                    className={`w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all duration-300 hover:scale-110 ${isPaused
-                                                        ? 'bg-primary border-primary shadow-xl shadow-primary/20 text-white'
-                                                        : 'bg-white border-border hover:border-accent-500/20 text-text transition-colors shadow-sm'
-                                                        }`}
+                                                    onClick={() => {
+                                                        const currentUrl = audioUrl || initialRecording?.url || followupRecording?.url;
+                                                        if (audioRef.current && currentUrl) {
+                                                            if (audioRef.current.src !== currentUrl) {
+                                                                audioRef.current.src = currentUrl;
+                                                            }
+                                                            if (isPlaybackPlaying) audioRef.current.pause();
+                                                            else audioRef.current.play();
+                                                        }
+                                                    }}
+                                                    className="flex items-center gap-2 px-6 py-2.5 bg-accent-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-accent-600 transition-all shadow-lg shadow-accent-500/20"
                                                 >
-                                                    {isPaused ? <Play className="w-6 h-6 fill-current" /> : <Pause className="w-6 h-6" />}
+                                                    {isPlaybackPlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                                                    {isPlaybackPlaying ? "Pause Playback" : "Play Recording"}
                                                 </button>
-                                                <button
-                                                    onClick={stopRecording}
-                                                    className="w-20 h-20 rounded-full bg-text-strong hover:bg-black flex items-center justify-center shadow-2xl shadow-primary/10 hover:scale-105 active:scale-95 transition-all outline-none"
-                                                >
-                                                    <Square className="w-8 h-8 fill-accent-500" />
-                                                </button>
+                                                {/* Scrub slider */}
+                                                <div className="w-full px-1 flex flex-col gap-1">
+                                                    <input
+                                                        type="range"
+                                                        min={0}
+                                                        max={audioDuration || 1}
+                                                        step={0.1}
+                                                        value={currentPlaybackTime}
+                                                        onChange={(e) => {
+                                                            const t = parseFloat(e.target.value);
+                                                            setCurrentPlaybackTime(t);
+                                                            if (audioRef.current) audioRef.current.currentTime = t;
+                                                        }}
+                                                        className="w-full h-1.5 rounded-full accent-accent-500 cursor-pointer"
+                                                        style={{
+                                                            background: `linear-gradient(to right, #22C58B ${audioDuration ? (currentPlaybackTime / audioDuration) * 100 : 0}%, #e2e8f0 ${audioDuration ? (currentPlaybackTime / audioDuration) * 100 : 0}%)`
+                                                        }}
+                                                    />
+                                                    <div className="flex justify-between text-[9px] font-bold text-slate-400 tabular-nums">
+                                                        <span>{formatTime(Math.floor(currentPlaybackTime))}</span>
+                                                        <span>{formatTime(Math.floor(audioDuration))}</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        ) : (
-                                            <div className="w-full space-y-6 animate-fade-in">
-                                                {sessionStep === "recording_initial" && (
-                                                    <div className="space-y-4">
-                                                        <button
-                                                            onClick={startRecording}
-                                                            className={`w-full h-16 rounded-2xl flex items-center justify-center gap-4 transition-all group overflow-hidden relative ${!consentChecked
-                                                                ? "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
-                                                                : "bg-gradient-to-br from-primary to-primary-900 text-white hover:shadow-2xl hover:shadow-primary/30"
-                                                                }`}
-                                                            disabled={!consentChecked}
-                                                        >
-                                                            {consentChecked && (
-                                                                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                                                            )}
-                                                            <Mic className={`w-5 h-5 relative z-10 ${!consentChecked ? "opacity-30" : ""}`} />
-                                                            <span className="text-[11px] font-black uppercase tracking-[0.2em] relative z-10">Start Recording</span>
-                                                        </button>
+                                        )}
+                                    </div>
+                                </div>
 
-                                                        {/* Inline Consent */}
-                                                        <label className="flex items-start gap-3 px-2 cursor-pointer group">
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={consentChecked}
-                                                                onChange={(e) => setConsentChecked(e.target.checked)}
-                                                                className="mt-1 w-4 h-4 rounded border-slate-200 text-primary focus:ring-primary/20 transition-all cursor-pointer"
-                                                            />
-                                                            <div className="flex flex-col gap-0.5">
-                                                                <span className="text-[11px] font-bold text-text-strong group-hover:text-primary transition-colors">
-                                                                    Patient consented to audio recording
-                                                                </span>
-                                                                <span className="text-[9px] font-medium text-text-muted">
-                                                                    Always confirm consent before recording.
-                                                                </span>
-                                                            </div>
+                                {/* Controls Area */}
+                                <div className="mt-10 flex flex-col items-center gap-6 relative z-10 w-full">
+                                    {isRecording ? (
+                                        <div className="flex items-center justify-center gap-6">
+                                            <button
+                                                onClick={isPaused ? resumeRecording : pauseRecording}
+                                                className={`w-14 h-14 rounded-full flex items-center justify-center border-2 transition-all duration-300 hover:scale-110 ${isPaused
+                                                    ? 'bg-primary border-primary shadow-xl shadow-primary/20 text-white'
+                                                    : 'bg-white border-border hover:border-accent-500/20 text-text transition-colors shadow-sm'
+                                                    }`}
+                                            >
+                                                {isPaused ? <Play className="w-6 h-6 fill-current" /> : <Pause className="w-6 h-6" />}
+                                            </button>
+                                            <button
+                                                onClick={stopRecording}
+                                                className="w-20 h-20 rounded-full bg-text-strong hover:bg-black flex items-center justify-center shadow-2xl shadow-primary/10 hover:scale-105 active:scale-95 transition-all outline-none"
+                                            >
+                                                <Square className="w-8 h-8 fill-accent-500" />
+                                            </button>
+                                        </div>
+                                    ) : sessionStep.includes("analyzing") ? (
+                                        <div className="flex flex-col items-center justify-center space-y-4 py-8">
+                                            <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                                            <p className="text-[12px] font-black uppercase tracking-widest text-primary mb-1">{aiStepCounter}</p>
+                                            <p className="text-[10px] font-bold text-text-muted mt-2 animate-pulse">{aiLoadingMessage}</p>
+                                        </div>
+                                    ) : (
+                                        <div className="w-full space-y-6 animate-fade-in">
+                                            {sessionStep === "recording_initial" && (
+                                                <div className="space-y-4">
+                                                    <button
+                                                        onClick={startRecording}
+                                                        className={`w-full h-16 rounded-2xl flex items-center justify-center gap-4 transition-all group overflow-hidden relative ${!consentChecked
+                                                            ? "bg-slate-200 text-slate-500 cursor-not-allowed border border-slate-300"
+                                                            : "bg-gradient-to-br from-primary to-primary-900 text-white hover:shadow-2xl hover:shadow-primary/30"
+                                                            }`}
+                                                        disabled={!consentChecked}
+                                                    >
+                                                        {consentChecked && (
+                                                            <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                                                        )}
+                                                        <Mic className={`w-5 h-5 relative z-10 ${!consentChecked ? "opacity-30" : ""}`} />
+                                                        <span className="text-[11px] font-black uppercase tracking-[0.2em] relative z-10">Start Recording</span>
+                                                    </button>
+
+                                                    <div className="relative">
+                                                        <input
+                                                            type="file"
+                                                            accept="audio/*,.m4a,.mp4,.wav,.mp3,.ogg,.webm"
+                                                            onChange={(e) => handleFileUpload(e, false)}
+                                                            className="hidden"
+                                                            id="audio-upload"
+                                                            disabled={!consentChecked}
+                                                        />
+                                                        <label
+                                                            htmlFor="audio-upload"
+                                                            className={`flex items-center justify-center w-full h-14 border-2 border-dashed rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all ${!consentChecked
+                                                                ? "border-slate-300 text-slate-500 cursor-not-allowed"
+                                                                : "border-primary/30 text-primary hover:bg-primary/5 cursor-pointer"
+                                                                }`}
+                                                        >
+                                                            <Upload className="w-4 h-4 mr-2" /> Upload Audio File
                                                         </label>
                                                     </div>
-                                                )}
+
+                                                    {/* Inline Consent */}
+                                                    <label className="flex items-start gap-3 px-2 cursor-pointer group">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={consentChecked}
+                                                            onChange={(e) => setConsentChecked(e.target.checked)}
+                                                            className="mt-1 w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary/20 transition-all cursor-pointer"
+                                                        />
+                                                        <div className="flex flex-col gap-0.5">
+                                                            <span className="text-[11px] font-bold text-text-strong group-hover:text-primary transition-colors">
+                                                                Patient consented to audio recording
+                                                            </span>
+                                                            <span className="text-[9px] font-medium text-text-muted">
+                                                                Always confirm consent before recording.
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            )}
 
 
-                                                {sessionStep === "ready_to_analyze_initial" && (
-                                                    <div className="space-y-3">
-                                                        <button
-                                                            onClick={handleAnalyzeInitial}
-                                                            className="w-full h-14 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-900 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"
-                                                        >
-                                                            <Sparkles className="w-4 h-4" /> Analyze (Local AI)
-                                                        </button>
-                                                        <button onClick={resetRecording} className="w-full text-[9px] font-bold text-text-muted uppercase tracking-widest flex items-center justify-center gap-2 hover:text-accent-600 transition-colors">
-                                                            <RotateCcw className="w-3 h-3" /> Redo Recording
-                                                        </button>
-                                                    </div>
-                                                )}
+                                            {sessionStep === "ready_to_analyze_initial" && (
+                                                <div className="space-y-3">
+                                                    <button
+                                                        onClick={handleAnalyzeInitial}
+                                                        className="w-full h-14 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-900 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"
+                                                    >
+                                                        <Sparkles className="w-4 h-4" /> Analyze (Local AI)
+                                                    </button>
+                                                    <button onClick={resetRecording} className="w-full text-[9px] font-bold text-text-muted uppercase tracking-widest flex items-center justify-center gap-2 hover:text-accent-600 transition-colors">
+                                                        <RotateCcw className="w-3 h-3" /> Redo Recording
+                                                    </button>
+                                                </div>
+                                            )}
 
-                                                {sessionStep === "followup_questions_ready" && (
+                                            {sessionStep === "followup_questions_ready" && (
+                                                <div className="space-y-4">
                                                     <button
                                                         onClick={() => { setSessionStep("recording_followup"); startRecording(); }}
                                                         className="w-full h-14 bg-indigo-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-3"
                                                     >
                                                         <Mic className="w-4 h-4" /> Start Follow-up Session
                                                     </button>
-                                                )}
 
-                                                {sessionStep === "ready_to_analyze_followup" && (
-                                                    <div className="space-y-3">
-                                                        <button
-                                                            onClick={handleAnalyzeFollowup}
-                                                            className="w-full h-14 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-900 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"
+                                                    <div className="relative">
+                                                        <input
+                                                            type="file"
+                                                            accept="audio/*,.m4a,.mp4,.wav,.mp3,.ogg,.webm"
+                                                            onChange={(e) => handleFileUpload(e, true)}
+                                                            className="hidden"
+                                                            id="followup-upload"
+                                                        />
+                                                        <label
+                                                            htmlFor="followup-upload"
+                                                            className={`flex items-center justify-center w-full h-14 border-2 border-dashed border-indigo-600/30 text-indigo-600 hover:bg-indigo-600/5 cursor-pointer rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] transition-all`}
                                                         >
-                                                            <Sparkles className="w-4 h-4" /> Update Summary (Local AI)
-                                                        </button>
-                                                        <button onClick={resetRecording} className="w-full text-[9px] font-bold text-text-muted uppercase tracking-widest flex items-center justify-center gap-2 hover:text-accent-600 transition-colors">
-                                                            <RotateCcw className="w-3 h-3" /> Redo Follow-up
-                                                        </button>
+                                                            <Upload className="w-4 h-4 mr-2" /> Upload Follow-up Audio
+                                                        </label>
                                                     </div>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {audioUrl && !isRecording && !sessionStep.includes("analyzing") && (
-                                        <div className="mt-10 p-6 rounded-3xl bg-surface-muted border border-border animate-slide-up shadow-sm">
-                                            <div className="flex items-center justify-between mb-4">
-                                                <span className="text-[9px] font-black text-accent-600 uppercase tracking-widest flex items-center gap-1.5">
-                                                    <Sparkles className="w-3 h-3" /> Preview Audio
-                                                </span>
-                                                <button onClick={resetRecording} className="p-1.5 hover:bg-red-50 text-red-400 rounded-lg transition-colors">
-                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                </button>
-                                            </div>
-                                            <audio controls src={audioUrl} className="w-full h-8 brightness-110 filter hue-rotate-180 opacity-80" />
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* MIDDLE: Topics to Cover (Primary Content) */}
-                        {!isFinalStep && (
-                            <div className="flex-1 flex flex-col gap-6 overflow-hidden animate-slide-up animate-delay-1">
-                                <div className="bg-white border border-slate-100 flex-1 flex flex-col overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.03)] rounded-[2.5rem] relative">
-                                    {/* Embedded Loading State overlay */}
-                                    {sessionStep.includes("analyzing") && (
-                                        <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center">
-                                            <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse">Neural Processing...</p>
-                                        </div>
-                                    )}
-
-                                    <div className="px-12 py-8 border-b border-slate-50">
-                                        <h3 className="text-2xl font-black text-accent-700 tracking-tight uppercase tracking-[0.1em]">
-                                            {!consentChecked && sessionStep === "recording_initial"
-                                                ? "SOAP Documentation Engine"
-                                                : (aiQuestions.length > 0 ? "Targeted Clinical Insights" : "Primary Topics to Cover")}
-                                        </h3>
-                                        <p className="text-text-muted text-xs font-bold mt-1 uppercase tracking-widest">
-                                            {!consentChecked && sessionStep === "recording_initial"
-                                                ? "Manual encounter entry active"
-                                                : "Patient Examination Checklist"}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex-1 overflow-y-auto p-12 scrollbar-thin">
-                                        {!consentChecked && sessionStep === "recording_initial" ? (
-                                            <div className="space-y-8 animate-fade-in">
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                                    {(['S', 'O', 'A', 'P'] as const).map(key => (
-                                                        <div key={key} className="space-y-3 group">
-                                                            <div className="flex items-center gap-3">
-                                                                <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-black text-sm">
-                                                                    {key}
-                                                                </div>
-                                                                <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">
-                                                                    {key === 'S' ? 'Subjective' : key === 'O' ? 'Objective' : key === 'A' ? 'Assessment' : 'Plan'}
-                                                                </span>
-                                                            </div>
-                                                            <textarea
-                                                                value={soapManual[key]}
-                                                                onChange={(e) => setSoapManual({ ...soapManual, [key]: e.target.value })}
-                                                                placeholder={`Enter detailed ${key === 'S' ? 'subjective' : key === 'O' ? 'objective' : key === 'A' ? 'assessment' : 'plan'} data...`}
-                                                                className="w-full h-48 p-6 rounded-[2rem] bg-slate-50 border border-slate-100 text-sm font-medium focus:ring-4 focus:ring-primary/5 focus:border-primary/50 outline-none transition-all resize-none shadow-inner group-hover:bg-white"
-                                                            />
-                                                        </div>
-                                                    ))}
                                                 </div>
-                                                <div className="pt-8 border-t border-slate-50 flex justify-end">
+                                            )}
+
+                                            {sessionStep === "ready_to_analyze_followup" && (
+                                                <div className="space-y-3">
                                                     <button
-                                                        onClick={handleAnalyzeTypedNotes}
-                                                        disabled={!Object.values(soapManual).some(v => v.trim()) || sessionStep !== "recording_initial"}
-                                                        className="w-full md:w-auto px-12 h-16 bg-gradient-to-br from-primary to-primary-900 text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] hover:shadow-2xl hover:shadow-primary/30 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        onClick={handleAnalyzeFollowup}
+                                                        className="w-full h-14 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-900 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3"
                                                     >
-                                                        <Sparkles className="w-4 h-4" /> Process & Generate SOAP Documentation
+                                                        <Sparkles className="w-4 h-4" /> Update Summary (Local AI)
+                                                    </button>
+                                                    <button onClick={resetRecording} className="w-full text-[9px] font-bold text-text-muted uppercase tracking-widest flex items-center justify-center gap-2 hover:text-accent-600 transition-colors">
+                                                        <RotateCcw className="w-3 h-3" /> Redo Follow-up
                                                     </button>
                                                 </div>
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <ul className="space-y-8">
-                                                    {(aiQuestions.length > 0 ? aiQuestions : currentClinicalPatient.suggestedTopics || []).map((topic: any, idx: number) => (
-                                                        <li
-                                                            key={topic.id}
-                                                            className="group flex items-start gap-6 animate-fade-in"
-                                                            style={{ animationDelay: `${idx * 0.1}s` }}
-                                                        >
-                                                            <div className="mt-2.5 w-2 h-2 rounded-full bg-accent-500 group-hover:scale-125 transition-all shadow-[0_0_10px_rgba(34,197,139,0.3)]" />
-                                                            <div className="flex flex-col gap-1 flex-1">
-                                                                <p className="font-black text-[17px] leading-relaxed text-text-strong tracking-tight group-hover:text-primary transition-colors">
-                                                                    {topic.question || topic.text}
-                                                                </p>
-                                                                {topic.priority && (
-                                                                    <span className={`text-[9px] font-black uppercase tracking-widest ${topic.priority === "High" ? "text-red-500" : topic.priority === "Medium" ? "text-amber-500" : "text-slate-400"
-                                                                        }`}>
-                                                                        Priority: {topic.priority}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-
-                                                {aiQuestions.length > 0 && sessionStep === "followup_questions_ready" && (
-                                                    <div className="mt-12 p-8 bg-accent-500/5 border border-dashed border-accent-500/20 rounded-[3rem] text-center animate-bounce-short max-w-lg mx-auto">
-                                                        <AlertCircle className="w-6 h-6 text-accent-500 mx-auto mb-3" />
-                                                        <h4 className="text-xs font-black text-accent-700 uppercase tracking-widest mb-1">Follow-up Phase Active</h4>
-                                                        <p className="text-[13px] font-bold text-text-muted leading-snug">The AI has generated specific clinical questions. Please address these through the follow-up recording for a complete SOAP generation.</p>
-                                                    </div>
-                                                )}
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* RIGHT: Collapsible Summary Sidebar */}
-                        {!isFinalStep && (
-                            <div className="w-full lg:w-[340px] flex flex-col gap-6 shrink-0 animate-slide-up animate-delay-2">
-                                <div className="bg-white border border-slate-100 flex flex-col overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.02)] rounded-[2.5rem]">
-                                    <div className="p-8 pb-4 flex items-center justify-between">
-                                        <h3 className="text-sm font-black text-accent-600 tracking-tight uppercase tracking-widest">Summary</h3>
-                                        <div className="bg-accent-500/10 px-2 py-0.5 rounded border border-accent-500/20">
-                                            <span className="text-[8px] font-black text-accent-600 uppercase tracking-widest">AI Vision</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="px-8 pb-4">
-                                        <button
-                                            onClick={() => setShowSummary(!showSummary)}
-                                            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary-900 transition-colors"
-                                        >
-                                            {showSummary ? (
-                                                <><ChevronUp className="w-3 h-3" /> Hide summary</>
-                                            ) : (
-                                                <><ChevronDown className="w-3 h-3" /> Show full summary</>
                                             )}
-                                        </button>
-                                    </div>
-
-                                    <div className={`transition-all duration-500 overflow-hidden ${showSummary ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <div className="p-8 pt-0 overflow-y-auto max-h-[460px] scrollbar-thin">
-                                            <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 italic text-[13px] font-medium leading-relaxed text-text-muted">
-                                                {aiSummary || currentClinicalPatient.latestSummary.text}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {!showSummary && (
-                                        <div className="p-8 pt-0">
-                                            <p className="text-[11px] font-bold text-text-muted line-clamp-3 italic opacity-60">
-                                                {aiSummary || currentClinicalPatient.latestSummary.text}
-                                            </p>
                                         </div>
                                     )}
                                 </div>
+
+                                {(audioUrl || initialRecording?.url || followupRecording?.url) && (
+                                    <audio
+                                        ref={audioRef}
+                                        src={audioUrl || initialRecording?.url || followupRecording?.url || ""}
+                                        onTimeUpdate={(e) => setCurrentPlaybackTime(e.currentTarget.currentTime)}
+                                        onLoadedMetadata={(e) => setAudioDuration(e.currentTarget.duration)}
+                                        onPlay={() => {
+                                            setIsRecording(false);
+                                            setIsPlaybackPlaying(true);
+                                        }}
+                                        onPause={() => setIsPlaybackPlaying(false)}
+                                        onEnded={() => {
+                                            setIsPlaybackPlaying(false);
+                                            setCurrentPlaybackTime(0);
+                                        }}
+                                        className="hidden"
+                                    />
+                                )}
                             </div>
-                        )}
+                        </div>
 
-                        {/* FINAL STEP VIEW (Full Width SOAP Editor) */}
-                        {isFinalStep && (
-                            <div className="flex-1 flex flex-col gap-8 animate-fade-in max-w-6xl mx-auto w-full">
-                                <div className="bg-white border border-slate-100 rounded-[3rem] shadow-2xl overflow-hidden flex flex-col">
-                                    <div className="flex flex-col xl:flex-row h-full">
-                                        {/* Summary component in final step */}
-                                        <div className="flex-1 border-r border-slate-50 bg-slate-50/30 p-12">
-                                            <div className="flex items-center justify-between mb-8">
-                                                <h3 className="text-xl font-black text-accent-600 tracking-tight uppercase">Encounter Summary</h3>
-                                                <span className="bg-white px-3 py-1 rounded-lg border border-border text-[9px] font-black text-text-muted uppercase tracking-widest">Validated Analysis</span>
-                                            </div>
-                                            <div className="text-[17px] font-medium leading-relaxed text-text-strong font-serif italic">
-                                                "{aiSummary}"
-                                            </div>
+                        {/* MIDDLE: General Content Area */}
+                        <div className="flex-1 flex flex-col gap-6 overflow-hidden animate-slide-up animate-delay-1">
+                            <div className="bg-white border border-slate-200 flex-1 flex flex-col overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.05)] rounded-[2.5rem] relative">
+                                <div className="px-12 py-8 border-b border-slate-100 flex items-center justify-between">
+                                    <div>
+                                        <h3 className="text-2xl font-black text-accent-700 tracking-tight uppercase tracking-[0.1em]">
+                                            {!consentChecked && sessionStep === "recording_initial"
+                                                ? "Manual Entry"
+                                                : isFinalStep ? "Session Documentation" : "Session"}
+                                        </h3>
+                                        <p className="text-slate-500 text-xs font-bold mt-1 uppercase tracking-widest">
+                                            {!consentChecked && sessionStep === "recording_initial"
+                                                ? ""
+                                                : isFinalStep ? "Review Transcription and SOAP notes" : "Live Recording & Processing"}
+                                        </p>
+                                    </div>
+                                    {isFinalStep && (
+                                        <div className="bg-slate-100 p-1 rounded-xl inline-flex shadow-inner">
+                                            <button onClick={() => setViewMode('transcription')} className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'transcription' ? 'bg-white shadow text-primary' : 'text-slate-500 hover:text-slate-700'}`}>Transcription</button>
+                                            <button onClick={() => setViewMode('soap')} className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${viewMode === 'soap' ? 'bg-white shadow text-primary' : 'text-slate-500 hover:text-slate-700'}`}>SOAP Notes</button>
                                         </div>
+                                    )}
+                                </div>
 
-                                        {/* SOAP Draft Fields */}
-                                        <div className="flex-[1.5] p-12 bg-white">
-                                            <div className="flex items-center justify-between mb-8">
-                                                <h3 className="text-xl font-black text-primary tracking-tight uppercase">SOAP Documentation</h3>
-                                                <div className="flex items-center gap-2 text-primary bg-primary-50 px-4 py-1.5 rounded-full border border-primary/10">
-                                                    <Check className="w-3.5 h-3.5" />
-                                                    <span className="text-[9px] font-black uppercase tracking-widest">Ready to Finalize</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="flex-1 overflow-y-auto p-12 scrollbar-thin flex flex-col">
+                                    {!consentChecked && sessionStep === "recording_initial" ? (
+                                        <div className="space-y-8 animate-fade-in">
+                                            <div className="flex flex-col gap-6">
                                                 {(['S', 'O', 'A', 'P'] as const).map(key => (
-                                                    <div key={key} className="p-6 bg-white border border-border rounded-3xl shadow-sm hover:border-accent-500/20 transition-all flex flex-col gap-4">
+                                                    <div key={key} className="flex flex-col gap-3 group bg-slate-50 p-6 rounded-3xl border border-slate-200 hover:bg-slate-100 transition-colors">
                                                         <div className="flex items-center gap-3">
-                                                            <span className="w-7 h-7 bg-primary text-white rounded-xl flex items-center justify-center text-[13px] font-black">{key}</span>
-                                                            <span className="text-[10px] font-black text-text-muted uppercase tracking-widest">
+                                                            <div className="w-2 h-2 rounded-full bg-primary"></div>
+                                                            <span className="text-sm font-black text-slate-800 uppercase tracking-widest">
                                                                 {key === 'S' ? 'Subjective' : key === 'O' ? 'Objective' : key === 'A' ? 'Assessment' : 'Plan'}
                                                             </span>
                                                         </div>
                                                         <textarea
-                                                            className="w-full h-44 bg-transparent border-none outline-none text-[14px] font-bold text-slate-700 leading-relaxed scrollbar-thin resize-none"
-                                                            value={soapDraft ? soapDraft[key] : ''}
-                                                            onChange={(e) => soapDraft && setSoapDraft({ ...soapDraft, [key]: e.target.value })}
+                                                            value={soapManual[key]}
+                                                            onChange={(e) => {
+                                                                setSoapManual({ ...soapManual, [key]: e.target.value });
+                                                                e.target.style.height = 'auto';
+                                                                e.target.style.height = e.target.scrollHeight + 'px';
+                                                            }}
+                                                            ref={(el) => {
+                                                                if (el) {
+                                                                    el.style.height = 'auto';
+                                                                    el.style.height = el.scrollHeight + 'px';
+                                                                }
+                                                            }}
+                                                            placeholder={`Enter detailed ${key === 'S' ? 'subjective' : key === 'O' ? 'objective' : key === 'A' ? 'assessment' : 'plan'} data...`}
+                                                            className="w-full min-h-[100px] ml-5 p-0 bg-transparent border-none outline-none text-[15px] font-semibold text-slate-800 leading-relaxed resize-none focus:ring-0 placeholder:text-slate-500"
                                                         />
                                                     </div>
                                                 ))}
                                             </div>
+
                                         </div>
-                                    </div>
+                                    ) : isRecording ? (
+                                        <div className="flex-1 p-8 space-y-6 flex flex-col items-center justify-center">
+                                            <div className="w-full max-w-2xl space-y-4">
+                                                <div className="h-4 bg-slate-200 rounded animate-pulse w-3/4"></div>
+                                                <div className="h-4 bg-slate-200 rounded animate-pulse w-full"></div>
+                                                <div className="h-4 bg-slate-200 rounded animate-pulse w-5/6"></div>
+                                                <div className="h-4 bg-slate-200 rounded animate-pulse w-1/2"></div>
+                                            </div>
+                                            <p className="text-slate-500 font-medium animate-pulse mt-8">Listening to session...</p>
+                                        </div>
+                                    ) : sessionStep.includes("analyzing") && !transcription ? (
+                                        <div className="flex-1 flex flex-col items-center justify-center h-full space-y-6 opacity-30">
+                                            <div className="w-full max-w-2xl space-y-4">
+                                                <div className="h-4 bg-slate-200 rounded animate-pulse w-3/4"></div>
+                                                <div className="h-4 bg-slate-200 rounded animate-pulse w-full"></div>
+                                            </div>
+                                        </div>
+                                    ) : (!isFinalStep && transcription) || (isFinalStep && viewMode === 'transcription') ? (
+                                        <div ref={transcriptContainerRef} className="font-serif text-[17px] leading-relaxed text-slate-700 bg-slate-50 p-8 rounded-3xl border border-slate-200 flex-1 overflow-y-auto relative">
+                                            {detailedTranscript ? (() => {
+                                                // Fuzzy match: find segment with highest character overlap with the quote
+                                                let bestSegIdx = -1;
+                                                if (highlightedQuote) {
+                                                    const qNorm = highlightedQuote.toLowerCase().replace(/[^a-z0-9 ]/g, '');
+                                                    let bestScore = 0;
+                                                    detailedTranscript.forEach((seg, i) => {
+                                                        const segText = seg.words.map(w => w.word).join(' ').toLowerCase().replace(/[^a-z0-9 ]/g, '');
+                                                        // Count how many characters of the quote appear in the segment text
+                                                        let matched = 0;
+                                                        let sPos = 0;
+                                                        for (let c = 0; c < qNorm.length; c++) {
+                                                            const found = segText.indexOf(qNorm[c], sPos);
+                                                            if (found !== -1) { matched++; sPos = found + 1; }
+                                                        }
+                                                        const score = matched / Math.max(qNorm.length, 1);
+                                                        if (score > bestScore) { bestScore = score; bestSegIdx = i; }
+                                                    });
+                                                    // Only highlight if at least 50% of characters matched
+                                                    if (bestScore < 0.5) bestSegIdx = -1;
+                                                }
+                                                return detailedTranscript.map((segment, sIdx) => (
+                                                    <div
+                                                        key={sIdx}
+                                                        className="mb-8 last:mb-0"
+                                                        ref={sIdx === bestSegIdx ? (el) => {
+                                                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                        } : undefined}
+                                                    >
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md ${segment.speaker_label === 'Doctor' ? 'bg-primary/10 text-primary' : 'bg-accent-500/10 text-accent-700'}`}>
+                                                                {segment.speaker_label}
+                                                            </span>
+                                                            <span className="text-[9px] font-bold text-slate-400 tabular-nums">
+                                                                {formatTime(Math.floor(segment.start))}
+                                                            </span>
+                                                        </div>
+                                                        <div className={`flex flex-wrap gap-x-1.5 gap-y-1 rounded-xl transition-all duration-500 ${sIdx === bestSegIdx ? 'bg-orange-100 px-3 py-2 ring-2 ring-orange-300' : ''
+                                                            }`}>
+                                                            {segment.words.map((word, wIdx) => {
+                                                                const isSpoken = word.start <= currentPlaybackTime;
+                                                                const isHighlighted = sIdx === bestSegIdx;
+                                                                return (
+                                                                    <span
+                                                                        key={wIdx}
+                                                                        className={`transition-all duration-300 rounded px-0.5 text-slate-700 ${isHighlighted ? 'bg-orange-300' : isSpoken ? 'bg-green-200' : 'bg-transparent'
+                                                                            }`}
+                                                                    >
+                                                                        {word.word}
+                                                                    </span>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                ));
+                                            })() : transcription ? (
+                                                transcription.split('\n').map((line, i) => {
+                                                    if (highlightedQuote && line.toLowerCase().includes(highlightedQuote.toLowerCase())) {
+                                                        const idx = line.toLowerCase().indexOf(highlightedQuote.toLowerCase());
+                                                        const before = line.slice(0, idx);
+                                                        const match = line.slice(idx, idx + highlightedQuote.length);
+                                                        const after = line.slice(idx + highlightedQuote.length);
+                                                        return (
+                                                            <p key={i} className="mb-4">
+                                                                {before}
+                                                                <mark className="bg-orange-300 px-0.5 rounded ring-1 ring-orange-400">{match}</mark>
+                                                                {after}
+                                                            </p>
+                                                        );
+                                                    }
+                                                    return <p key={i} className="mb-4">{line}</p>;
+                                                })
+                                            ) : (
+                                                <p className="italic text-slate-400">No transcription available.</p>
+                                            )}
+                                        </div>
+                                    ) : isFinalStep && viewMode === 'soap' ? (
+                                        <div className="flex flex-col gap-6 flex-1 px-4 pb-8 overflow-y-auto">
+                                            {(['S', 'O', 'A', 'P'] as const).map(key => {
+                                                const soapKeyMap: Record<string, string> = { S: 'subjective', O: 'objective', A: 'assessment', P: 'plan' };
+                                                const quotesForSection = soapQuotes?.[soapKeyMap[key]] || [];
+                                                const hasQuotes = quotesForSection.length > 0;
+                                                return (
+                                                    <div key={key} className="flex flex-col gap-3 bg-slate-50 p-6 rounded-3xl border border-slate-200 hover:bg-slate-100 transition-colors">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="w-2 h-2 rounded-full bg-primary"></div>
+                                                            <span className="text-sm font-black text-slate-800 uppercase tracking-widest">
+                                                                {key === 'S' ? 'Subjective' : key === 'O' ? 'Objective' : key === 'A' ? 'Assessment' : 'Plan'}
+                                                            </span>
+                                                        </div>
+                                                        {hasQuotes ? (
+                                                            <ul className="ml-5 space-y-2">
+                                                                {quotesForSection.map((entry, idx) => (
+                                                                    <li key={idx}>
+                                                                        <span
+                                                                            onClick={() => {
+                                                                                if (entry.quote) {
+                                                                                    const cleaned = entry.quote.replace(/^["'\[\]]+|["'\[\]]+$/g, '').trim();
+                                                                                    setHighlightedQuote(cleaned);
+                                                                                    setViewMode('transcription');
+                                                                                }
+                                                                            }}
+                                                                            className={`text-[15px] font-semibold leading-relaxed ${entry.quote
+                                                                                ? 'text-slate-800 cursor-pointer hover:text-primary hover:underline decoration-primary/30 underline-offset-4 transition-all'
+                                                                                : 'text-slate-600'
+                                                                                }`}
+                                                                            title={entry.quote ? `Source: "${entry.quote}"` : undefined}
+                                                                        >
+                                                                            {entry.sentence}
+                                                                        </span>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        ) : (
+                                                            <textarea
+                                                                className="w-full h-auto min-h-[80px] bg-transparent border-none outline-none text-[15px] font-semibold text-slate-800 leading-relaxed resize-none ml-5 p-0 focus:ring-0"
+                                                                value={soapDraft ? soapDraft[key] : ''}
+                                                                onChange={(e) => {
+                                                                    if (soapDraft) {
+                                                                        setSoapDraft({ ...soapDraft, [key]: e.target.value });
+                                                                        e.target.style.height = 'auto';
+                                                                        e.target.style.height = e.target.scrollHeight + 'px';
+                                                                    }
+                                                                }}
+                                                                ref={(el) => {
+                                                                    if (el) {
+                                                                        el.style.height = 'auto';
+                                                                        el.style.height = el.scrollHeight + 'px';
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    ) : consentChecked && !isRecording && !sessionStep.includes("analyzing") && !isFinalStep ? (
+                                        <div className="flex-1 border-2 border-dashed border-slate-300 rounded-3xl flex items-center justify-center">
+                                            <p className="text-slate-400 font-medium">Ready to record.</p>
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>
-                        )}
+                        </div>
+
                     </div>
                 </main>
 
                 {/* Inline footer version for Final Step only */}
-                {isFinalStep && (
-                    <footer className="h-16 shrink-0 bg-white border-t border-slate-100 flex items-center justify-center">
-                        <div className="flex items-center gap-3 text-accent-600 bg-accent-500/5 px-6 py-2 rounded-full border border-accent-500/10">
-                            <Sparkles className="w-4 h-4" />
-                            <span className="text-[11px] font-black uppercase tracking-widest">AI Documentation Synchronized Locally</span>
-                        </div>
-                    </footer>
-                )}
-            </div>
-        </Layout>
+                {/* AI Documentation status removed */}
+
+            </div >
+        </Layout >
     );
 };

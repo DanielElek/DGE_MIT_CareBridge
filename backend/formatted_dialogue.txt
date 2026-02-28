@@ -1,0 +1,27 @@
+Doctor: Hey doctor, I came to you because I have a really bad headache for the past two days.
+Doctor: And where are you?
+Doctor: Feel it?
+Doctor: It's somewhere in the back of my head.
+Doctor: I tried drinking a lot of water, but even though I drink like four liters per day, it did not help.
+Doctor: And have you sleep enough?
+Doctor: Yes, well, I guess, like seven hours, seven hours, yeah?
+Doctor: Or I sleep around seven hours per day.
+Doctor: Okay, and how many hours work?
+Doctor: In Monday.
+Doctor: Ah, so how many hours I work?
+Doctor: I work...
+Doctor: Like 12.
+Patient: And it's physical or just office jobs?
+Doctor: Office jobs.
+Doctor: I work at the computer.
+Patient: Oh, so you watch the screen for the day?
+Doctor: Yes, yes, the entire day actually.
+Doctor: And have you glasses or something?
+Doctor: Yeah, I just know more glasses for vision correction.
+Patient: Okay, maybe that was the problem.
+Patient: So try it with the glass.
+Doctor: Ah, okay.
+Doctor: Okay.
+Doctor: Then I will try looking at the computer without glasses.
+Doctor: Thank you, Doc.
+Doctor: Bye.
