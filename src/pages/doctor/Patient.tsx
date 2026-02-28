@@ -435,7 +435,7 @@ export const Patient: React.FC = () => {
               </div>
 
               {/* Patient Input Summary */}
-              <div className="glass-card border-accent-500/10 flex flex-col min-h-0">
+              <div className="glass-card border-accent-500/10 flex flex-col min-h-0 overflow-hidden">
                 <div className="px-6 py-4 border-b border-accent-500/5 flex items-center justify-between bg-accent-500/5">
                   <h3 className="text-sm font-black text-accent-700 uppercase tracking-[0.2em] flex items-center gap-2">
                     <Clock className="w-4 h-4 text-accent-500" /> Latest Patient Summary
@@ -522,7 +522,7 @@ export const Patient: React.FC = () => {
             {/* Right Column: Timeline (~30%) */}
             <div className="lg:col-span-3 flex flex-col gap-6 h-full min-h-0">
               {/* Treatment Timeline */}
-              <div className="glass-card flex-1 flex flex-col min-h-0 max-h-[calc(100vh-200px)]">
+              <div className="glass-card flex-1 flex flex-col min-h-0 max-h-[calc(100vh-200px)] overflow-hidden">
                 <div className="px-6 py-5 border-b border-border flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur-md z-10">
                   <h3 className="text-sm font-black text-accent-700 uppercase tracking-[0.2em] flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-accent-500" /> Treatment Timeline
@@ -531,11 +531,18 @@ export const Patient: React.FC = () => {
                 <div className="flex-1 overflow-y-auto p-0 scrollbar-thin">
                   <div className="grid grid-cols-1">
                     {visibleTimeline.map((item: any, idx: number) => (
-                      <div key={item.id} className={`group hover:bg-surface-muted transition-all border-b border-border last:border-none cursor-pointer overflow-hidden ${expandedTimeline === item.id ? 'bg-accent-500/5' : ''}`} onClick={() => setExpandedTimeline(expandedTimeline === item.id ? null : item.id)}>
-                        <div className="p-5 flex items-start gap-4">
-                          <div className="w-2 relative flex flex-col items-center h-full mt-1.5 shrink-0">
-                            <div className={`w-2 h-2 rounded-full border border-white z-10 transition-transform group-hover:scale-125 ${expandedTimeline === item.id ? 'bg-accent-500 ring-4 ring-accent-500/20' : 'bg-text-muted'}`} />
-                            {idx !== visibleTimeline.length - 1 && <div className="absolute top-2 w-px h-[200px] bg-border group-hover:bg-accent-500/20" />}
+                      <div key={item.id} className={`group hover:bg-surface-muted transition-all border-b border-border last:border-none cursor-pointer relative overflow-hidden ${expandedTimeline === item.id ? 'bg-accent-500/5' : ''}`} onClick={() => setExpandedTimeline(expandedTimeline === item.id ? null : item.id)}>
+                        {/* Persistent Vertical Line Connector */}
+                        <div className={`absolute left-[27px] w-0.5 bg-slate-200/60 group-hover:bg-accent-500/30 transition-colors z-0
+                          ${idx === 0 ? 'top-[31px] bottom-0' : idx === visibleTimeline.length - 1 ? 'top-0 h-[31px]' : 'top-0 bottom-0'}
+                        `} />
+
+                        <div className="p-5 flex items-start gap-4 relative z-10">
+                          <div className="w-4 shrink-0 mt-2 flex justify-center">
+                            {/* Dot */}
+                            <div className={`w-2.5 h-2.5 rounded-full border-2 border-white z-10 transition-all duration-300 relative
+                              ${expandedTimeline === item.id ? 'bg-accent-500 ring-4 ring-accent-500/20 scale-110 shadow-lg' : 'bg-slate-300 group-hover:bg-accent-500'}
+                            `} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <span className="text-[12px] font-medium text-text-muted tracking-wide mb-1.5 block">{item.date}</span>
