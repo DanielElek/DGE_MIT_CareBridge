@@ -77,29 +77,29 @@ const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any 
 
           <section className="grid grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="text-[10px] font-black text-text-muted uppercase tracking-widest">Clinical Findings</h3>
+              <h3 className="text-[12px] font-black text-text-muted uppercase tracking-widest">Clinical Findings</h3>
               <ul className="space-y-2">
                 {[
                   'Neurological exam within normal limits.',
                   'No acute inflammation detected.',
                   'Patient responsive to palpation in lumbar region.'
                 ].map((f, i) => (
-                  <li key={i} className="flex items-center gap-2 text-[11px] font-bold text-text bg-white p-2 rounded-lg border border-border shadow-sm">
-                    <div className="w-1 h-1 rounded-full bg-accent-500" /> {f}
+                  <li key={i} className="flex items-center gap-3 text-[14px] font-bold text-text bg-white p-3 rounded-lg border border-border shadow-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent-500 shrink-0" /> {f}
                   </li>
                 ))}
               </ul>
             </div>
             <div className="space-y-4">
-              <h3 className="text-[10px] font-black text-text-muted uppercase tracking-widest">Treatment Plan</h3>
+              <h3 className="text-[12px] font-black text-text-muted uppercase tracking-widest">Treatment Plan</h3>
               <ul className="space-y-2">
                 {[
                   'Scheduled for MRI imaging.',
                   'Physical therapy twice weekly.',
                   'Medication adjustment: OTC Ibuprofen 400mg PRN.'
                 ].map((s, i) => (
-                  <li key={i} className="flex items-center gap-2 text-[11px] font-bold text-text bg-white p-2 rounded-lg border border-border shadow-sm">
-                    <div className="w-1 h-1 rounded-full bg-accent-500" /> {s}
+                  <li key={i} className="flex items-center gap-3 text-[14px] font-bold text-text bg-white p-3 rounded-lg border border-border shadow-sm">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent-500 shrink-0" /> {s}
                   </li>
                 ))}
               </ul>
