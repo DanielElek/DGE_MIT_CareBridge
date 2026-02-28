@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../AppContext';
 import { Layout } from '../../components/Layout';
@@ -7,14 +7,43 @@ import { MonogramAvatar } from '../../components/MonogramAvatar';
 import { MOCK_CLINICAL_PATIENT, mockTrends } from '../../mockData';
 
 const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any }> = ({ isOpen, onClose, report }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+
+      const handleWheel = (e: WheelEvent) => {
+        if (scrollRef.current) {
+          // If the mouse is anywhere in the modal area or overlay, route it
+          // Actually, the requirement says "Scrolling anywhere ... must scroll the report content"
+          // We apply the delta directly to the scroller
+          scrollRef.current.scrollTop += e.deltaY;
+          e.preventDefault();
+        }
+      };
+
+      // Add wheel event listener globally with passive: false to allow preventDefault
+      window.addEventListener('wheel', handleWheel, { passive: false });
+
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('wheel', handleWheel);
+      };
+    }
+  }, [isOpen]);
+
   if (!isOpen || !report) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[200] flex justify-center items-start pt-6 px-4">
+      {/* Overlay */}
       <div className="absolute inset-0 bg-primary/40 backdrop-blur-sm animate-fade-in" onClick={onClose} />
-      <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden flex flex-col max-h-[90vh]">
+
+      {/* Modal Container */}
+      <div className="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden flex flex-col max-h-[calc(100vh-48px)]">
         {/* Modal Header */}
-        <div className="p-8 border-b border-border flex items-center justify-between bg-white sticky top-0 z-10">
+        <div className="p-8 border-b border-border flex items-center justify-between bg-white sticky top-0 z-10 shrink-0">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="text-[10px] font-black text-accent-600 uppercase tracking-[0.2em]">Clinical Report</span>
@@ -28,12 +57,15 @@ const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any 
           </button>
         </div>
 
-        {/* Modal Content */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-thin">
+        {/* Modal Content - Scrollable Region */}
+        <div
+          ref={scrollRef}
+          className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-thin overflow-x-hidden"
+        >
           <section>
-            <h3 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-4">Report</h3>
+            <h3 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-4">Report Details</h3>
             <div className="bg-background rounded-2xl p-6 border border-border">
-              <p className="text-sm text-text leading-relaxed font-semibold">
+              <p className="text-[14px] text-text leading-relaxed font-semibold">
                 {report.details} The patient, Michael Oxlong, presents with a complex clinical manifestation of chronic lumbar degeneration, specifically focused on the L4-L5 and L5-S1 segments. Durante today's evaluation, he reported a persistent dull ache that intensifies into a sharp, lancinating sensation (7/10) upon axial rotation or lateral bending.
                 <br /><br />
                 The onset of current symptoms appears to be correlated with increased mechanical loading earlier this week. Clinical observation reveals significant paraspinal guarding and a reduction in fluid movement during transitional tasks. While baseline neurological functions remain intact, the subjective level of discomfort is impacting his sleep architecture and overall mobility.
@@ -59,7 +91,7 @@ const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any 
               </ul>
             </div>
             <div className="space-y-4">
-              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Treatment Plan</h3>
+              <h3 className="text-[10px] font-black text-text-muted uppercase tracking-widest">Treatment Plan</h3>
               <ul className="space-y-2">
                 {[
                   'Scheduled for MRI imaging.',
@@ -76,16 +108,16 @@ const ReportModal: React.FC<{ isOpen: boolean; onClose: () => void; report: any 
 
           <section>
             <h3 className="text-[10px] font-black text-text-muted uppercase tracking-widest mb-4">Physician Notes</h3>
-            <p className="text-xs text-text-muted italic bg-accent-500/5 p-4 rounded-2xl border border-accent-500/10 font-medium">
+            <p className="text-[13px] text-text-muted italic bg-accent-500/5 p-4 rounded-2xl border border-accent-500/10 font-medium">
               "The patient's mobility has shown improvement over the last quarter, though recent lower back pain requires careful monitoring during upcoming travel."
             </p>
           </section>
         </div>
 
         {/* Modal Footer */}
-        <div className="p-8 border-t border-border bg-background/50 flex items-center justify-between">
+        <div className="p-8 border-t border-border bg-background/50 flex items-center justify-between shrink-0">
           <p className="text-[9px] font-bold text-text-muted uppercase tracking-[0.2em]">Record ID: PR-{report.id}-CLINICAL</p>
-          <button onClick={onClose} className="btn-secondary py-3 px-12 text-xs font-black uppercase tracking-widest">CANCEL</button>
+          <button onClick={onClose} className="btn-secondary py-3 px-12 text-xs font-black uppercase tracking-widest">CLOSE REPORT</button>
         </div>
       </div>
     </div>
